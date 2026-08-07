@@ -6,6 +6,11 @@ exports.registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    console.log("Registration request:", {
+      name,
+      email
+    });
+
     const existing = await User.findUserByEmail(email);
 
     if (existing) {
@@ -22,12 +27,17 @@ exports.registerUser = async (req, res) => {
       hashedPassword
     );
 
-    res.status(201).json(user);
+    res.status(201).json({
+      message: "Account created successfully",
+      user
+    });
 
   } catch (err) {
-    console.error(err);
+    console.error("REGISTRATION ERROR:", err);
+
     res.status(500).json({
-      message: "Server error"
+      message: "Server error",
+      error: err.message
     });
   }
 };
@@ -68,9 +78,11 @@ exports.loginUser = async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err);
+    console.error("LOGIN ERROR:", err);
+
     res.status(500).json({
-      message: "Server error"
+      message: "Server error",
+      error: err.message
     });
   }
 };
