@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Register</title>
+<title>Register - SmartMinute</title>
 
 <style>
 body{
@@ -30,6 +30,7 @@ padding:12px;
 margin:10px 0;
 border:1px solid #ccc;
 border-radius:6px;
+box-sizing:border-box;
 }
 
 button{
@@ -42,6 +43,10 @@ border-radius:6px;
 font-size:16px;
 cursor:pointer;
 }
+
+button:hover{
+background:#004ecc;
+}
 </style>
 
 </head>
@@ -52,17 +57,69 @@ cursor:pointer;
 
 <h2>Create Account</h2>
 
-<input placeholder="Full Name">
+<form id="registerForm">
 
-<input type="email" placeholder="Email">
+<input id="name" placeholder="Full Name" required>
 
-<input placeholder="Phone Number">
+<input id="email" type="email" placeholder="Email" required>
 
-<input type="password" placeholder="Password">
+<input id="phone" placeholder="Phone Number">
 
-<button>Create Account</button>
+<input id="password" type="password" placeholder="Password" required>
+
+<button type="submit">Create Account</button>
+
+</form>
 
 </div>
+
+
+<script>
+
+const form = document.getElementById("registerForm");
+
+form.addEventListener("submit", async (e)=>{
+
+e.preventDefault();
+
+const name = document.getElementById("name").value;
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+
+try{
+
+const response = await fetch(
+"https://smartminutes-backend.onrender.com/api/auth/register",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name,
+email,
+password
+})
+}
+);
+
+
+const data = await response.json();
+
+alert(data.message || "Account created successfully");
+
+
+}catch(error){
+
+alert("Cannot connect to server");
+
+}
+
+});
+
+</script>
+
 
 </body>
 </html>
