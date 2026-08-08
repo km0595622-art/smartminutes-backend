@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SmartMinute Dashboard</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#eef3ff;
+    color:#222;
+    overflow-x:hidden;
+}
+
+/* MONEY BACKGROUND */
+
+.money-background{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+}
+
+.money{
+    position:absolute;
+    font-size:48px;
+    opacity:.32;
+    animation:fall linear infinite;
+    filter:drop-shadow(0 3px 3px rgba(0,0,0,.15));
+}
+
+.money:nth-child(1){
+    left:3%;
+    animation-duration:11s;
+}
+
+.money:nth-child(2){
+    left:13%;
+    animation-duration:15s;
+    animation-delay:2s;
+}
+
+.money:nth-child(3){
+    left:25%;
+    animation-duration:12s;
+    animation-delay:4s;
+}
+
+.money:nth-child(4){
+    left:38%;
+    animation-duration:16s;
+    animation-delay:1s;
+}
+
+.money:nth-child(5){
+    left:50%;
+    animation-duration:13s;
+    animation-delay:5s;
+}
+
+.money:nth-child(6){
+    left:63%;
+    animation-duration:15s;
+    animation-delay:3s;
+}
+
+.money:nth-child(7){
+    left:75%;
+    animation-duration:11s;
+    animation-delay:6s;
+}
+
+.money:nth-child(8){
+    left:88%;
+    animation-duration:14s;
+    animation-delay:1s;
+}
+
+.money:nth-child(9){
+    left:95%;
+    animation-duration:17s;
+    animation-delay:7s;
+}
+
+@keyframes fall{
+
+    0%{
+        top:-100px;
+        transform:rotate(-20deg);
+    }
+
+    50%{
+        transform:rotate(180deg);
+    }
+
+    100%{
+        top:110vh;
+        transform:rotate(360deg);
+    }
+}
+
+/* HEADER */
+
+header{
+    position:relative;
+    z-index:2;
+    background:linear-gradient(135deg,#0066ff,#0047b3);
+    color:white;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 3px 12px rgba(0,0,0,.2);
+}
+
+header h2{
+    margin:0;
+}
+
+/* DEPOSIT BUTTON */
+
+.deposit{
+    background:#ffd21c;
+    color:#111;
+    border:none;
+    padding:14px 24px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:17px;
+    box-shadow:0 4px 10px rgba(0,0,0,.2);
+}
+
+.deposit:hover{
+    background:#ffca00;
+    transform:scale(1.04);
+}
+
+/* MAIN */
+
+.container{
+    position:relative;
+    z-index:1;
+    max-width:900px;
+    margin:25px auto;
+    padding:0 20px;
+}
+
+.welcome{
+    background:rgba(255,255,255,.96);
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 3px 15px rgba(0,0,0,.1);
+    margin-bottom:20px;
+}
+
+.welcome h1{
+    margin-top:0;
+    color:#0066ff;
+}
+
+/* CARDS */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+}
+
+.card{
+    background:rgba(255,255,255,.97);
+    padding:22px;
+    border-radius:15px;
+    box-shadow:0 3px 15px rgba(0,0,0,.1);
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+}
+
+.card h3{
+    margin-top:0;
+    color:#555;
+}
+
+.amount{
+    font-size:28px;
+    font-weight:bold;
+    color:#0066ff;
+}
+
+/* QUICK ACTIONS */
+
+.section{
+    background:rgba(255,255,255,.97);
+    margin-top:20px;
+    padding:22px;
+    border-radius:15px;
+    box-shadow:0 3px 15px rgba(0,0,0,.1);
+}
+
+.action{
+    width:100%;
+    padding:14px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(135deg,#0066ff,#0047b3);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.action:hover{
+    transform:scale(1.01);
+}
+
+/* ACCOUNT SETTINGS */
+
+.settings{
+    background:rgba(255,255,255,.97);
+    margin-top:20px;
+    padding:22px;
+    border-radius:15px;
+    box-shadow:0 3px 15px rgba(0,0,0,.1);
+}
+
+.settings h2{
+    margin-top:0;
+}
+
+.setting-button{
+    width:100%;
+    padding:14px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    background:#f0f2f5;
+    color:#222;
+    font-size:16px;
+    cursor:pointer;
+    text-align:left;
+    font-weight:bold;
+}
+
+.setting-button:hover{
+    background:#e2e6eb;
+}
+
+.withdraw-button{
+    background:#fff3cd;
+    color:#8a6500;
+}
+
+/* MESSAGE */
+
+.message{
+    text-align:center;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+/* MOBILE */
+
+@media(max-width:500px){
+
+    .container{
+        padding:0 14px;
+    }
+
+    .welcome{
+        padding:20px;
+    }
+
+    .money{
+        font-size:40px;
+    }
+
+    .deposit{
+        padding:12px 18px;
+        font-size:15px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- MONEY STICKERS -->
+
+<div class="money-background">
+
+<div class="money">💵</div>
+<div class="money">💸</div>
+<div class="money">💵</div>
+<div class="money">💸</div>
+<div class="money">💵</div>
+<div class="money">💸</div>
+<div class="money">💵</div>
+<div class="money">💸</div>
+<div class="money">💵</div>
+
+</div>
+
+
+<!-- HEADER -->
+
+<header>
+
+<h2>SmartMinute</h2>
+
+<button class="deposit" onclick="deposit()">
+💳 Deposit
+</button>
+
+</header>
+
+
+<!-- DASHBOARD -->
+
+<div class="container">
+
+<div class="welcome">
+
+<h1>
+Welcome to SmartMinute 👋
+</h1>
+
+<p>
+Earn smarter, complete tasks and grow your balance.
+</p>
+
+</div>
+
+
+<!-- BALANCE CARDS -->
+
+<div class="cards">
+
+<div class="card">
+
+<h3>💰 Available Balance</h3>
+
+<div class="amount">
+KSh 0.00
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>📈 Total Earned</h3>
+
+<div class="amount">
+KSh 0.00
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>✅ Tasks Completed</h3>
+
+<div class="amount">
+0
+</div>
+
+</div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+
+<div class="section">
+
+<h2>🚀 Quick Actions</h2>
+
+<button class="action" onclick="startTasks()">
+🚀 Start Earning
+</button>
+
+<button class="action" onclick="loginRegister()">
+🔐 Login / Register
+</button>
+
+<p id="message" class="message"></p>
+
+</div>
+
+
+<!-- ACCOUNT SETTINGS -->
+
+<div class="settings">
+
+<h2>⚙️ Account Settings</h2>
+
+<button class="setting-button" onclick="profile()">
+👤 My Profile
+</button>
+
+<button class="setting-button" onclick="security()">
+🔒 Security
+</button>
+
+<button class="setting-button withdraw-button" onclick="withdraw()">
+💸 Withdrawal
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+const token = localStorage.getItem("token");
+
+if(!token){
+
+    window.location.href = "login.html";
+
+}
+
+
+/* DEPOSIT */
+
+function deposit(){
+
+    window.location.href = "deposit.html";
+
+}
+
+
+/* START EARNING */
+
+function startTasks(){
+
+    document.getElementById("message").textContent =
+    "Earning tasks will be available soon 🚀";
+
+}
+
+
+/* LOGIN / REGISTER */
+
+function loginRegister(){
+
+    window.location.href = "login.html";
+
+}
+
+
+/* PROFILE */
+
+function profile(){
+
+    document.getElementById("message").textContent =
+    "Your profile settings will be available soon 👤";
+
+}
+
+
+/* SECURITY */
+
+function security(){
+
+    document.getElementById("message").textContent =
+    "Security settings will be available soon 🔒";
+
+}
+
+
+/* WITHDRAWAL */
+
+function withdraw(){
+
+    document.getElementById("message").textContent =
+    "Withdrawal settings will be available soon 💸";
+
+}
+
+</script>
+
+</body>
+</html>

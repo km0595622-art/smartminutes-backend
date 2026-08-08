@@ -1,0 +1,465 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Deposit - SmartMinute</title><style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#eef3ff;
+    color:#222;
+}
+
+header{
+    background:linear-gradient(135deg,#0066ff,#0047b3);
+    color:white;
+    padding:18px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h2{
+    margin:0;
+}
+
+.back{
+    background:white;
+    color:#0066ff;
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.container{
+    max-width:500px;
+    margin:30px auto;
+    padding:0 20px;
+}
+
+.box{
+    background:white;
+    padding:28px;
+    border-radius:16px;
+    box-shadow:0 4px 18px rgba(0,0,0,.1);
+}
+
+h1{
+    color:#0066ff;
+    text-align:center;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+}
+
+.balance{
+    background:#f0f5ff;
+    padding:18px;
+    border-radius:10px;
+    text-align:center;
+    margin:20px 0;
+}
+
+.balance strong{
+    display:block;
+    font-size:26px;
+    color:#0066ff;
+    margin-top:5px;
+}
+
+label{
+    display:block;
+    margin-top:18px;
+    font-weight:bold;
+}
+
+.amount-options{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-top:10px;
+}
+
+.amount-options button{
+    padding:13px;
+    border:2px solid #0066ff;
+    background:white;
+    color:#0066ff;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.amount-options button:hover{
+    background:#0066ff;
+    color:white;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    margin-top:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.deposit-button{
+    width:100%;
+    padding:15px;
+    margin-top:22px;
+    border:none;
+    border-radius:9px;
+    background:#ffd21c;
+    color:#111;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.deposit-button:hover{
+    background:#ffca00;
+}
+
+.deposit-button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+#message{
+    text-align:center;
+    margin-top:18px;
+    font-weight:bold;
+}
+
+.note{
+    margin-top:20px;
+    padding:14px;
+    background:#fff8dc;
+    border-radius:8px;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.minimum{
+    text-align:center;
+    color:#0066ff;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+@media(max-width:500px){
+
+    .container{
+        margin-top:20px;
+    }
+
+    .box{
+        padding:22px;
+    }
+}
+</style></head><body><header><h2>SmartMinute</h2><button class="back" onclick="goBack()">
+← Dashboard
+</button></header><div class="container"><div class="box"><h1>💳 Deposit</h1><p class="subtitle">
+Add money to your SmartMinute account
+</p><div class="balance">Current Balance
+
+<strong>KSh 0.00</strong>
+
+</div><form id="depositForm"><label>
+Deposit Amount
+</label><div class="amount-options"><button type="button" onclick="setAmount(99)">
+KSh 99
+</button><button type="button" onclick="setAmount(100)">
+KSh 100
+</button><button type="button" onclick="setAmount(200)">
+KSh 200
+</button><button type="button" onclick="setAmount(500)">
+KSh 500
+</button></div><p class="minimum">
+Minimum deposit: KSh 99
+</p><input
+id="amount"
+type="number"
+min="99"
+placeholder="Or enter your own amount"
+required
+
+«»
+
+<label for="phone">
+M-Pesa Phone Number
+</label><input
+id="phone"
+type="tel"
+placeholder="07XXXXXXXX"
+required
+
+«»
+
+<button
+id="depositButton"
+class="deposit-button"
+type="submit"
+
+«»
+
+💳 Continue Deposit
+</button>
+
+</form><p id="message"></p><div class="note"><strong>Important:</strong><br>
+
+Your money will only be deposited after the payment is successfully confirmed.
+
+The M-Pesa payment connection will be connected after we successfully test this deposit request.
+
+</div></div></div><script>
+
+/*
+==================================================
+SMARTMINUTE DEPOSIT
+==================================================
+*/
+
+const token = localStorage.getItem("token");
+
+if(!token){
+
+    window.location.href = "login.html";
+
+}
+
+
+/*
+==================================================
+BACKEND URL
+==================================================
+*/
+
+const API_URL = "https://smartminutes-backend.onrender.com";
+
+
+/*
+==================================================
+SELECT AMOUNT
+==================================================
+*/
+
+function setAmount(amount){
+
+    document.getElementById("amount").value = amount;
+
+    document.getElementById("message").textContent = "";
+
+}
+
+
+/*
+==================================================
+DEPOSIT FORM
+==================================================
+*/
+
+const form = document.getElementById("depositForm");
+
+const message = document.getElementById("message");
+
+const depositButton =
+    document.getElementById("depositButton");
+
+
+form.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+
+    const amount =
+        Number(document.getElementById("amount").value);
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+
+    /*
+    ==============================================
+    MINIMUM DEPOSIT
+    ==============================================
+    */
+
+    if(amount < 99){
+
+        message.textContent =
+        "Minimum deposit is KSh 99.";
+
+        message.style.color = "red";
+
+        return;
+
+    }
+
+
+    /*
+    ==============================================
+    PHONE CHECK
+    ==============================================
+    */
+
+    if(!/^07\d{8}$/.test(phone)){
+
+        message.textContent =
+        "Please enter a valid M-Pesa number, e.g. 0712345678.";
+
+        message.style.color = "red";
+
+        return;
+
+    }
+
+
+    /*
+    ==============================================
+    SHOW LOADING
+    ==============================================
+    */
+
+    depositButton.disabled = true;
+
+    depositButton.textContent = "Processing...";
+
+    message.textContent =
+        "Sending deposit request...";
+
+    message.style.color = "#0066ff";
+
+
+    /*
+    ==============================================
+    SEND REQUEST TO EXPRESS BACKEND
+    ==============================================
+    */
+
+    try{
+
+        const response = await fetch(
+            `${API_URL}/api/deposit`,
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+
+                    "Authorization":
+                        `Bearer ${token}`
+                },
+
+                body:JSON.stringify({
+
+                    amount:amount,
+
+                    phone:phone
+
+                })
+
+            }
+        );
+
+
+        /*
+        ==========================================
+        READ BACKEND RESPONSE
+        ==========================================
+        */
+
+        const data = await response.json();
+
+
+        /*
+        ==========================================
+        SUCCESS
+        ==========================================
+        */
+
+        if(response.ok){
+
+            message.textContent =
+                data.message ||
+                "Deposit request submitted successfully. 💳";
+
+            message.style.color = "green";
+
+
+            /*
+            Clear the form after successful request
+            */
+
+            document.getElementById("amount").value = "";
+
+            document.getElementById("phone").value = "";
+
+
+        }else{
+
+            /*
+            ======================================
+            BACKEND ERROR
+            ======================================
+            */
+
+            message.textContent =
+                data.message ||
+                "Deposit request failed.";
+
+            message.style.color = "red";
+
+        }
+
+
+    }catch(error){
+
+        console.error("DEPOSIT ERROR:",error);
+
+
+        message.textContent =
+            "Unable to connect to the SmartMinute server. Please try again.";
+
+        message.style.color = "red";
+
+    }
+
+
+    /*
+    ==============================================
+    ENABLE BUTTON AGAIN
+    ==============================================
+    */
+
+    depositButton.disabled = false;
+
+    depositButton.textContent =
+        "💳 Continue Deposit";
+
+});
+
+
+/*
+==================================================
+BACK TO DASHBOARD
+==================================================
+*/
+
+function goBack(){
+
+    window.location.href = "dashboard.html";
+
+}
+
+</script></body>
+</html>
