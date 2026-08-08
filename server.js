@@ -1,23 +1,39 @@
 const express = require("express");
 const cors = require("cors");
+const db = require("./config/db");
 const authRoutes = require("./routes/auth");
 
 const app = express();
 
-// Enable CORS
 app.use(cors());
-
-// Parse JSON requests
 app.use(express.json());
 
-// Test route
 app.get("/", (req, res) => {
   res.json({
     message: "SmartMinute Backend is Running!"
   });
 });
 
-// Auth routes
+// Database test
+app.get("/test-db", async (req, res) => {
+  try {
+    const result = await db.query("SELECT NOW()");
+
+    res.json({
+      message: "Database connection successful",
+      time: result.rows[0].now
+    });
+
+  } catch (error) {
+    console.error("DATABASE TEST ERROR:", error);
+
+    res.status(500).json({
+      message: "Database connection failed",
+      error: error.message
+    });
+  }
+});
+
 app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 3000;
