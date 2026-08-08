@@ -2,14 +2,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-exports.registerUser = async (req, res) => {
+exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
-    console.log("Registration request:", {
-      name,
-      email
-    });
 
     const existing = await User.findUserByEmail(email);
 
@@ -33,56 +28,64 @@ exports.registerUser = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("REGISTRATION ERROR:", err);
+    console.error("REGISTER ERROR:", err);
 
     res.status(500).json({
-      message: "Server error",
-      error: err.message
+      message: "Server error"
     });
   }
 };
 
 
-exports.loginUser = async (req, res) => {
+exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await User.findUserByEmail(email);
 
     if (!user) {
-      return res.status(400).json({
+      return res.status(401).json({
         message: "Invalid email or password"
       });
     }
 
-    const validPassword = await bcrypt.compare(
+    const passwordMatch = await bcrypt.compare(
       password,
       user.password
     );
 
-    if (!validPassword) {
-      return res.status(400).json({
+    if (!passwordMatch) {
+      return res.status(401).json({
         message: "Invalid email or password"
       });
     }
 
     const token = jwt.sign(
-      { id: user.id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      {
+        id: user.id,
+        email: user.email
+      },
+      process.env.JWT_KEY,
+      {
+        expiresIn: "7d"
+      }
     );
 
     res.json({
       message: "Login successful",
-      token
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
     });
 
   } catch (err) {
     console.error("LOGIN ERROR:", err);
 
     res.status(500).json({
-      message: "Server error",
-      error: err.message
+      message: "Server error"
     });
   }
 };
