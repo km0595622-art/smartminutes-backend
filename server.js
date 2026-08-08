@@ -17,6 +17,12 @@ app.get("/", (req, res) => {
 // Database test
 app.get("/test-db", async (req, res) => {
   try {
+    if (!process.env.DATABASE_URL) {
+      return res.status(500).json({
+        message: "DATABASE_URL is missing from Render environment variables"
+      });
+    }
+
     const result = await db.query("SELECT NOW()");
 
     res.json({
@@ -29,11 +35,14 @@ app.get("/test-db", async (req, res) => {
 
     res.status(500).json({
       message: "Database connection failed",
-      error: error.message
+      error: error.message || "No error message",
+      code: error.code || "No error code",
+      name: error.name || "Unknown error"
     });
   }
 });
 
+// Authentication routes
 app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 3000;
