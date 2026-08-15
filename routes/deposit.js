@@ -1,19 +1,13 @@
 const express = require("express");
-
-const {
-    createDeposit,
-    getDeposit
-} = require("../controllers/depositController");
-
 const router = express.Router();
 
+const depositController = require("../controllers/depositController");
+const authenticateToken = require("../middleware/authMiddleware");
 
-// Create a deposit
-router.post("/deposit", createDeposit);
-
-
-// Get a deposit
-router.get("/deposit/:id", getDeposit);
-
+router.post(
+  "/deposit",
+  authenticateToken,
+  depositController.createDeposit
+);
 
 module.exports = router;

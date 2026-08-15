@@ -1,44 +1,125 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const db = require("../config/db");
+
+
+// ============================================
+// REGISTER USER + CREATE WALLET
+// ============================================
 
 exports.register = async (req, res) => {
+  const client = await db.connect();
+
   try {
     const { name, email, password } = req.body;
 
+    // Basic validation
+    if (!name || !email || !password) {
+      client.release();
+
+      return res.status(400).json({
+        message: "Name, email and password are required"
+      });
+    }
+
+    // Check whether email already exists
     const existing = await User.findUserByEmail(email);
 
     if (existing) {
+      client.release();
+
       return res.status(400).json({
         message: "Email already exists"
       });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.createUser(
-      name,
-      email,
-      hashedPassword
+    // Start transaction
+    await client.query("BEGIN");
+
+    // Create user
+    const userResult = await client.query(
+      `
+      INSERT INTO users
+      (
+        name,
+        email,
+        password
+      )
+      VALUES ($1, $2, $3)
+      RETURNING
+        id,
+        name,
+        email,
+        trading_unlocked,
+        unlock_fee_paid,
+        unlock_paid_at;
+      `,
+      [
+        name,
+        email,
+        hashedPassword
+      ]
     );
 
-    res.status(201).json({
+    const user = userResult.rows[0];
+
+    // Create wallet
+    await client.query(
+      `
+      INSERT INTO wallets
+      (
+        user_id,
+        currency,
+        balance,
+        withdrawable_balance,
+        locked_balance
+      )
+      VALUES ($1, 'KES', 0.00, 0.00, 0.00);
+      `,
+      [user.id]
+    );
+
+    // Everything succeeded
+    await client.query("COMMIT");
+
+    client.release();
+
+    return res.status(201).json({
       message: "Account created successfully",
       user
     });
 
   } catch (err) {
+
+    // Roll back if anything failed
+    try {
+      await client.query("ROLLBACK");
+    } catch (rollbackError) {
+      console.error("ROLLBACK ERROR:", rollbackError);
+    }
+
+    client.release();
+
     console.error("REGISTER ERROR:", err);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Server error"
     });
   }
 };
 
 
+// ============================================
+// LOGIN
+// ============================================
+
 exports.login = async (req, res) => {
   try {
+
     const { email, password } = req.body;
 
     const user = await User.findUserByEmail(email);
@@ -82,6 +163,7 @@ exports.login = async (req, res) => {
     });
 
   } catch (err) {
+
     console.error("LOGIN ERROR:", err);
 
     res.status(500).json({

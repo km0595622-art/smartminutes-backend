@@ -1,27 +1,47 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const db = require("./config/db");
 
 const authRoutes = require("./routes/auth");
 const depositRoutes = require("./routes/deposit");
+const taskRoutes = require("./routes/tasks");
+const walletRoutes = require("./routes/wallet");
+const paymentWebhookRoutes = require("./routes/paymentWebhook");
 
 const app = express();
 
 
-// Middleware
+// ============================================
+// MIDDLEWARE
+// ============================================
+
 app.use(cors());
 app.use(express.json());
 
 
-// Home
+// ============================================
+// SERVE WEBSITE FILES
+// ============================================
+
+app.use(express.static(path.join(__dirname, "public")));
+
+
+// ============================================
+// HOME
+// ============================================
+
 app.get("/", (req, res) => {
-    res.json({
-        message: "SmartMinute Backend is Running!"
-    });
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 
-// Database test
+// ============================================
+// DATABASE TEST
+// ============================================
+
 app.get("/test-db", async (req, res) => {
 
     try {
@@ -47,19 +67,58 @@ app.get("/test-db", async (req, res) => {
 });
 
 
-// Authentication routes
+// ============================================
+// AUTHENTICATION
+// ============================================
+
 app.use("/api/auth", authRoutes);
 
 
-// Deposit routes
+// ============================================
+// DEPOSITS
+// ============================================
+
 app.use("/api", depositRoutes);
 
 
-// Start server
+// ============================================
+// TASKS
+// ============================================
+
+app.use("/api", taskRoutes);
+
+
+// ============================================
+// WALLET
+// ============================================
+
+app.use("/api/wallet", walletRoutes);
+app.use("/api", paymentWebhookRoutes);
+
+
+// ============================================
+// 404 HANDLER
+// ============================================
+
+app.use((req, res) => {
+
+    res.status(404).json({
+        message: "Route not found."
+    });
+
+});
+
+
+// ============================================
+// START SERVER
+// ============================================
+
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
 
-    console.log(`Server running on port ${PORT}`);
+    console.log(
+        `SmartMinute server running on port ${PORT}`
+    );
 
 });
