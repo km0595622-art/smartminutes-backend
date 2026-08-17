@@ -103,7 +103,7 @@ app.use("/api", paymentWebhookRoutes);
 // WITHDRAWALS
 // ============================================
 
-app.use("/api", withdrawalRoutes);
+app.use("/api/withdrawal", withdrawalRoutes);
 
 // ============================================
 // ADMIN
