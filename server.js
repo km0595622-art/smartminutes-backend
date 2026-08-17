@@ -11,6 +11,7 @@ const taskRoutes = require("./routes/tasks");
 const walletRoutes = require("./routes/wallet");
 const paymentWebhookRoutes = require("./routes/paymentWebhook");
 const withdrawalRoutes = require("./routes/withdrawal");
+const adminRoutes = require("./routes/admin");
 
 const app = express();
 
@@ -101,6 +102,12 @@ app.use("/api", paymentWebhookRoutes);
 // ============================================
 
 app.use("/api", withdrawalRoutes);
+
+// ============================================
+// ADMIN
+// ============================================
+
+app.use("/api/admin", adminRoutes);
 
 
 // ============================================

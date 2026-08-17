@@ -344,6 +344,7 @@ exports.login = async (req, res) => {
                 name,
                 email,
                 password,
+                role,
                 trading_unlocked,
                 unlock_fee_paid,
                 unlock_paid_at
@@ -576,7 +577,8 @@ exports.login = async (req, res) => {
         const token = jwt.sign(
             {
                 id: user.id,
-                email: user.email
+                email: user.email,
+                role: user.role
             },
             process.env.JWT_KEY,
             {
