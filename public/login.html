@@ -7,108 +7,357 @@
 <title>SmartMinute Login</title>
 
 <style>
-body{
-font-family:Arial,sans-serif;
-background:#f4f6f9;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
+*{
+    box-sizing:border-box;
 }
 
-.box{
-background:white;
-padding:30px;
-border-radius:10px;
-width:320px;
-box-shadow:0 0 15px rgba(0,0,0,.1);
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#020914,#071a35 55%,#15100a);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    color:#172033;
+}
+
+.container{
+    width:100%;
+    max-width:410px;
+}
+
+/* GOLD MELTING CLOCK LOGO */
+
+.brand{
+    text-align:center;
+    color:#f3c24b;
+    margin-bottom:22px;
+}
+
+.logo{
+    width:78px;
+    height:78px;
+    margin:0 auto 10px;
+    position:relative;
+    border:4px solid #d9a52e;
+    border-radius:50%;
+    background:radial-gradient(circle,#17130a,#07101f 70%);
+    box-shadow:
+        0 0 25px rgba(218,165,46,.35),
+        inset 0 0 18px rgba(218,165,46,.12);
+}
+
+/* clock hands */
+
+.logo:before{
+    content:"";
+    position:absolute;
+    width:4px;
+    height:25px;
+    background:#f0c34f;
+    left:50%;
+    top:13px;
+    transform:translateX(-50%);
+    border-radius:4px;
+}
+
+.logo:after{
+    content:"";
+    position:absolute;
+    width:22px;
+    height:4px;
+    background:#f0c34f;
+    left:50%;
+    top:37px;
+    transform:rotate(35deg);
+    transform-origin:left center;
+    border-radius:4px;
+}
+
+/* melting gold drops */
+
+.gold-drop{
+    position:absolute;
+    background:linear-gradient(#f6d15b,#b77b12);
+    border-radius:0 0 12px 12px;
+    box-shadow:0 3px 8px rgba(218,165,46,.3);
+}
+
+.drop1{
+    width:9px;
+    height:20px;
+    left:13px;
+    bottom:-14px;
+}
+
+.drop2{
+    width:12px;
+    height:29px;
+    left:31px;
+    bottom:-23px;
+}
+
+.drop3{
+    width:8px;
+    height:17px;
+    right:19px;
+    bottom:-12px;
+}
+
+.brand h1{
+    margin:15px 0 0;
+    font-size:32px;
+    font-weight:800;
+    color:#e8b83f;
+    text-shadow:0 2px 10px rgba(0,0,0,.4);
+}
+
+.tagline{
+    margin:7px 0 0;
+    font-size:13px;
+    letter-spacing:4px;
+    font-weight:bold;
+    color:#d9a52e;
+}
+
+/* CARD */
+
+.card{
+    background:#fff;
+    border-radius:20px;
+    padding:30px 25px;
+    box-shadow:0 20px 50px rgba(0,0,0,.4);
 }
 
 h2{
-text-align:center;
-margin-bottom:20px;
+    text-align:center;
+    margin:0;
+    color:#111d31;
+    font-size:27px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#687386;
+    font-size:14px;
+    margin:8px 0 24px;
+}
+
+.gold-line{
+    width:48px;
+    height:3px;
+    background:#d5a52e;
+    margin:0 auto 22px;
+    border-radius:5px;
+}
+
+label{
+    display:block;
+    margin-top:14px;
+    margin-bottom:6px;
+    font-size:14px;
+    font-weight:bold;
+    color:#263247;
 }
 
 input{
-width:100%;
-padding:12px;
-margin:10px 0;
-border:1px solid #ccc;
-border-radius:6px;
-box-sizing:border-box;
+    width:100%;
+    padding:14px;
+    border:1px solid #d4dae3;
+    border-radius:9px;
+    font-size:15px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#d1a02c;
+    box-shadow:0 0 0 3px rgba(209,160,44,.12);
 }
 
 button{
-width:100%;
-padding:12px;
-background:#0066ff;
-color:white;
-border:none;
-border-radius:6px;
-font-size:16px;
-cursor:pointer;
+    width:100%;
+    margin-top:23px;
+    padding:14px;
+    background:#071a31;
+    color:#e8b83f;
+    border:1px solid #b88a24;
+    border-radius:9px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 button:hover{
-background:#004ecc;
+    background:#0d294b;
 }
 
 button:disabled{
-background:#999;
-cursor:not-allowed;
-}
-
-p{
-text-align:center;
-margin-top:15px;
+    background:#888;
+    color:white;
+    cursor:not-allowed;
 }
 
 #message{
-font-weight:bold;
+    text-align:center;
+    min-height:20px;
+    margin:15px 0 0;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.register{
+    text-align:center;
+    margin-top:20px;
+    color:#687386;
+    font-size:14px;
+}
+
+.register a{
+    color:#b17f18;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+.footer{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    margin-top:22px;
+    color:#c7cbd3;
+    text-align:center;
+    font-size:11px;
+}
+
+.footer div{
+    flex:1;
+}
+
+.footer strong{
+    display:block;
+    color:#e6b63e;
+    margin-bottom:4px;
+    font-size:12px;
+}
+
+@media(max-width:420px){
+
+    body{
+        padding:15px;
+    }
+
+    .brand h1{
+        font-size:28px;
+    }
+
+    .card{
+        padding:25px 20px;
+    }
+
+    h2{
+        font-size:24px;
+    }
 }
 </style>
-
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
 
-<h2>Login</h2>
+    <div class="brand">
 
-<form id="loginForm">
+        <div class="logo">
+            <span class="gold-drop drop1"></span>
+            <span class="gold-drop drop2"></span>
+            <span class="gold-drop drop3"></span>
+        </div>
 
-<input
-id="email"
-type="email"
-placeholder="Email"
-required
->
+        <h1>SmartMinute</h1>
 
-<input
-id="password"
-type="password"
-placeholder="Password"
-required
->
+        <div class="tagline">
+            TIME IS MONEY
+        </div>
 
-<button id="loginButton" type="submit">
-Login
-</button>
+    </div>
 
-<p id="message"></p>
+    <div class="card">
 
-</form>
+        <h2>Welcome Back</h2>
 
-<p>
-Don't have an account?
-<a href="register.html">Register</a>
-</p>
+        <div class="subtitle">
+            Login to your SmartMinute account
+        </div>
+
+        <div class="gold-line"></div>
+
+        <form id="loginForm">
+
+            <label for="email">Email</label>
+
+            <input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password">Password</label>
+
+            <input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button id="loginButton" type="submit">
+                LOGIN
+            </button>
+
+            <p id="message"></p>
+
+        </form>
+
+        <div class="register">
+            Don't have an account?
+            <a href="register.html">Create Account</a>
+        </div>
+
+    </div>
+
+    <div class="footer">
+
+        <div>
+            <strong>SECURE</strong>
+            Protected
+        </div>
+
+        <div>
+            <strong>FAST</strong>
+            Simple
+        </div>
+
+        <div>
+            <strong>SMART</strong>
+            Powerful
+        </div>
+
+        <div>
+            <strong>TIME</strong>
+            Matters
+        </div>
+
+    </div>
 
 </div>
 
 <script>
+
+const API_BASE = window.location.origin;
 
 const form = document.getElementById("loginForm");
 const message = document.getElementById("message");
@@ -116,60 +365,81 @@ const loginButton = document.getElementById("loginButton");
 
 form.addEventListener("submit", async function(e){
 
-e.preventDefault();
+    e.preventDefault();
 
-const email = document.getElementById("email").value.trim();
-const password = document.getElementById("password").value;
+    const email =
+        document.getElementById("email").value.trim();
 
-message.textContent = "Connecting to SmartMinute...";
-loginButton.disabled = true;
+    const password =
+        document.getElementById("password").value;
 
-try{
+    message.textContent =
+        "Connecting to SmartMinute...";
 
-const response = await fetch(
-"https://smartminutes-backend.onrender.com/api/auth/login",
-{
-method:"POST",
+    loginButton.disabled = true;
 
-headers:{
-"Content-Type":"application/json"
-},
+    try{
 
-body:JSON.stringify({
-email:email,
-password:password
-})
-}
-);
+        const response = await fetch(
+            API_BASE + "/api/auth/login",
+            {
+                method:"POST",
 
-const data = await response.json();
+                headers:{
+                    "Content-Type":"application/json"
+                },
 
-if(response.ok){
+                body:JSON.stringify({
+                    email:email,
+                    password:password
+                })
+            }
+        );
 
-localStorage.setItem("token", data.token);
+        const data = await response.json();
 
-message.textContent =
-"Login successful! 🎉 Welcome " + data.user.name;
+        if(response.ok){
 
-}else{
+            localStorage.setItem(
+                "token",
+                data.token
+            );
 
-message.textContent =
-"Login failed: " + (data.message || "Invalid details");
+            localStorage.setItem(
+                "user",
+                JSON.stringify(data.user)
+            );
 
-}
+            message.textContent =
+                "Login successful! 🎉";
 
-}catch(error){
+            setTimeout(function(){
 
-console.error("LOGIN ERROR:",error);
+                window.location.href =
+                    "dashboard.html";
 
-message.textContent =
-"Cannot connect to SmartMinute server.";
+            },800);
 
-}finally{
+        }else{
 
-loginButton.disabled = false;
+            message.textContent =
+                "Login failed: " +
+                (data.message || "Invalid details");
 
-}
+        }
+
+    }catch(error){
+
+        console.error("LOGIN ERROR:",error);
+
+        message.textContent =
+            "Cannot connect to SmartMinute server.";
+
+    }finally{
+
+        loginButton.disabled = false;
+
+    }
 
 });
 

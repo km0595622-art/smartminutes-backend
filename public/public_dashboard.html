@@ -3,96 +3,905 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>SmartMinute Dashboard</title>
 
 <style>
-body{
-font-family:Arial,sans-serif;
-background:#f5f5f5;
-margin:0;
+*{
+    box-sizing:border-box;
 }
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f5f7;
+    color:#172033;
+}
+
+/* HEADER */
 
 header{
-background:#0066ff;
-color:#fff;
-padding:20px;
-text-align:center;
+    background:#020c20;
+    color:white;
+    padding:16px 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky;
+    top:0;
+    z-index:10;
+    border-bottom:2px solid #d9a52e;
+    box-shadow:0 3px 15px rgba(0,0,0,.2);
 }
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.mini-clock{
+    width:48px;
+    height:48px;
+    border:3px solid #e5b63f;
+    border-radius:50%;
+    position:relative;
+    background:#071326;
+}
+
+.mini-clock:before{
+    content:"";
+    position:absolute;
+    width:3px;
+    height:14px;
+    background:#e5b63f;
+    left:50%;
+    top:7px;
+    transform:translateX(-50%);
+    border-radius:3px;
+}
+
+.mini-clock:after{
+    content:"";
+    position:absolute;
+    width:13px;
+    height:3px;
+    background:#e5b63f;
+    left:50%;
+    top:22px;
+    transform:rotate(35deg);
+    transform-origin:left center;
+    border-radius:3px;
+}
+
+.brand-name{
+    font-size:24px;
+    font-weight:800;
+    color:#e8b83f;
+}
+
+.brand-tag{
+    color:#e2b63e;
+    font-size:10px;
+    letter-spacing:3px;
+    margin-top:3px;
+}
+
+.logout{
+    border:1px solid #c79626;
+    background:transparent;
+    color:#e5b63f;
+    padding:9px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* MAIN */
 
 .container{
-padding:20px;
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+    padding:24px;
 }
 
-.card{
-background:#fff;
-margin-bottom:20px;
-padding:20px;
-border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,.1);
+.welcome{
+    margin-bottom:20px;
+}
+
+.welcome h1{
+    margin:0;
+    font-size:27px;
+}
+
+.welcome p{
+    margin:7px 0;
+    color:#697383;
+}
+
+/* BALANCE AREA */
+
+.balance-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.balance-card{
+    background:#020f28;
+    color:white;
+    padding:27px;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.18);
+    position:relative;
+    overflow:hidden;
+}
+
+.balance-card:after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    border:1px solid rgba(229,182,63,.08);
+    border-radius:50%;
+    right:-130px;
+    bottom:-130px;
+}
+
+.balance-label{
+    color:#d1d7df;
+    font-size:14px;
+    letter-spacing:.5px;
 }
 
 .balance{
-font-size:32px;
-color:#0066ff;
-font-weight:bold;
+    font-size:38px;
+    font-weight:bold;
+    color:white;
+    margin:10px 0 22px;
 }
 
-.btn{
-display:inline-block;
-padding:12px 20px;
-background:#0066ff;
-color:#fff;
-text-decoration:none;
-border-radius:8px;
-margin:8px;
+.deposit{
+    display:inline-block;
+    padding:13px 28px;
+    border-radius:9px;
+    background:#e5b63f;
+    color:#071326;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.withdrawable{
+    border-left:1px solid rgba(229,182,63,.4);
+    padding:20px 25px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.withdrawable-label{
+    color:#e5b63f;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.withdrawable-amount{
+    color:#e5b63f;
+    font-size:32px;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.withdrawable-note{
+    color:#c5ccd6;
+    font-size:13px;
+    line-height:1.5;
+    margin-top:10px;
+}
+
+/* ACCOUNT OVERVIEW */
+
+.overview{
+    background:white;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.overview h2{
+    margin:0 0 14px;
+    font-size:20px;
+}
+
+.overview-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #edf0f3;
+}
+
+.overview-row:last-child{
+    border-bottom:none;
+}
+
+.overview-label{
+    color:#4e5868;
+}
+
+.overview-value{
+    font-weight:bold;
+}
+
+/* HUB */
+
+.section-title{
+    margin:27px 0 13px;
+    font-size:20px;
 }
 
 .menu{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-gap:15px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
 }
 
 .item{
-background:#fff;
-padding:20px;
-text-align:center;
-border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,.1);
+    background:white;
+    padding:20px 12px;
+    text-align:center;
+    border-radius:14px;
+    box-shadow:0 3px 12px rgba(0,0,0,.07);
+    cursor:pointer;
+    transition:.2s;
+    border:1px solid transparent;
+}
+
+.item:hover{
+    transform:translateY(-2px);
+    border-color:#e2b23b;
+}
+
+.icon{
+    font-size:29px;
+    margin-bottom:9px;
+}
+
+.item strong{
+    display:block;
+    font-size:15px;
+}
+
+.item span{
+    display:block;
+    color:#788292;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.badge{
+    display:inline-block;
+    margin-left:5px;
+    padding:2px 5px;
+    border-radius:4px;
+    background:#182238;
+    color:#e5b63f;
+    font-size:9px;
+}
+
+/* RECENT ACTIVITY */
+
+.activity{
+    background:#020f28;
+    color:white;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 5px 18px rgba(0,0,0,.15);
+    margin-top:20px;
+}
+
+.activity-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.activity-title h2{
+    margin:0;
+    color:white;
+    font-size:19px;
+}
+
+.activity-title span{
+    color:#e5b63f;
+    font-size:13px;
+}
+
+.activity-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px;
+    margin-top:8px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:10px;
+    background:rgba(255,255,255,.025);
+}
+
+.activity-name{
+    font-weight:bold;
+}
+
+.activity-time{
+    color:#aeb7c5;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.activity-amount{
+    color:#e5b63f;
+    font-weight:bold;
+}
+
+/* TIME IS MONEY */
+
+.time-box{
+    margin-top:18px;
+    padding:18px;
+    border:1px solid #d9a52e;
+    border-radius:12px;
+    background:#071a35;
+}
+
+.time-box strong{
+    color:#e5b63f;
+    font-size:15px;
+}
+
+.time-box p{
+    margin:7px 0 0;
+    color:#d4d9e1;
+    font-size:13px;
+    line-height:1.5;
+}
+
+/* SECURITY */
+
+.security{
+    margin-top:20px;
+    background:#fffdf7;
+    border:1px solid #ead9a5;
+    border-radius:12px;
+    padding:17px;
+    color:#4d4328;
+}
+
+.security strong{
+    color:#1c2636;
+}
+
+/* FOOTER */
+
+footer{
+    background:#020c20;
+    color:#c5cad3;
+    border-top:2px solid #d9a52e;
+    text-align:center;
+    padding:22px;
+    font-size:12px;
+    margin-top:30px;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+    .balance-grid{
+        grid-template-columns:1fr;
+    }
+
+    .withdrawable{
+        border-left:none;
+        border-top:1px solid rgba(229,182,63,.35);
+        padding:18px 0 0;
+    }
+
+    .menu{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:450px){
+
+    header{
+        padding:12px 14px;
+    }
+
+    .mini-clock{
+        width:40px;
+        height:40px;
+    }
+
+    .brand-name{
+        font-size:19px;
+    }
+
+    .brand-tag{
+        font-size:8px;
+        letter-spacing:2px;
+    }
+
+    .logout{
+        padding:7px 9px;
+        font-size:12px;
+    }
+
+    .container{
+        padding:16px;
+    }
+
+    .welcome h1{
+        font-size:22px;
+    }
+
+    .balance{
+        font-size:31px;
+    }
+
+    .withdrawable-amount{
+        font-size:28px;
+    }
+
+    .menu{
+        gap:10px;
+    }
+
+    .item{
+        padding:17px 8px;
+    }
+
 }
 </style>
-
 </head>
+
 <body>
 
 <header>
-<h2>SmartMinute Dashboard</h2>
+
+    <div class="brand">
+
+        <div class="mini-clock"></div>
+
+        <div>
+            <div class="brand-name">
+                SmartMinute
+            </div>
+
+            <div class="brand-tag">
+                TIME IS MONEY
+            </div>
+        </div>
+
+    </div>
+
+    <button class="logout" onclick="logout()">
+        Logout
+    </button>
+
 </header>
+
 
 <div class="container">
 
-<div class="card">
-<p>Wallet Balance</p>
-<div class="balance">KSh 0.00</div>
+    <div class="welcome">
 
-<a class="btn" href="#">Deposit</a>
-<a class="btn" href="#">Withdraw</a>
+        <h1 id="welcomeName">
+            Welcome to SmartMinute
+        </h1>
+
+        <p>
+            Manage your account and make every minute count.
+        </p>
+
+    </div>
+
+
+    <div class="balance-grid">
+
+        <div class="balance-card">
+
+            <div class="balance-label">
+                WALLET BALANCE
+            </div>
+
+            <div class="balance">
+                KSh 0.00
+            </div>
+
+            <a
+                class="deposit"
+                href="#"
+                onclick="comingSoon('Deposit')"
+            >
+                ⊕ &nbsp; Deposit Now
+            </a>
+
+        </div>
+
+
+        <div class="balance-card">
+
+            <div class="withdrawable">
+
+                <div class="withdrawable-label">
+                    WITHDRAWABLE AMOUNT
+                </div>
+
+                <div class="withdrawable-amount">
+                    KSh 2,345.00
+                </div>
+
+                <div class="withdrawable-note">
+                    Your withdrawable amount updates
+                    as you earn.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="overview">
+
+        <h2>
+            Account Overview
+        </h2>
+
+        <div class="overview-row">
+
+            <span class="overview-label">
+                📈 Total Earned
+            </span>
+
+            <span class="overview-value">
+                KSh 0.00
+            </span>
+
+        </div>
+
+        <div class="overview-row">
+
+            <span class="overview-label">
+                💳 Total Deposited
+            </span>
+
+            <span class="overview-value">
+                KSh 0.00
+            </span>
+
+        </div>
+
+        <div class="overview-row">
+
+            <span class="overview-label">
+                🎁 Total Tasks Completed
+            </span>
+
+            <span class="overview-value">
+                0
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <h2 class="section-title">
+        SmartMinute Hub
+    </h2>
+
+
+    <div class="menu">
+
+        <div class="item"
+             onclick="comingSoon('Daily Tasks')">
+
+            <div class="icon">🎯</div>
+
+            <strong>Daily Tasks</strong>
+
+            <span>
+                Complete tasks and earn
+            </span>
+
+        </div>
+
+
+        <div class="item"
+             onclick="comingSoon('Games')">
+
+            <div class="icon">🎮</div>
+
+            <strong>Games</strong>
+
+            <span>
+                Play games and win rewards
+            </span>
+
+        </div>
+
+
+        <div class="item"
+             onclick="comingSoon('Referrals')">
+
+            <div class="icon">👥</div>
+
+            <strong>Referrals</strong>
+
+            <span>
+                Invite friends and earn more
+            </span>
+
+        </div>
+
+
+        <div class="item"
+             onclick="comingSoon('Transactions')">
+
+            <div class="icon">📜</div>
+
+            <strong>Transactions</strong>
+
+            <span>
+                View your transactions
+            </span>
+
+        </div>
+
+
+        <div class="item"
+             onclick="comingSoon('Profile')">
+
+            <div class="icon">👤</div>
+
+            <strong>Profile</strong>
+
+            <span>
+                Manage your account
+            </span>
+
+        </div>
+
+
+        <div class="item"
+             onclick="comingSoon('Trading')">
+
+            <div class="icon">📈</div>
+
+            <strong>
+                Trading
+                <span class="badge">SOON</span>
+            </strong>
+
+            <span>
+                Smart trading platform
+            </span>
+
+        </div>
+
+
+        <div class="item"
+             onclick="comingSoon('Questions')">
+
+            <div class="icon">❓</div>
+
+            <strong>
+                Questions
+                <span class="badge">SOON</span>
+            </strong>
+
+            <span>
+                Test your knowledge
+            </span>
+
+        </div>
+
+
+        <div class="item"
+             onclick="comingSoon('Support')">
+
+            <div class="icon">🎧</div>
+
+            <strong>Support</strong>
+
+            <span>
+                Get help and assistance
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="activity">
+
+        <div class="activity-title">
+
+            <h2>
+                🕐 Recent Activity
+            </h2>
+
+            <span>
+                View all →
+            </span>
+
+        </div>
+
+
+        <div class="activity-row">
+
+            <div>
+
+                <div class="activity-name">
+                    Account Created
+                </div>
+
+                <div class="activity-time">
+                    Welcome to SmartMinute
+                </div>
+
+            </div>
+
+            <div class="activity-amount">
+                KSh 0.00
+            </div>
+
+        </div>
+
+
+        <div class="activity-row">
+
+            <div>
+
+                <div class="activity-name">
+                    Wallet Ready
+                </div>
+
+                <div class="activity-time">
+                    Make your first deposit
+                </div>
+
+            </div>
+
+            <div class="activity-amount">
+                KSh 0.00
+            </div>
+
+        </div>
+
+
+        <div class="time-box">
+
+            <strong>
+                ⏱️ TIME IS MONEY
+            </strong>
+
+            <p>
+                Make the most of every minute.
+                SmartMinute is being built to help
+                you earn, grow and achieve your goals.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="security">
+
+        🛡️
+        <strong> Secure & Trusted</strong>
+
+        <br>
+
+        Your security is our priority.
+        SmartMinute uses secure technology
+        to protect your account.
+
+    </div>
 
 </div>
 
-<div class="menu">
 
-<div class="item">Daily Tasks</div>
+<footer>
 
-<div class="item">Referrals</div>
+    © 2026 SmartMinute. All rights reserved.
+    <br>
+    <strong>Time is Money ⏱️</strong>
 
-<div class="item">Transaction History</div>
+</footer>
 
-<div class="item">Profile</div>
 
-</div>
+<script>
 
-</div>
+/* CHECK LOGIN */
+
+const token =
+    localStorage.getItem("token");
+
+if(!token){
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* DISPLAY USER */
+
+try{
+
+    const savedUser =
+        localStorage.getItem("user");
+
+    if(savedUser){
+
+        const user =
+            JSON.parse(savedUser);
+
+        if(user.name){
+
+            document.getElementById(
+                "welcomeName"
+            ).textContent =
+                "Welcome, " + user.name + " 👋";
+
+        }
+
+    }
+
+}catch(error){
+
+    console.error(
+        "USER DATA ERROR:",
+        error
+    );
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+    localStorage.removeItem("token");
+
+    localStorage.removeItem("user");
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* TEMPORARY FEATURES */
+
+function comingSoon(feature){
+
+    alert(
+        feature +
+        " will be connected as we build SmartMinute."
+    );
+
+}
+
+</script>
 
 </body>
 </html>
