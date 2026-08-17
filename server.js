@@ -12,6 +12,8 @@ const walletRoutes = require("./routes/wallet");
 const paymentWebhookRoutes = require("./routes/paymentWebhook");
 const withdrawalRoutes = require("./routes/withdrawal");
 const adminRoutes = require("./routes/admin");
+const adminKycRoutes = require("./routes/adminKyc");
+const kycRoutes = require("./routes/kyc");
 
 const app = express();
 
@@ -108,6 +110,13 @@ app.use("/api", withdrawalRoutes);
 // ============================================
 
 app.use("/api/admin", adminRoutes);
+app.use("/api/admin/kyc", adminKycRoutes);
+
+// ============================================
+// KYC
+// ============================================
+
+app.use("/api/kyc", kycRoutes);
 
 
 // ============================================
