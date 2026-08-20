@@ -844,4 +844,279 @@ router.post(
 );
 
 
+// ============================================
+// ADMIN — APPROVE TASK ATTEMPT
+// ============================================
+
+router.post(
+    "/tasks/attempts/:id/approve",
+    authenticateToken,
+    requireAdmin,
+    async (req, res) => {
+
+        const client = await db.connect();
+
+        try {
+
+            const attemptId = Number(req.params.id);
+
+            if (!Number.isInteger(attemptId) || attemptId <= 0) {
+
+                return res.status(400).json({
+                    message: "Invalid task attempt ID."
+                });
+
+            }
+
+            await client.query("BEGIN");
+
+            // --------------------------------------------
+            // LOCK SUBMITTED ATTEMPT
+            // --------------------------------------------
+
+            const attemptResult = await client.query(
+                `
+                SELECT
+                    ta.id,
+                    ta.user_id,
+                    ta.task_id,
+                    ta.status,
+                    t.title,
+                    t.reward
+                FROM task_attempts ta
+                INNER JOIN tasks t
+                    ON t.id = ta.task_id
+                WHERE ta.id = $1
+                FOR UPDATE OF ta
+                `,
+                [attemptId]
+            );
+
+            if (attemptResult.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(404).json({
+                    message: "Task attempt not found."
+                });
+
+            }
+
+            const attempt = attemptResult.rows[0];
+
+            // --------------------------------------------
+            // PREVENT DOUBLE APPROVAL
+            // --------------------------------------------
+
+            if (attempt.status !== "submitted") {
+
+                await client.query("ROLLBACK");
+
+                return res.status(400).json({
+                    message:
+                        `Task attempt is already ${attempt.status}.`,
+                    attempt
+                });
+
+            }
+
+            const reward = Number(attempt.reward);
+
+            if (!Number.isFinite(reward) || reward <= 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(400).json({
+                    message: "Invalid task reward."
+                });
+
+            }
+
+            // --------------------------------------------
+            // LOCK USER WALLET
+            // --------------------------------------------
+
+            const walletResult = await client.query(
+                `
+                SELECT
+                    id,
+                    user_id,
+                    currency,
+                    balance,
+                    withdrawable_balance,
+                    locked_balance
+                FROM wallets
+                WHERE user_id = $1
+                FOR UPDATE
+                `,
+                [attempt.user_id]
+            );
+
+            if (walletResult.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(404).json({
+                    message: "Wallet not found."
+                });
+
+            }
+
+            const wallet = walletResult.rows[0];
+
+            // --------------------------------------------
+            // CREATE APPROVED EARNING
+            // --------------------------------------------
+
+            const earningResult = await client.query(
+                `
+                INSERT INTO earnings
+                (
+                    user_id,
+                    task_id,
+                    task_attempt_id,
+                    amount,
+                    description,
+                    status,
+                    approved_at
+                )
+                VALUES
+                (
+                    $1,
+                    $2,
+                    $3,
+                    $4,
+                    $5,
+                    'approved',
+                    NOW()
+                )
+                RETURNING
+                    id,
+                    user_id,
+                    task_id,
+                    task_attempt_id,
+                    amount,
+                    description,
+                    status,
+                    created_at,
+                    approved_at
+                `,
+                [
+                    attempt.user_id,
+                    attempt.task_id,
+                    attempt.id,
+                    reward,
+                    `Reward for completing task: ${attempt.title}`
+                ]
+            );
+
+            // --------------------------------------------
+            // CREDIT WALLET
+            // --------------------------------------------
+
+            const walletUpdate = await client.query(
+                `
+                UPDATE wallets
+                SET
+                    balance = COALESCE(balance, 0) + $1,
+                    withdrawable_balance =
+                        COALESCE(withdrawable_balance, 0) + $1,
+                    updated_at = NOW()
+                WHERE id = $2
+                RETURNING
+                    id,
+                    user_id,
+                    currency,
+                    balance,
+                    withdrawable_balance,
+                    locked_balance,
+                    updated_at
+                `,
+                [
+                    reward,
+                    wallet.id
+                ]
+            );
+
+            if (walletUpdate.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(400).json({
+                    message: "Unable to credit wallet."
+                });
+
+            }
+
+            // --------------------------------------------
+            // MARK ATTEMPT APPROVED
+            // --------------------------------------------
+
+            const updatedAttempt = await client.query(
+                `
+                UPDATE task_attempts
+                SET
+                    status = 'approved',
+                    verified_at = NOW()
+                WHERE id = $1
+                  AND status = 'submitted'
+                RETURNING
+                    id,
+                    user_id,
+                    task_id,
+                    status,
+                    started_at,
+                    completed_at,
+                    verified_at
+                `,
+                [attemptId]
+            );
+
+            if (updatedAttempt.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(400).json({
+                    message:
+                        "Task attempt could not be approved."
+                });
+
+            }
+
+            await client.query("COMMIT");
+
+            return res.status(200).json({
+                message:
+                    "Task approved and reward credited successfully.",
+                attempt: updatedAttempt.rows[0],
+                earning: earningResult.rows[0],
+                wallet: walletUpdate.rows[0]
+            });
+
+        } catch (error) {
+
+            try {
+                await client.query("ROLLBACK");
+            } catch (_) {}
+
+            console.error(
+                "ADMIN APPROVE TASK ERROR:",
+                error
+            );
+
+            return res.status(500).json({
+                message:
+                    "Unable to approve task attempt."
+            });
+
+        } finally {
+
+            client.release();
+
+        }
+
+    }
+);
+
+
 module.exports = router;
