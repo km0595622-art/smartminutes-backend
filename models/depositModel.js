@@ -168,7 +168,9 @@ async function confirmDeposit(
                 `
                 UPDATE wallets
                 SET
-                    balance = balance + $1,
+                    balance = COALESCE(balance, 0) + $1,
+                    withdrawable_balance =
+                        COALESCE(withdrawable_balance, 0) + $1,
                     updated_at = NOW()
                 WHERE user_id = $2
                 RETURNING

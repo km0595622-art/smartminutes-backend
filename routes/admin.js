@@ -4,6 +4,8 @@ const db = require("../config/db");
 const authenticateToken = require("../middleware/authMiddleware");
 const requireAdmin = require("../middleware/adminMiddleware");
 const depositModel = require("../models/depositModel");
+const { failWithdrawal } = require("../services/withdrawalService");
+const { processWithdrawal } = require("../services/withdrawalProcessor");
 
 const router = express.Router();
 
@@ -390,257 +392,55 @@ router.post(
     requireAdmin,
     async (req, res) => {
 
-        const client = await db.connect();
+        const withdrawalId = req.params.id;
+
+        const provider =
+            req.body?.provider || "manual";
 
         try {
 
-            const withdrawalId = req.params.id;
-
-            const {
-                provider,
-                provider_transaction_id
-            } = req.body;
-
-            if (!provider_transaction_id) {
-
-                return res.status(400).json({
-                    message:
-                        "Provider transaction ID is required."
-                });
-
-            }
-
-            await client.query("BEGIN");
-
-            const withdrawalResult = await client.query(
-                `
-                SELECT
-                    id,
-                    user_id,
-                    amount,
-                    fee,
-                    net_amount,
-                    currency,
-                    status
-                FROM withdrawals
-                WHERE id = $1
-                FOR UPDATE
-                `,
-                [withdrawalId]
+            const result = await processWithdrawal(
+                withdrawalId,
+                provider
             );
 
-            if (withdrawalResult.rows.length === 0) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(404).json({
-                    message: "Withdrawal not found."
-                });
-
-            }
-
-            const withdrawal =
-                withdrawalResult.rows[0];
-
-            if (withdrawal.status !== "pending") {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message:
-                        `Withdrawal is already ${withdrawal.status}.`,
-                    withdrawal
-                });
-
-            }
-
-            const walletResult = await client.query(
-                `
-                SELECT
-                    id,
-                    user_id,
-                    balance,
-                    withdrawable_balance,
-                    locked_balance,
-                    currency
-                FROM wallets
-                WHERE user_id = $1
-                FOR UPDATE
-                `,
-                [withdrawal.user_id]
-            );
-
-            if (walletResult.rows.length === 0) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(404).json({
-                    message: "Wallet not found."
-                });
-
-            }
-
-            const wallet = walletResult.rows[0];
-
-            const amount = Number(withdrawal.amount);
-            const lockedBalance =
-                Number(wallet.locked_balance || 0);
-            const balance =
-                Number(wallet.balance || 0);
-
-            if (
-                !Number.isFinite(amount) ||
-                amount <= 0
-            ) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message: "Invalid withdrawal amount."
-                });
-
-            }
-
-            if (lockedBalance < amount) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message:
-                        "Locked wallet balance is insufficient for this withdrawal.",
-                    locked_balance: lockedBalance,
-                    withdrawal_amount: amount
-                });
-
-            }
-
-            if (balance < amount) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message:
-                        "Wallet balance is insufficient for this withdrawal.",
-                    balance,
-                    withdrawal_amount: amount
-                });
-
-            }
-
-            const updatedWallet = await client.query(
-                `
-                UPDATE wallets
-                SET
-                    balance = balance - $1,
-                    locked_balance = locked_balance - $1,
-                    updated_at = NOW()
-                WHERE id = $2
-                  AND balance >= $1
-                  AND locked_balance >= $1
-                RETURNING
-                    id,
-                    user_id,
-                    currency,
-                    balance,
-                    withdrawable_balance,
-                    locked_balance,
-                    updated_at
-                `,
-                [
-                    amount,
-                    wallet.id
-                ]
-            );
-
-            if (updatedWallet.rows.length === 0) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message:
-                        "Unable to finalize withdrawal funds."
-                });
-
-            }
-
-            const updatedWithdrawal =
-                await client.query(
-                    `
-                    UPDATE withdrawals
-                    SET
-                        status = 'completed',
-                        provider = COALESCE($2, provider),
-                        provider_transaction_id = $3,
-                        processed_at = NOW(),
-                        completed_at = NOW(),
-                        updated_at = NOW(),
-                        failure_reason = NULL
-                    WHERE id = $1
-                      AND status = 'pending'
-                    RETURNING
-                        id,
-                        user_id,
-                        amount,
-                        fee,
-                        net_amount,
-                        currency,
-                        method,
-                        destination,
-                        status,
-                        provider,
-                        provider_transaction_id,
-                        processed_at,
-                        completed_at,
-                        updated_at
-                    `,
-                    [
-                        withdrawalId,
-                        provider || null,
-                        provider_transaction_id
-                    ]
-                );
-
-            if (updatedWithdrawal.rows.length === 0) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message:
-                        "Withdrawal could not be marked completed."
-                });
-
-            }
-
-            await client.query("COMMIT");
-
-            return res.json({
-                message:
-                    "Withdrawal approved successfully.",
-                withdrawal:
-                    updatedWithdrawal.rows[0],
-                wallet:
-                    updatedWallet.rows[0]
-            });
+            return res.json(result);
 
         } catch (error) {
-
-            try {
-                await client.query("ROLLBACK");
-            } catch (_) {}
 
             console.error(
                 "ADMIN APPROVE WITHDRAWAL ERROR:",
                 error
             );
 
+            const message = error.message || "";
+
+            if (
+                message === "Withdrawal not found."
+            ) {
+                return res.status(404).json({
+                    message
+                });
+            }
+
+            if (
+                message.includes("already") ||
+                message.includes("cannot") ||
+                message.includes("required") ||
+                message.includes("Invalid") ||
+                message.includes("insufficient") ||
+                message.includes("Unsupported") ||
+                message.includes("not connected")
+            ) {
+                return res.status(400).json({
+                    message
+                });
+            }
+
             return res.status(500).json({
                 message:
-                    "Unable to approve withdrawal."
+                    "Unable to process withdrawal."
             });
-
-        } finally {
-
-            client.release();
 
         }
 
@@ -649,6 +449,7 @@ router.post(
 
 
 // ============================================
+
 // ADMIN — REJECT WITHDRAWAL
 // ============================================
 
@@ -658,191 +459,69 @@ router.post(
     requireAdmin,
     async (req, res) => {
 
-        const client = await db.connect();
+        const withdrawalId = req.params.id;
+
+        const {
+            failure_reason
+        } = req.body;
+
+        const reason =
+            failure_reason ||
+            "Withdrawal rejected by administrator.";
 
         try {
 
-            const withdrawalId = req.params.id;
-
-            const {
-                failure_reason
-            } = req.body;
-
-            const reason =
-                failure_reason ||
-                "Withdrawal rejected by administrator.";
-
-            await client.query("BEGIN");
-
-            const withdrawalResult = await client.query(
-                `
-                SELECT
-                    id,
-                    user_id,
-                    amount,
-                    status
-                FROM withdrawals
-                WHERE id = $1
-                FOR UPDATE
-                `,
-                [withdrawalId]
+            const result = await failWithdrawal(
+                withdrawalId,
+                reason
             );
-
-            if (withdrawalResult.rows.length === 0) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(404).json({
-                    message: "Withdrawal not found."
-                });
-
-            }
-
-            const withdrawal =
-                withdrawalResult.rows[0];
-
-            if (withdrawal.status !== "pending") {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message:
-                        `Withdrawal is already ${withdrawal.status}.`,
-                    withdrawal
-                });
-
-            }
-
-            const amount = Number(withdrawal.amount);
-
-            if (
-                !Number.isFinite(amount) ||
-                amount <= 0
-            ) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message: "Invalid withdrawal amount."
-                });
-
-            }
-
-            const walletResult = await client.query(
-                `
-                UPDATE wallets
-                SET
-                    withdrawable_balance =
-                        withdrawable_balance + $1,
-                    locked_balance =
-                        locked_balance - $1,
-                    updated_at = NOW()
-                WHERE user_id = $2
-                  AND locked_balance >= $1
-                RETURNING
-                    id,
-                    user_id,
-                    currency,
-                    balance,
-                    withdrawable_balance,
-                    locked_balance,
-                    updated_at
-                `,
-                [
-                    amount,
-                    withdrawal.user_id
-                ]
-            );
-
-            if (walletResult.rows.length === 0) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message:
-                        "Unable to release locked withdrawal funds."
-                });
-
-            }
-
-            const updatedWithdrawal =
-                await client.query(
-                    `
-                    UPDATE withdrawals
-                    SET
-                        status = 'failed',
-                        failure_reason = $2,
-                        processed_at = NOW(),
-                        updated_at = NOW()
-                    WHERE id = $1
-                      AND status = 'pending'
-                    RETURNING
-                        id,
-                        user_id,
-                        amount,
-                        fee,
-                        net_amount,
-                        currency,
-                        method,
-                        destination,
-                        status,
-                        failure_reason,
-                        processed_at,
-                        updated_at
-                    `,
-                    [
-                        withdrawalId,
-                        reason
-                    ]
-                );
-
-            if (updatedWithdrawal.rows.length === 0) {
-
-                await client.query("ROLLBACK");
-
-                return res.status(400).json({
-                    message:
-                        "Withdrawal could not be rejected."
-                });
-
-            }
-
-            await client.query("COMMIT");
 
             return res.json({
                 message:
                     "Withdrawal rejected and funds returned.",
                 withdrawal:
-                    updatedWithdrawal.rows[0],
+                    result.withdrawal,
                 wallet:
-                    walletResult.rows[0]
+                    result.wallet
             });
 
         } catch (error) {
-
-            try {
-                await client.query("ROLLBACK");
-            } catch (_) {}
 
             console.error(
                 "ADMIN REJECT WITHDRAWAL ERROR:",
                 error
             );
 
+            const message = error.message || "";
+
+            if (
+                message === "Withdrawal not found."
+            ) {
+                return res.status(404).json({
+                    message
+                });
+            }
+
+            if (
+                message.includes("already") ||
+                message.includes("Invalid") ||
+                message.includes("insufficient") ||
+                message.includes("cannot be failed")
+            ) {
+                return res.status(400).json({
+                    message
+                });
+            }
+
             return res.status(500).json({
                 message:
                     "Unable to reject withdrawal."
             });
 
-        } finally {
-
-            client.release();
-
         }
 
     }
 );
-
 
 // ============================================
 // ADMIN — APPROVE TASK ATTEMPT

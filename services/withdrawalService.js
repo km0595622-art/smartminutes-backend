@@ -280,6 +280,54 @@ async function completeWithdrawal(
 
 
         // ============================================
+        // PROVIDER TRANSACTION VALIDATION
+        // ============================================
+
+        if (
+            !providerTransactionId ||
+            typeof providerTransactionId !== "string" ||
+            !providerTransactionId.trim()
+        ) {
+
+            throw new Error(
+                "Provider transaction ID is required to complete withdrawal."
+            );
+
+        }
+
+        providerTransactionId =
+            providerTransactionId.trim();
+
+
+        // ============================================
+        // DUPLICATE PROVIDER TRANSACTION PROTECTION
+        // ============================================
+
+        const duplicateProviderTransaction =
+            await client.query(
+                `
+                SELECT id
+                FROM withdrawals
+                WHERE provider_transaction_id = $1
+                  AND id <> $2
+                LIMIT 1
+                `,
+                [
+                    providerTransactionId,
+                    withdrawal.id
+                ]
+            );
+
+        if (duplicateProviderTransaction.rows.length > 0) {
+
+            throw new Error(
+                "Provider transaction ID has already been used."
+            );
+
+        }
+
+
+        // ============================================
         // LOCK WALLET
         // ============================================
 
@@ -698,8 +746,247 @@ async function failWithdrawal(
 }
 
 
+// ============================================
+// ADMIN APPROVE WITHDRAWAL
+// ============================================
+
+async function approveWithdrawal(
+    withdrawalId,
+    provider = null,
+    providerTransactionId
+) {
+
+    const client = await db.connect();
+
+    try {
+
+        await client.query("BEGIN");
+
+        // ============================================
+        // LOCK WITHDRAWAL
+        // ============================================
+
+        const withdrawalResult = await client.query(
+            `
+            SELECT
+                id,
+                user_id,
+                amount,
+                fee,
+                net_amount,
+                currency,
+                method,
+                destination,
+                status,
+                provider,
+                provider_transaction_id
+            FROM withdrawals
+            WHERE id = $1
+            FOR UPDATE
+            `,
+            [withdrawalId]
+        );
+
+        if (withdrawalResult.rows.length === 0) {
+            throw new Error("Withdrawal not found.");
+        }
+
+        const withdrawal = withdrawalResult.rows[0];
+
+        if (withdrawal.status !== "pending") {
+            throw new Error(
+                `Withdrawal is already ${withdrawal.status}.`
+            );
+        }
+
+        if (!providerTransactionId) {
+            throw new Error(
+                "Provider transaction ID is required."
+            );
+        }
+
+        // ============================================
+        // PROTECT AGAINST DUPLICATE PROVIDER IDs
+        // ============================================
+
+        const duplicateResult = await client.query(
+            `
+            SELECT id
+            FROM withdrawals
+            WHERE provider_transaction_id = $1
+              AND id <> $2
+            LIMIT 1
+            `,
+            [
+                providerTransactionId,
+                withdrawal.id
+            ]
+        );
+
+        if (duplicateResult.rows.length > 0) {
+            throw new Error(
+                "Provider transaction ID has already been used."
+            );
+        }
+
+        // ============================================
+        // LOCK WALLET
+        // ============================================
+
+        const walletResult = await client.query(
+            `
+            SELECT
+                id,
+                user_id,
+                currency,
+                balance,
+                withdrawable_balance,
+                locked_balance
+            FROM wallets
+            WHERE user_id = $1
+            FOR UPDATE
+            `,
+            [withdrawal.user_id]
+        );
+
+        if (walletResult.rows.length === 0) {
+            throw new Error("User wallet not found.");
+        }
+
+        const wallet = walletResult.rows[0];
+
+        const amount = Number(withdrawal.amount);
+        const balance = Number(wallet.balance || 0);
+        const lockedBalance =
+            Number(wallet.locked_balance || 0);
+
+        if (!Number.isFinite(amount) || amount <= 0) {
+            throw new Error("Invalid withdrawal amount.");
+        }
+
+        if (lockedBalance < amount) {
+            throw new Error(
+                "Locked wallet balance is insufficient for this withdrawal."
+            );
+        }
+
+        if (balance < amount) {
+            throw new Error(
+                "Wallet balance is insufficient for this withdrawal."
+            );
+        }
+
+        // ============================================
+        // FINALIZE WALLET
+        // ============================================
+
+        const walletUpdate = await client.query(
+            `
+            UPDATE wallets
+            SET
+                balance = balance - $1,
+                locked_balance = locked_balance - $1,
+                updated_at = NOW()
+            WHERE id = $2
+              AND balance >= $1
+              AND locked_balance >= $1
+            RETURNING
+                id,
+                user_id,
+                currency,
+                balance,
+                withdrawable_balance,
+                locked_balance,
+                updated_at
+            `,
+            [
+                amount,
+                wallet.id
+            ]
+        );
+
+        if (walletUpdate.rows.length === 0) {
+            throw new Error(
+                "Wallet could not be finalized."
+            );
+        }
+
+        // ============================================
+        // COMPLETE WITHDRAWAL
+        // ============================================
+
+        const completedResult = await client.query(
+            `
+            UPDATE withdrawals
+            SET
+                status = 'completed',
+                provider = COALESCE($2, provider),
+                provider_transaction_id = $3,
+                processed_at = COALESCE(processed_at, NOW()),
+                completed_at = NOW(),
+                updated_at = NOW(),
+                failure_reason = NULL
+            WHERE id = $1
+              AND status = 'pending'
+            RETURNING
+                id,
+                user_id,
+                amount,
+                fee,
+                net_amount,
+                currency,
+                method,
+                destination,
+                status,
+                provider,
+                provider_transaction_id,
+                failure_reason,
+                processed_at,
+                completed_at,
+                updated_at
+            `,
+            [
+                withdrawal.id,
+                provider || null,
+                providerTransactionId
+            ]
+        );
+
+        if (completedResult.rows.length === 0) {
+            throw new Error(
+                "Withdrawal could not be marked completed."
+            );
+        }
+
+        await client.query("COMMIT");
+
+        return {
+            success: true,
+            message: "Withdrawal approved successfully.",
+            withdrawal: completedResult.rows[0],
+            wallet: walletUpdate.rows[0]
+        };
+
+    } catch (error) {
+
+        try {
+            await client.query("ROLLBACK");
+        } catch (_) {}
+
+        throw error;
+
+    } finally {
+
+        client.release();
+
+    }
+
+}
+
+
 module.exports = {
     startWithdrawal,
     completeWithdrawal,
-    failWithdrawal
+    failWithdrawal,
+    approveWithdrawal
 };

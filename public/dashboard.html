@@ -1185,33 +1185,81 @@ async function startTasks(){
         }
 
         container.innerHTML =
-            data.tasks.map(task => `
-                <div class="task-card">
+            data.tasks.map(task => {
 
-                    <h3>${task.title}</h3>
+                const externalUrl =
+                    typeof task.external_url === "string" &&
+                    (() => {
+                    try {
+                        const url = new URL(task.external_url);
+                        return url.protocol === "http:" ||
+                               url.protocol === "https:";
+                    } catch (_) {
+                        return false;
+                    }
+                })()
+                        ? task.external_url
+                        : null;
 
-                    <p>
-                        <strong>Category:</strong>
-                        ${task.category || "General"}
-                    </p>
+                return `
+                    <div class="task-card">
 
-                    <p>
-                        ${task.description || ""}
-                    </p>
+                        <h3>${task.title}</h3>
 
-                    <p>
-                        <strong>Reward:</strong>
-                        KSh ${task.reward}
-                    </p>
+                        <p>
+                            <strong>Category:</strong>
+                            ${task.category || "General"}
+                        </p>
 
-                    <button
-                        onclick="startTask(${task.id})"
-                    >
-                        Start Task
-                    </button>
+                        <p>
+                            ${task.description || ""}
+                        </p>
 
-                </div>
-            `).join("");
+                        <p>
+                            <strong>Reward:</strong>
+                            KSh ${task.reward}
+                        </p>
+
+                        ${task.provider ? `
+                            <p>
+                                <strong>Provider:</strong>
+                                ${task.provider}
+                            </p>
+                        ` : ""}
+
+                        ${task.requirements ? `
+                            <p>
+                                <strong>Requirements:</strong>
+                                ${task.requirements}
+                            </p>
+                        ` : ""}
+
+                        ${task.risk_notice ? `
+                            <p>
+                                <strong>Risk notice:</strong>
+                                ${task.risk_notice}
+                            </p>
+                        ` : ""}
+
+                        <button
+                            onclick="startTask(${task.id})"
+                        >
+                            Start Task
+                        </button>
+
+                        ${externalUrl ? `
+                            <button
+                                type="button"
+                                onclick="window.open('${externalUrl}', '_blank', 'noopener,noreferrer')"
+                            >
+                                Open Provider
+                            </button>
+                        ` : ""}
+
+                    </div>
+                `;
+
+            }).join("");
 
         showMessage(
             data.tasks.length + " tasks available"
