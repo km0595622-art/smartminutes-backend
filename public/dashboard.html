@@ -986,8 +986,9 @@ async function loadWallet(){
         <p
             id="message"
             class="message"
-        <div id="tasksContainer"></div>
         ></p>
+
+        <div id="tasksContainer"></div>
 
     </div>
 
@@ -1270,7 +1271,7 @@ async function startTasks(){
                         : null;
 
                 return `
-                    <div class="task-card">
+                    <div class="task-card" data-task-id="${task.id}">
 
                         <h3>${task.title}</h3>
 
@@ -1339,6 +1340,164 @@ async function startTasks(){
 
         showMessage(
             "Unable to load tasks."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   START TASK
+========================================= */
+
+async function startTask(taskId){
+
+    showMessage("Starting task...");
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/tasks/" + taskId + "/start",
+            {
+                method:"POST",
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Failed to start task."
+            );
+
+        }
+
+        showMessage(
+            "Task started successfully! Complete it and submit it for verification."
+        );
+
+        const attempt =
+            data.attempt;
+
+        if(attempt && attempt.id){
+
+            const container =
+                document.getElementById(
+                    "tasksContainer"
+                );
+
+            const card =
+                container.querySelector(
+                    '[data-task-id="' + taskId + '"]'
+                );
+
+            if(card){
+
+                card.insertAdjacentHTML(
+                    "beforeend",
+                    `
+                    <button
+                        class="action"
+                        onclick="submitTask(${attempt.id})"
+                    >
+                        ✅ Submit Task
+                    </button>
+                    `
+                );
+
+            }
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "START TASK ERROR:",
+            error
+        );
+
+        showMessage(
+            error.message ||
+            "Unable to start task."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   SUBMIT TASK
+========================================= */
+
+async function submitTask(attemptId){
+
+    showMessage("Submitting task for verification...");
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/tasks/attempt/" + attemptId + "/submit",
+            {
+                method:"POST",
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Failed to submit task."
+            );
+
+        }
+
+        showMessage(
+            "Task submitted successfully. Waiting for verification."
+        );
+
+        /*
+         * Disable the submit button that was just used.
+         */
+        const buttons =
+            document.querySelectorAll(
+                'button[onclick="submitTask(' + attemptId + ')"]'
+            );
+
+        buttons.forEach(button => {
+
+            button.disabled = true;
+            button.textContent = "⏳ Submitted";
+            button.style.opacity = "0.65";
+            button.style.cursor = "default";
+
+        });
+
+    }catch(error){
+
+        console.error(
+            "SUBMIT TASK ERROR:",
+            error
+        );
+
+        showMessage(
+            error.message ||
+            "Unable to submit task."
         );
 
     }
