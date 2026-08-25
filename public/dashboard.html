@@ -678,8 +678,76 @@ header{
 }
 
 /* =========================================
+   LOAD WALLET
+========================================= */
+
+async function loadWallet(){
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/wallet",
+            {
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Failed to load wallet."
+            );
+
+        }
+
+        const wallet =
+            data.wallet;
+
+        const withdrawable =
+            Number(
+                wallet.withdrawable_balance || 0
+            );
+
+        document.getElementById(
+            "balance"
+        ).textContent =
+            "KSh " +
+            withdrawable.toLocaleString(
+                "en-KE",
+                {
+                    minimumFractionDigits:2,
+                    maximumFractionDigits:2
+                }
+            );
+
+    }catch(error){
+
+        console.error(
+            "WALLET LOAD ERROR:",
+            error
+        );
+
+        showMessage(
+            "Unable to load wallet balance."
+        );
+
+    }
+
+}
+
+
+/* =========================================
    MESSAGE
 ========================================= */
+
+
 
 .message{
     text-align:center;
@@ -1293,6 +1361,8 @@ function showMessage(text){
         text;
 
 }
+
+loadWallet();
 
 </script>
 
