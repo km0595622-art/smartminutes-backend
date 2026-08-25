@@ -10,12 +10,14 @@ async function getTasks(req, res) {
     try {
 
         const userId = req.user.id;
+        const isAdmin = req.user.role === "admin";
 
         const userResult = await db.query(
             `
             SELECT
                 id,
-                trading_unlocked
+                trading_unlocked,
+                membership_tier
             FROM users
             WHERE id = $1
             `,
@@ -49,14 +51,17 @@ async function getTasks(req, res) {
             AND (
                 requires_unlock = FALSE
                 OR $1 = TRUE
+                OR $2 = TRUE
             )
             ORDER BY created_at DESC
             `,
-            [user.trading_unlocked]
+            [user.trading_unlocked, isAdmin]
         );
 
         res.json({
             tradingUnlocked: user.trading_unlocked,
+            membershipTier: user.membership_tier,
+            isAdmin,
             tasks: result.rows
         });
 
@@ -111,7 +116,7 @@ async function startTask(req, res) {
             });
         }
 
-        if (task.requires_unlock) {
+        if (task.requires_unlock && req.user.role !== "admin") {
 
             const userResult = await db.query(
                 `
@@ -126,7 +131,7 @@ async function startTask(req, res) {
 
             if (!user || !user.trading_unlocked) {
                 return res.status(403).json({
-                    message: "This task requires the KSh 250 access unlock."
+                    message: "This task requires an eligible SmartMinute membership."
                 });
             }
         }
