@@ -176,8 +176,8 @@ Add money to your SmartMinute account
 
 </div><form id="depositForm"><label>
 Deposit Amount
-</label><div class="amount-options"><button type="button" onclick="setAmount(99)">
-KSh 99
+</label><div class="amount-options"><button type="button" onclick="setAmount(50)">
+KSh 50
 </button><button type="button" onclick="setAmount(100)">
 KSh 100
 </button><button type="button" onclick="setAmount(200)">
@@ -185,11 +185,11 @@ KSh 200
 </button><button type="button" onclick="setAmount(500)">
 KSh 500
 </button></div><p class="minimum">
-Minimum deposit: KSh 99
+Minimum deposit: KSh 50
 </p><input
 id="amount"
 type="number"
-min="99"
+min="50"
 placeholder="Or enter your own amount"
 required
 
@@ -294,10 +294,10 @@ form.addEventListener("submit", async function(e){
     ==============================================
     */
 
-    if(amount < 99){
+    if(amount < 50){
 
         message.textContent =
-        "Minimum deposit is KSh 99.";
+        "Minimum deposit is KSh 50.";
 
         message.style.color = "red";
 

@@ -17,10 +17,10 @@ const createDeposit = async (req, res) => {
     }
 
     // Minimum SmartMinute deposit
-    if (Number(amount) < 99) {
+    if (Number(amount) < 50) {
       return res.status(400).json({
         success: false,
-        message: "Minimum deposit amount is KSh 99"
+        message: "Minimum deposit amount is KSh 50"
       });
     }
 
