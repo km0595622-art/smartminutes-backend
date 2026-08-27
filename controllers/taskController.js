@@ -1,4 +1,8 @@
 const db = require("../config/db");
+const {
+    getMembershipTier,
+    hasMembershipAccess
+} = require("../config/membership");
 
 
 // ============================================
@@ -17,7 +21,8 @@ async function getTasks(req, res) {
             SELECT
                 id,
                 trading_unlocked,
-                membership_tier
+                membership_tier,
+                role
             FROM users
             WHERE id = $1
             `,
@@ -45,24 +50,33 @@ async function getTasks(req, res) {
                 provider,
                 external_url,
                 requires_unlock,
+                required_membership,
                 created_at
             FROM tasks
             WHERE is_active = TRUE
-            AND (
-                requires_unlock = FALSE
-                OR $1 = TRUE
-                OR $2 = TRUE
-            )
             ORDER BY created_at DESC
-            `,
-            [user.trading_unlocked, isAdmin]
+            `
         );
+
+        const availableTasks = result.rows.filter(task => {
+            if (isAdmin) {
+                return true;
+            }
+
+            return hasMembershipAccess(
+                user.membership_tier || "free",
+                task.required_membership || "free"
+            );
+        });
 
         res.json({
             tradingUnlocked: user.trading_unlocked,
-            membershipTier: user.membership_tier,
+            membershipTier: user.membership_tier || "free",
+            membershipName: getMembershipTier(
+                user.membership_tier || "free"
+            ).name,
             isAdmin,
-            tasks: result.rows
+            tasks: availableTasks
         });
 
     } catch (error) {
@@ -101,6 +115,7 @@ async function startTask(req, res) {
                 title,
                 category,
                 requires_unlock,
+                required_membership,
                 is_active
             FROM tasks
             WHERE id = $1
@@ -116,11 +131,13 @@ async function startTask(req, res) {
             });
         }
 
-        if (task.requires_unlock && req.user.role !== "admin") {
+        if (req.user.role !== "admin") {
 
             const userResult = await db.query(
                 `
-                SELECT trading_unlocked
+                SELECT
+                    membership_tier,
+                    trading_unlocked
                 FROM users
                 WHERE id = $1
                 `,
@@ -129,9 +146,23 @@ async function startTask(req, res) {
 
             const user = userResult.rows[0];
 
-            if (!user || !user.trading_unlocked) {
+            const userTier = user?.membership_tier || "free";
+            const requiredTier = task.required_membership || "free";
+            const tradingUnlocked = user?.trading_unlocked === true;
+
+            if (!hasMembershipAccess(userTier, requiredTier)) {
                 return res.status(403).json({
-                    message: "This task requires an eligible SmartMinute membership."
+                    message: `This task requires ${getMembershipTier(requiredTier).name} membership or higher.`,
+                    requiredMembership: requiredTier,
+                    membershipTier: userTier
+                });
+            }
+
+            if (task.requires_unlock && !tradingUnlocked) {
+                return res.status(403).json({
+                    message: "This task requires trading access to be unlocked.",
+                    requiresUnlock: true,
+                    tradingUnlocked: false
                 });
             }
         }

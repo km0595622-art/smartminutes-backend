@@ -798,4 +798,450 @@ router.post(
 );
 
 
+
+// ============================================
+// ADMIN — MEMBERSHIP PAYMENTS
+// ============================================
+
+router.get(
+    "/membership/payments",
+    authenticateToken,
+    requireAdmin,
+    async (req, res) => {
+
+        try {
+
+            const result = await db.query(
+                `
+                SELECT
+                    mp.id,
+                    mp.user_id,
+                    u.email,
+                    mp.membership_tier,
+                    mp.amount,
+                    mp.phone,
+                    mp.status,
+                    mp.transaction_id,
+                    mp.approved_at,
+                    mp.created_at,
+                    mp.updated_at
+                FROM membership_payments mp
+                LEFT JOIN users u
+                    ON u.id = mp.user_id
+                ORDER BY
+                    CASE
+                        WHEN mp.status = 'pending' THEN 0
+                        ELSE 1
+                    END,
+                    mp.created_at DESC
+                `
+            );
+
+            return res.status(200).json({
+                success: true,
+                payments: result.rows
+            });
+
+        } catch (error) {
+
+            console.error(
+                "ADMIN MEMBERSHIP PAYMENTS ERROR:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Unable to load membership payments."
+            });
+
+        }
+
+    }
+);
+
+
+// ============================================
+// ADMIN — APPROVE MEMBERSHIP PAYMENT
+// ============================================
+
+router.post(
+    "/membership/payments/:id/approve",
+    authenticateToken,
+    requireAdmin,
+    async (req, res) => {
+
+        const client = await db.connect();
+
+        try {
+
+            const paymentId = Number(req.params.id);
+
+            if (
+                !Number.isInteger(paymentId) ||
+                paymentId <= 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid membership payment ID."
+                });
+
+            }
+
+            const transactionId =
+                req.body && req.body.transactionId
+                    ? String(req.body.transactionId).trim()
+                    : null;
+
+            await client.query("BEGIN");
+
+            const paymentResult = await client.query(
+                `
+                SELECT
+                    id,
+                    user_id,
+                    membership_tier,
+                    amount,
+                    phone,
+                    status,
+                    transaction_id,
+                    approved_at,
+                    created_at
+                FROM membership_payments
+                WHERE id = $1
+                FOR UPDATE
+                `,
+                [paymentId]
+            );
+
+            if (paymentResult.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "Membership payment not found."
+                });
+
+            }
+
+            const payment = paymentResult.rows[0];
+
+            if (payment.status !== "pending") {
+
+                await client.query("ROLLBACK");
+
+                return res.status(409).json({
+                    success: false,
+                    message:
+                        "Membership payment is already " +
+                        payment.status + ".",
+                    payment: {
+                        id: payment.id,
+                        status: payment.status
+                    }
+                });
+
+            }
+
+            const userResult = await client.query(
+                `
+                SELECT
+                    id,
+                    email,
+                    membership_tier,
+                    membership_fee,
+                    membership_activated_at
+                FROM users
+                WHERE id = $1
+                FOR UPDATE
+                `,
+                [payment.user_id]
+            );
+
+            if (userResult.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "Membership payment user not found."
+                });
+
+            }
+
+            const validTiers = [
+                "bronze",
+                "silver",
+                "gold",
+                "titanium",
+                "platinum"
+            ];
+
+            if (!validTiers.includes(payment.membership_tier)) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Invalid membership tier on payment."
+                });
+
+            }
+
+            if (transactionId) {
+
+                const duplicateTransaction =
+                    await client.query(
+                        `
+                        SELECT id
+                        FROM membership_payments
+                        WHERE transaction_id = $1
+                          AND id <> $2
+                        LIMIT 1
+                        `,
+                        [
+                            transactionId,
+                            payment.id
+                        ]
+                    );
+
+                if (duplicateTransaction.rows.length > 0) {
+
+                    await client.query("ROLLBACK");
+
+                    return res.status(409).json({
+                        success: false,
+                        message:
+                            "This transaction ID is already assigned to another membership payment."
+                    });
+
+                }
+
+            }
+
+            const activatedUser = await client.query(
+                `
+                UPDATE users
+                SET
+                    membership_tier = $1,
+                    membership_fee = $2,
+                    membership_activated_at = NOW()
+                WHERE id = $3
+                RETURNING
+                    id,
+                    email,
+                    membership_tier,
+                    membership_fee,
+                    membership_activated_at
+                `,
+                [
+                    payment.membership_tier,
+                    payment.amount,
+                    payment.user_id
+                ]
+            );
+
+            if (activatedUser.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Unable to activate membership."
+                });
+
+            }
+
+            const approvedPayment = await client.query(
+                `
+                UPDATE membership_payments
+                SET
+                    status = 'approved',
+                    transaction_id =
+                        COALESCE($1, transaction_id),
+                    approved_at = NOW(),
+                    updated_at = NOW()
+                WHERE id = $2
+                  AND status = 'pending'
+                RETURNING
+                    id,
+                    user_id,
+                    membership_tier,
+                    amount,
+                    phone,
+                    status,
+                    transaction_id,
+                    approved_at,
+                    created_at,
+                    updated_at
+                `,
+                [
+                    transactionId,
+                    payment.id
+                ]
+            );
+
+            if (approvedPayment.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(409).json({
+                    success: false,
+                    message:
+                        "Membership payment could not be approved."
+                });
+
+            }
+
+            await client.query("COMMIT");
+
+            return res.status(200).json({
+                success: true,
+                message:
+                    "Membership payment approved and membership activated successfully.",
+                payment: approvedPayment.rows[0],
+                user: activatedUser.rows[0]
+            });
+
+        } catch (error) {
+
+            try {
+                await client.query("ROLLBACK");
+            } catch (_) {}
+
+            console.error(
+                "ADMIN APPROVE MEMBERSHIP ERROR:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Unable to approve membership payment."
+            });
+
+        } finally {
+
+            client.release();
+
+        }
+
+    }
+);
+
+
+// ============================================
+// ADMIN — REJECT MEMBERSHIP PAYMENT
+// ============================================
+
+router.post(
+    "/membership/payments/:id/reject",
+    authenticateToken,
+    requireAdmin,
+    async (req, res) => {
+
+        try {
+
+            const paymentId = Number(req.params.id);
+
+            if (
+                !Number.isInteger(paymentId) ||
+                paymentId <= 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Invalid membership payment ID."
+                });
+
+            }
+
+            const result = await db.query(
+                `
+                UPDATE membership_payments
+                SET
+                    status = 'rejected',
+                    updated_at = NOW()
+                WHERE id = $1
+                  AND status = 'pending'
+                RETURNING
+                    id,
+                    user_id,
+                    membership_tier,
+                    amount,
+                    phone,
+                    status,
+                    transaction_id,
+                    approved_at,
+                    created_at,
+                    updated_at
+                `,
+                [paymentId]
+            );
+
+            if (result.rows.length === 0) {
+
+                const existing = await db.query(
+                    `
+                    SELECT
+                        id,
+                        status
+                    FROM membership_payments
+                    WHERE id = $1
+                    `,
+                    [paymentId]
+                );
+
+                if (existing.rows.length === 0) {
+
+                    return res.status(404).json({
+                        success: false,
+                        message:
+                            "Membership payment not found."
+                    });
+
+                }
+
+                return res.status(409).json({
+                    success: false,
+                    message:
+                        "Membership payment is already " +
+                        existing.rows[0].status + ".",
+                    payment: existing.rows[0]
+                });
+
+            }
+
+            return res.status(200).json({
+                success: true,
+                message:
+                    "Membership payment rejected successfully.",
+                payment: result.rows[0]
+            });
+
+        } catch (error) {
+
+            console.error(
+                "ADMIN REJECT MEMBERSHIP ERROR:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Unable to reject membership payment."
+            });
+
+        }
+
+    }
+);
+
 module.exports = router;
