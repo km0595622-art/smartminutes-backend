@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartMinute Admin</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#07111f;color:#fff}
+header{background:#0b1b2e;border-bottom:1px solid #d4a83a;padding:15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:42px;height:42px;border:2px solid #d4a83a;border-radius:50%;display:grid;place-items:center;color:#d4a83a;font-size:22px}
+h1,h2{color:#d4a83a}
+h1{font-size:19px;margin:0}
+small{color:#9aa8b8}
+.container{max-width:1400px;margin:auto;padding:18px}
+button{border:0;border-radius:7px;padding:9px 13px;font-weight:bold;cursor:pointer}
+.gold{background:#d4a83a;color:#07111f}
+.red{background:#7f2630;color:white}
+.gray{background:#26394d;color:white}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.card{background:#0d2034;border:1px solid #203b54;border-radius:11px;padding:16px}
+.label{font-size:12px;color:#9aa8b8}
+.value{font-size:24px;color:#d4a83a;font-weight:bold;margin-top:7px}
+.nav{display:flex;gap:7px;overflow-x:auto;margin-bottom:18px}
+.nav button{background:#10263b;color:#ddd;border:1px solid #25445e;white-space:nowrap}
+.nav .active{background:#d4a83a;color:#07111f}
+.section{display:none}
+.section.active{display:block}
+.panel{background:#0d2034;border:1px solid #203b54;border-radius:11px;padding:15px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:750px}
+th{background:#10263b;color:#d4a83a;text-align:left;padding:11px;font-size:12px}
+td{border-top:1px solid #203b54;padding:10px;font-size:12px}
+.status{font-weight:bold}
+.pending{color:#f2c75c}
+.approved,.completed{color:#70d59b}
+.rejected,.failed{color:#ff8d99}
+input{background:#07111f;color:white;border:1px solid #40536b;border-radius:6px;padding:8px;width:130px}
+.message{display:none;background:#17324a;border:1px solid #31536d;border-radius:7px;padding:11px;margin:10px 0}
+.actions{display:flex;gap:5px;flex-wrap:wrap}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.container{padding:10px}.cards{gap:7px}.card{padding:12px}.value{font-size:19px}header{padding:10px}.logo{width:36px;height:36px}.brand h1{font-size:16px}}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="brand">
+<div class="logo">◷</div>
+<div>
+<h1>SMARTMINUTE</h1>
+<small>ADMIN CONTROL CENTER</small>
+</div>
+</div>
+<div class="actions">
+<button class="gold" onclick="loadAll()">↻ Refresh</button>
+<button class="red" onclick="logout()">Logout</button>
+</div>
+</header>
+
+<div class="container">
+
+<h2>Admin Dashboard</h2>
+<div id="message" class="message"></div>
+
+<div class="cards">
+<div class="card"><div class="label">TOTAL USERS</div><div id="usersCount" class="value">—</div></div>
+<div class="card"><div class="label">TOTAL DEPOSITS</div><div id="depositsCount" class="value">—</div></div>
+<div class="card"><div class="label">PENDING DEPOSITS</div><div id="pendingDeposits" class="value">—</div></div>
+<div class="card"><div class="label">PENDING WITHDRAWALS</div><div id="pendingWithdrawals" class="value">—</div></div>
+<div class="card"><div class="label">WALLET BALANCE</div><div id="walletBalance" class="value">—</div></div>
+<div class="card"><div class="label">WITHDRAWABLE</div><div id="withdrawable" class="value">—</div></div>
+<div class="card"><div class="label">SUBMITTED TASKS</div><div id="submittedTasks" class="value">—</div></div>
+<div class="card"><div class="label">PENDING EARNINGS</div><div id="pendingEarnings" class="value">—</div></div>
+</div>
+
+<div class="nav">
+<button class="active" onclick="section('overview',this)">📊 Overview</button>
+<button onclick="section('users',this)">👥 Users</button>
+<button onclick="section('deposits',this)">💰 Deposits</button>
+<button onclick="section('withdrawals',this)">💸 Withdrawals</button>
+<button onclick="section('membership',this)">👑 Membership</button>
+<button onclick="section('unlock',this)">🔓 Trading Unlock</button>
+</div>
+
+<section id="overview" class="section active">
+<div class="panel">
+<h2>System Overview</h2>
+<p>SmartMinute administration center.</p>
+<p>Use the tabs above to manage users, deposits, withdrawals and membership payments.</p>
+</div>
+</section>
+
+<section id="users" class="section">
+<div class="panel">
+<h2>Users</h2>
+<table>
+<thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Trading</th><th>Unlock Paid</th><th>Created</th></tr></thead>
+<tbody id="usersTable"><tr><td colspan="7">Loading...</td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section id="deposits" class="section">
+<div class="panel">
+<h2>Deposit Approvals</h2>
+<table>
+<thead><tr><th>ID</th><th>User</th><th>Email</th><th>Amount</th><th>Phone</th><th>Status</th><th>Transaction</th><th>Action</th></tr></thead>
+<tbody id="depositsTable"><tr><td colspan="8">Loading...</td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section id="withdrawals" class="section">
+<div class="panel">
+<h2>Withdrawal Management</h2>
+<table>
+<thead><tr><th>ID</th><th>User</th><th>Amount</th><th>Fee</th><th>Net</th><th>Method</th><th>Destination</th><th>Status</th><th>Action</th></tr></thead>
+<tbody id="withdrawalsTable"><tr><td colspan="9">Loading...</td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section id="membership" class="section">
+<div class="panel">
+<h2>Membership Payments</h2>
+<table>
+<thead><tr><th>ID</th><th>User</th><th>Tier</th><th>Amount</th><th>Phone</th><th>Status</th><th>Transaction</th><th>Action</th></tr></thead>
+<tbody id="membershipTable"><tr><td colspan="8">Loading...</td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section id="unlock" class="section">
+<div class="panel">
+<h2>Trading Unlock Payments</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User</th>
+<th>Amount</th>
+<th>Method</th>
+<th>Transaction Reference</th>
+<th>Status</th>
+<th>Trading Unlocked</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="unlockTable">
+<tr><td colspan="8">Loading...</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+</div>
+
+<script>
+const token=localStorage.getItem("token");
+
+if(!token){
+    location.href="login.html";
+}
+
+function esc(v){
+    return String(v??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function money(v){
+    return Number(v||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function msg(text){
+    const x=document.getElementById("message");
+    x.textContent=text;
+    x.style.display="block";
+    setTimeout(()=>x.style.display="none",4000);
+}
+
+async function api(url,options={}){
+    options.headers={
+        ...(options.headers||{}),
+        Authorization:"Bearer "+token,
+        "Content-Type":"application/json"
+    };
+
+    const r=await fetch(url,options);
+    const d=await r.json().catch(()=>({}));
+
+    if(r.status===401){
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        location.href="login.html";
+        return;
+    }
+
+    if(r.status===403){
+        msg("Administrator access required.");
+        throw new Error("Admin access denied");
+    }
+
+    if(!r.ok) throw new Error(d.message||"Request failed");
+
+    return d;
+}
+
+function section(id,btn){
+    document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    btn.classList.add("active");
+}
+
+async function loadDashboard(){
+    try{
+        const d=(await api("/api/admin/dashboard")).dashboard||{};
+        document.getElementById("usersCount").textContent=d.total_users||0;
+        document.getElementById("depositsCount").textContent=d.total_deposits||0;
+        document.getElementById("pendingDeposits").textContent=d.pending_deposits||0;
+        document.getElementById("pendingWithdrawals").textContent=d.pending_withdrawals||0;
+        document.getElementById("walletBalance").textContent=money(d.total_wallet_balance);
+        document.getElementById("withdrawable").textContent=money(d.total_withdrawable_balance);
+        document.getElementById("submittedTasks").textContent=d.submitted_tasks||0;
+        document.getElementById("pendingEarnings").textContent=money(d.pending_earnings);
+    }catch(e){msg("Dashboard: "+e.message)}
+}
+
+async function loadUsers(){
+    try{
+        const users=(await api("/api/admin/users")).users||[];
+        document.getElementById("usersTable").innerHTML=users.map(u=>`
+        <tr>
+        <td>${esc(u.id)}</td>
+        <td>${esc(u.name)}</td>
+        <td>${esc(u.email)}</td>
+        <td>${esc(u.role)}</td>
+        <td>${u.trading_unlocked?"Yes":"No"}</td>
+        <td>${u.unlock_fee_paid?"Yes":"No"}</td>
+        <td>${esc(u.created_at)}</td>
+        </tr>`).join("")||"<tr><td colspan='7'>No users.</td></tr>";
+    }catch(e){msg("Users: "+e.message)}
+}
+
+async function loadDeposits(){
+    try{
+        const rows=(await api("/api/admin/deposits")).deposits||[];
+        document.getElementById("depositsTable").innerHTML=rows.map(d=>`
+        <tr>
+        <td>${esc(d.id)}</td>
+        <td>${esc(d.user_name)}</td>
+        <td>${esc(d.user_email)}</td>
+        <td>${money(d.amount)}</td>
+        <td>${esc(d.phone)}</td>
+        <td class="status ${esc(d.status)}">${esc(d.status)}</td>
+        <td>${esc(d.transaction_id||"—")}</td>
+        <td>${d.status==="pending"?`
+        <input id="tx${d.id}" placeholder="Transaction ID">
+        <button class="gold" onclick="approveDeposit(${d.id})">Approve</button>`:"—"}</td>
+        </tr>`).join("")||"<tr><td colspan='8'>No deposits.</td></tr>";
+    }catch(e){msg("Deposits: "+e.message)}
+}
+
+async function approveDeposit(id){
+    const tx=document.getElementById("tx"+id).value.trim();
+    if(!tx)return msg("Enter the transaction ID.");
+    if(!confirm("Approve this deposit and credit the wallet?"))return;
+
+    try{
+        await api("/api/admin/deposits/"+id+"/approve",{
+            method:"POST",
+            body:JSON.stringify({transaction_id:tx})
+        });
+        msg("Deposit approved successfully.");
+        loadAll();
+    }catch(e){msg(e.message)}
+}
+
+async function loadWithdrawals(){
+    try{
+        const rows=(await api("/api/admin/withdrawals")).withdrawals||[];
+        document.getElementById("withdrawalsTable").innerHTML=rows.map(w=>`
+        <tr>
+        <td>${esc(w.id)}</td>
+        <td>${esc(w.user_name||w.user_email)}</td>
+        <td>${money(w.amount)}</td>
+        <td>${money(w.fee)}</td>
+        <td>${money(w.net_amount)}</td>
+        <td>${esc(w.method)}</td>
+        <td>${esc(w.destination)}</td>
+        <td class="status ${esc(w.status)}">${esc(w.status)}</td>
+        <td>${w.status==="pending"?`
+        <button class="gold" onclick="approveWithdrawal(${w.id})">Approve</button>
+        <button class="red" onclick="rejectWithdrawal(${w.id})">Reject</button>`:"—"}</td>
+        </tr>`).join("")||"<tr><td colspan='9'>No withdrawals.</td></tr>";
+    }catch(e){msg("Withdrawals: "+e.message)}
+}
+
+async function approveWithdrawal(id){
+    if(!confirm("Approve and process this withdrawal?"))return;
+    try{
+        await api("/api/admin/withdrawals/"+id+"/approve",{
+            method:"POST",
+            body:JSON.stringify({provider:"manual"})
+        });
+        msg("Withdrawal processed.");
+        loadAll();
+    }catch(e){msg(e.message)}
+}
+
+async function rejectWithdrawal(id){
+    const reason=prompt("Reason for rejection:","Withdrawal rejected by administrator.");
+    if(reason===null)return;
+
+    try{
+        await api("/api/admin/withdrawals/"+id+"/reject",{
+            method:"POST",
+            body:JSON.stringify({failure_reason:reason||"Withdrawal rejected by administrator."})
+        });
+        msg("Withdrawal rejected and funds returned.");
+        loadAll();
+    }catch(e){msg(e.message)}
+}
+
+async function loadMembership(){
+    try{
+        const rows=(await api("/api/admin/membership/payments")).payments||[];
+        document.getElementById("membershipTable").innerHTML=rows.map(p=>`
+        <tr>
+        <td>${esc(p.id)}</td>
+        <td>${esc(p.user_id)}</td>
+        <td>${esc(p.email)}</td>
+        <td>${esc(p.membership_tier)}</td>
+        <td>${money(p.amount)}</td>
+        <td>${esc(p.phone)}</td>
+        <td class="status ${esc(p.status)}">${esc(p.status)}</td>
+        <td>${esc(p.transaction_id||"—")}</td>
+        <td>${p.status==="pending"?`
+        <input id="mtx${p.id}" placeholder="Transaction ID">
+        <button class="gold" onclick="approveMembership(${p.id})">Approve</button>`:"—"}</td>
+        </tr>`).join("")||"<tr><td colspan='9'>No membership payments.</td></tr>";
+    }catch(e){msg("Membership: "+e.message)}
+}
+
+async function approveMembership(id){
+    const tx=document.getElementById("mtx"+id).value.trim();
+    if(!tx)return msg("Enter the transaction ID.");
+    if(!confirm("Approve this membership payment?"))return;
+
+    try{
+        await api("/api/admin/membership/payments/"+id+"/approve",{
+            method:"POST",
+            body:JSON.stringify({transactionId:tx})
+        });
+        msg("Membership approved.");
+        loadAll();
+    }catch(e){msg(e.message)}
+}
+
+async function loadUnlockPayments(){
+    try{
+        const rows=(await api("/api/admin/unlock/payments")).payments||[];
+
+        document.getElementById("unlockTable").innerHTML=rows.map(p=>`
+        <tr>
+        <td>${esc(p.id)}</td>
+        <td>${esc(p.email || p.user_id)}</td>
+        <td>${money(p.amount)}</td>
+        <td>${esc(p.payment_method || "—")}</td>
+        <td>${esc(p.transaction_reference || "—")}</td>
+        <td class="status ${esc(p.status)}">${esc(p.status)}</td>
+        <td>${p.trading_unlocked ? "Yes" : "No"}</td>
+        <td>
+        ${p.status==="pending" ? `
+            <div class="actions">
+                <button class="gold" onclick="approveUnlock(${p.id})">Approve</button>
+                <button class="red" onclick="rejectUnlock(${p.id})">Reject</button>
+            </div>
+        ` : "—"}
+        </td>
+        </tr>
+        `).join("") ||
+        "<tr><td colspan='8'>No trading unlock payments.</td></tr>";
+
+    }catch(e){
+        msg("Unlock payments: "+e.message);
+    }
+}
+
+
+async function approveUnlock(id){
+    const tx=prompt("Enter the M-Pesa transaction reference:");
+
+    if(tx===null)return;
+
+    const transactionReference=tx.trim();
+
+    if(!transactionReference){
+        return msg("Enter the transaction reference.");
+    }
+
+    if(!confirm("Approve this KSh 250 trading unlock payment?")){
+        return;
+    }
+
+    try{
+        await api("/api/admin/unlock/payments/"+id+"/approve",{
+            method:"POST",
+            body:JSON.stringify({
+                transactionReference
+            })
+        });
+
+        msg("Trading access unlocked successfully.");
+        loadAll();
+
+    }catch(e){
+        msg(e.message);
+    }
+}
+
+
+async function rejectUnlock(id){
+    if(!confirm("Reject this trading unlock payment?")){
+        return;
+    }
+
+    try{
+        await api("/api/admin/unlock/payments/"+id+"/reject",{
+            method:"POST"
+        });
+
+        msg("Trading unlock payment rejected.");
+        loadAll();
+
+    }catch(e){
+        msg(e.message);
+    }
+}
+
+
+async function loadAll(){
+    await Promise.all([
+        loadDashboard(),
+        loadUsers(),
+        loadDeposits(),
+        loadWithdrawals(),
+        loadMembership(),
+        loadUnlockPayments()
+    ]);
+}
+
+function logout(){
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    location.href="login.html";
+}
+
+loadAll();
+</script>
+
+</body>
+</html>

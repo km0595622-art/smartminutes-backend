@@ -1244,4 +1244,464 @@ router.post(
     }
 );
 
+
+// ============================================
+// ADMIN — TRADING UNLOCK PAYMENTS
+// ============================================
+
+router.get(
+    "/unlock/payments",
+    authenticateToken,
+    requireAdmin,
+    async (req, res) => {
+
+        try {
+
+            const result = await db.query(
+                `
+                SELECT
+                    up.id,
+                    up.user_id,
+                    u.email,
+                    up.amount,
+                    up.payment_method,
+                    up.transaction_reference,
+                    up.status,
+                    up.created_at,
+                    u.trading_unlocked,
+                    u.unlock_fee_paid,
+                    u.unlock_paid_at
+                FROM unlock_payments up
+                LEFT JOIN users u
+                    ON u.id = up.user_id
+                ORDER BY
+                    CASE
+                        WHEN up.status = 'pending' THEN 0
+                        ELSE 1
+                    END,
+                    up.created_at DESC
+                `
+            );
+
+            return res.status(200).json({
+                success: true,
+                payments: result.rows
+            });
+
+        } catch (error) {
+
+            console.error(
+                "ADMIN UNLOCK PAYMENTS ERROR:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Unable to load trading unlock payments."
+            });
+
+        }
+
+    }
+);
+
+
+// ============================================
+// ADMIN — APPROVE TRADING UNLOCK PAYMENT
+// ============================================
+
+router.post(
+    "/unlock/payments/:id/approve",
+    authenticateToken,
+    requireAdmin,
+    async (req, res) => {
+
+        const client = await db.connect();
+
+        try {
+
+            const paymentId = Number(req.params.id);
+
+            if (
+                !Number.isInteger(paymentId) ||
+                paymentId <= 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Invalid unlock payment ID."
+                });
+
+            }
+
+            const transactionReference =
+                req.body && req.body.transactionReference
+                    ? String(req.body.transactionReference).trim()
+                    : null;
+
+            await client.query("BEGIN");
+
+            const paymentResult = await client.query(
+                `
+                SELECT
+                    id,
+                    user_id,
+                    amount,
+                    payment_method,
+                    transaction_reference,
+                    status,
+                    created_at,
+                    completed_at
+                FROM unlock_payments
+                WHERE id = $1
+                FOR UPDATE
+                `,
+                [paymentId]
+            );
+
+            if (paymentResult.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "Unlock payment not found."
+                });
+
+            }
+
+            const payment = paymentResult.rows[0];
+
+            if (payment.status !== "pending") {
+
+                await client.query("ROLLBACK");
+
+                return res.status(409).json({
+                    success: false,
+                    message:
+                        "Unlock payment is already " +
+                        payment.status + ".",
+                    payment: {
+                        id: payment.id,
+                        status: payment.status
+                    }
+                });
+
+            }
+
+            if (Number(payment.amount) !== 250) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Invalid trading unlock payment amount."
+                });
+
+            }
+
+            if (transactionReference) {
+
+                const duplicateTransaction =
+                    await client.query(
+                        `
+                        SELECT id
+                        FROM unlock_payments
+                        WHERE transaction_reference = $1
+                          AND id <> $2
+                        LIMIT 1
+                        `,
+                        [
+                            transactionReference,
+                            payment.id
+                        ]
+                    );
+
+                if (duplicateTransaction.rows.length > 0) {
+
+                    await client.query("ROLLBACK");
+
+                    return res.status(409).json({
+                        success: false,
+                        message:
+                            "This transaction reference is already assigned to another unlock payment."
+                    });
+
+                }
+
+            }
+
+            const userResult = await client.query(
+                `
+                SELECT
+                    id,
+                    email,
+                    trading_unlocked,
+                    unlock_fee_paid,
+                    unlock_paid_at
+                FROM users
+                WHERE id = $1
+                FOR UPDATE
+                `,
+                [payment.user_id]
+            );
+
+            if (userResult.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(404).json({
+                    success: false,
+                    message:
+                        "Unlock payment user not found."
+                });
+
+            }
+
+            const user = userResult.rows[0];
+
+            if (user.trading_unlocked === true) {
+
+                await client.query(
+                    `
+                    UPDATE unlock_payments
+                    SET
+                        status = 'successful',
+                        transaction_reference =
+                            COALESCE($1, transaction_reference),
+                        completed_at = NOW()
+                    WHERE id = $2
+                    `,
+                    [
+                        transactionReference,
+                        payment.id
+                    ]
+                );
+
+                await client.query("COMMIT");
+
+                return res.status(200).json({
+                    success: true,
+                    message:
+                        "User was already unlocked. Payment marked successful.",
+                    tradingUnlocked: true,
+                    paymentId: payment.id
+                });
+
+            }
+
+            const activatedUser = await client.query(
+                `
+                UPDATE users
+                SET
+                    trading_unlocked = TRUE,
+                    unlock_fee_paid = 250.00,
+                    unlock_paid_at = NOW()
+                WHERE id = $1
+                RETURNING
+                    id,
+                    email,
+                    trading_unlocked,
+                    unlock_fee_paid,
+                    unlock_paid_at
+                `,
+                [payment.user_id]
+            );
+
+            if (activatedUser.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Unable to unlock trading access."
+                });
+
+            }
+
+            const approvedPayment = await client.query(
+                `
+                UPDATE unlock_payments
+                SET
+                    status = 'successful',
+                    transaction_reference =
+                        COALESCE($1, transaction_reference),
+                    completed_at = NOW()
+                WHERE id = $2
+                  AND status = 'pending'
+                RETURNING
+                    id,
+                    user_id,
+                    amount,
+                    payment_method,
+                    transaction_reference,
+                    status,
+                    created_at,
+                    completed_at
+                `,
+                [
+                    transactionReference,
+                    payment.id
+                ]
+            );
+
+            if (approvedPayment.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(409).json({
+                    success: false,
+                    message:
+                        "Unlock payment could not be approved."
+                });
+
+            }
+
+            await client.query("COMMIT");
+
+            return res.status(200).json({
+                success: true,
+                message:
+                    "Trading unlock payment approved and trading access activated successfully.",
+                payment: approvedPayment.rows[0],
+                user: activatedUser.rows[0]
+            });
+
+        } catch (error) {
+
+            try {
+                await client.query("ROLLBACK");
+            } catch (_) {}
+
+            console.error(
+                "ADMIN APPROVE UNLOCK ERROR:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Unable to approve trading unlock payment."
+            });
+
+        } finally {
+
+            client.release();
+
+        }
+
+    }
+);
+
+
+// ============================================
+// ADMIN — REJECT TRADING UNLOCK PAYMENT
+// ============================================
+
+router.post(
+    "/unlock/payments/:id/reject",
+    authenticateToken,
+    requireAdmin,
+    async (req, res) => {
+
+        try {
+
+            const paymentId = Number(req.params.id);
+
+            if (
+                !Number.isInteger(paymentId) ||
+                paymentId <= 0
+            ) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Invalid unlock payment ID."
+                });
+
+            }
+
+            const result = await db.query(
+                `
+                UPDATE unlock_payments
+                SET
+                    status = 'failed'
+                WHERE id = $1
+                  AND status = 'pending'
+                RETURNING
+                    id,
+                    user_id,
+                    amount,
+                    payment_method,
+                    transaction_reference,
+                    status,
+                    created_at,
+                    completed_at
+                `,
+                [paymentId]
+            );
+
+            if (result.rows.length === 0) {
+
+                const existing = await db.query(
+                    `
+                    SELECT
+                        id,
+                        status
+                    FROM unlock_payments
+                    WHERE id = $1
+                    `,
+                    [paymentId]
+                );
+
+                if (existing.rows.length === 0) {
+
+                    return res.status(404).json({
+                        success: false,
+                        message:
+                            "Unlock payment not found."
+                    });
+
+                }
+
+                return res.status(409).json({
+                    success: false,
+                    message:
+                        "Unlock payment is already " +
+                        existing.rows[0].status + ".",
+                    payment: existing.rows[0]
+                });
+
+            }
+
+            return res.status(200).json({
+                success: true,
+                message:
+                    "Trading unlock payment rejected successfully.",
+                payment: result.rows[0]
+            });
+
+        } catch (error) {
+
+            console.error(
+                "ADMIN REJECT UNLOCK ERROR:",
+                error
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Unable to reject trading unlock payment."
+            });
+
+        }
+
+    }
+);
+
 module.exports = router;
