@@ -615,6 +615,139 @@ header{
 }
 
 /* =========================================
+   ACCOUNT FORMS
+========================================= */
+
+.account-form{
+
+    margin-top:15px;
+
+    padding:18px;
+
+    background:#f5f6f8;
+
+    border-radius:12px;
+
+    border:
+        1px solid
+        #d9a52e;
+
+}
+
+.account-form h3{
+
+    margin-top:0;
+
+    color:#071a31;
+
+}
+
+.form-note{
+
+    color:#687386;
+
+    font-size:13px;
+
+    line-height:1.5;
+
+}
+
+.account-form label{
+
+    display:block;
+
+    margin-top:12px;
+
+    margin-bottom:5px;
+
+    color:#4e596b;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+.account-form input,
+.account-form select{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:13px;
+
+    border:
+        1px solid
+        #ccd1d9;
+
+    border-radius:9px;
+
+    background:white;
+
+    color:#071a31;
+
+    font-size:15px;
+
+}
+
+.account-form input:focus,
+.account-form select:focus{
+
+    outline:none;
+
+    border-color:#b88a24;
+
+}
+
+.secondary-action{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:12px;
+
+    border:
+        1px solid
+        #b88a24;
+
+    border-radius:10px;
+
+    background:white;
+
+    color:#071a31;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+.secondary-action:hover{
+
+    background:#f0c34f;
+
+}
+
+.form-message{
+
+    margin-top:12px;
+
+    color:#687386;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    line-height:1.5;
+
+}
+
+
+/* =========================================
    PROFILE PANEL
 ========================================= */
 
@@ -993,6 +1126,44 @@ async function loadWallet(){
     </div>
 
 
+
+    <!-- ACCOUNT & SECURITY -->
+
+    <div
+        id="accountSection"
+        class="section"
+    >
+
+        <h2>
+            🔐 Account & Security
+        </h2>
+
+        <button
+            class="action"
+            onclick="showWithdrawalForm()"
+        >
+            💸 Withdraw Funds
+        </button>
+
+        <button
+            class="action"
+            onclick="showKycForm()"
+        >
+            🪪 KYC Verification
+        </button>
+
+        <button
+            class="action"
+            onclick="showUnlockForm()"
+        >
+            🔓 Trading Access
+        </button>
+
+        <div id="accountForms"></div>
+
+    </div>
+
+
     <!-- PROFILE SETTINGS -->
 
     <div
@@ -1262,6 +1433,716 @@ function deposit(){
         "deposit.html";
 
 }
+
+
+/* =========================================
+   ACCOUNT & SECURITY
+========================================= */
+
+function accountForms(){
+
+    return document.getElementById("accountForms");
+
+}
+
+
+/* =========================================
+   WITHDRAWAL FORM
+========================================= */
+
+function showWithdrawalForm(){
+
+    accountForms().innerHTML = `
+        <div class="account-form">
+
+            <h3>💸 Withdraw Funds</h3>
+
+            <p class="form-note">
+                Withdrawals are reviewed by SmartMinute before funds are released.
+                A KSh 100 withdrawal fee applies.
+            </p>
+
+            <label>Amount (KSh)</label>
+
+            <input
+                id="withdrawAmount"
+                type="number"
+                min="5000"
+                step="0.01"
+                placeholder="Minimum KSh 5,000"
+            >
+
+            <label>Withdrawal Method</label>
+
+            <select id="withdrawMethod">
+
+                <option value="mpesa">
+                    M-Pesa
+                </option>
+
+                <option value="bank">
+                    Bank
+                </option>
+
+            </select>
+
+            <label>Destination</label>
+
+            <input
+                id="withdrawDestination"
+                type="text"
+                placeholder="M-Pesa number or bank details"
+            >
+
+            <button
+                class="action"
+                onclick="submitWithdrawal()"
+            >
+                Submit Withdrawal Request
+            </button>
+
+            <button
+                class="secondary-action"
+                onclick="closeAccountForm()"
+            >
+                Cancel
+            </button>
+
+            <p id="withdrawMessage" class="form-message"></p>
+
+        </div>
+    `;
+
+    accountForms().scrollIntoView({
+        behavior:"smooth",
+        block:"nearest"
+    });
+
+}
+
+
+/* =========================================
+   SUBMIT WITHDRAWAL
+========================================= */
+
+async function submitWithdrawal(){
+
+    const amount =
+        Number(
+            document.getElementById(
+                "withdrawAmount"
+            ).value
+        );
+
+    const method =
+        document.getElementById(
+            "withdrawMethod"
+        ).value;
+
+    const destination =
+        document.getElementById(
+            "withdrawDestination"
+        ).value.trim();
+
+    const message =
+        document.getElementById(
+            "withdrawMessage"
+        );
+
+    if(!Number.isFinite(amount) || amount < 5000){
+
+        message.textContent =
+            "Minimum withdrawal amount is KSh 5,000.";
+
+        return;
+
+    }
+
+    if(!destination){
+
+        message.textContent =
+            "Please enter your withdrawal destination.";
+
+        return;
+
+    }
+
+    message.textContent =
+        "Submitting withdrawal request...";
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/withdrawal",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    Authorization:
+                        "Bearer " + token
+                },
+
+                body:JSON.stringify({
+
+                    amount,
+                    method,
+                    destination
+
+                })
+
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to create withdrawal."
+            );
+
+        }
+
+        message.textContent =
+            "Withdrawal request submitted successfully. " +
+            "Your funds are now reserved pending admin review.";
+
+        await loadWallet();
+
+    }catch(error){
+
+        console.error(
+            "WITHDRAWAL ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to submit withdrawal.";
+
+    }
+
+}
+
+
+/* =========================================
+   KYC FORM
+========================================= */
+
+async function showKycForm(){
+
+    accountForms().innerHTML = `
+        <div class="account-form">
+
+            <h3>🪪 KYC Verification</h3>
+
+            <p class="form-note">
+                Create your KYC profile and submit it for review.
+            </p>
+
+            <label>Country</label>
+
+            <input
+                id="kycCountry"
+                type="text"
+                value="Kenya"
+                placeholder="Enter your country"
+            >
+
+            <button
+                class="action"
+                onclick="startKyc()"
+            >
+                Start KYC Profile
+            </button>
+
+            <button
+                class="secondary-action"
+                onclick="submitKyc()"
+            >
+                Submit KYC for Review
+            </button>
+
+            <button
+                class="secondary-action"
+                onclick="loadKycStatus()"
+            >
+                Check KYC Status
+            </button>
+
+            <p id="kycMessage" class="form-message"></p>
+
+        </div>
+    `;
+
+    await loadKycStatus();
+
+    accountForms().scrollIntoView({
+        behavior:"smooth",
+        block:"nearest"
+    });
+
+}
+
+
+/* =========================================
+   START KYC
+========================================= */
+
+async function startKyc(){
+
+    const country =
+        document.getElementById(
+            "kycCountry"
+        ).value.trim();
+
+    const message =
+        document.getElementById(
+            "kycMessage"
+        );
+
+    message.textContent =
+        "Creating KYC profile...";
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/kyc/start",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    Authorization:
+                        "Bearer " + token
+                },
+
+                body:JSON.stringify({
+                    country
+                })
+
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to start KYC."
+            );
+
+        }
+
+        message.textContent =
+            "KYC profile ready. Status: " +
+            (data.kyc?.status || "not_started");
+
+    }catch(error){
+
+        console.error(
+            "START KYC ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to start KYC.";
+
+    }
+
+}
+
+
+/* =========================================
+   SUBMIT KYC
+========================================= */
+
+async function submitKyc(){
+
+    const message =
+        document.getElementById(
+            "kycMessage"
+        );
+
+    message.textContent =
+        "Submitting KYC for review...";
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/kyc/submit",
+            {
+                method:"POST",
+
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to submit KYC."
+            );
+
+        }
+
+        message.textContent =
+            "KYC submitted successfully. " +
+            "Status: pending review.";
+
+    }catch(error){
+
+        console.error(
+            "SUBMIT KYC ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to submit KYC.";
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD KYC STATUS
+========================================= */
+
+async function loadKycStatus(){
+
+    const message =
+        document.getElementById(
+            "kycMessage"
+        );
+
+    if(!message){
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/kyc",
+            {
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            if(response.status === 404){
+
+                message.textContent =
+                    "KYC profile has not been started yet.";
+
+                return;
+
+            }
+
+            throw new Error(
+                data.message ||
+                "Unable to load KYC status."
+            );
+
+        }
+
+        if(data.kyc){
+
+            message.textContent =
+                "Current KYC status: " +
+                data.kyc.status;
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "KYC STATUS ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to load KYC status.";
+
+    }
+
+}
+
+
+/* =========================================
+   TRADING UNLOCK FORM
+========================================= */
+
+async function showUnlockForm(){
+
+    accountForms().innerHTML = `
+        <div class="account-form">
+
+            <h3>🔓 Trading Access</h3>
+
+            <p class="form-note">
+                Trading access requires a one-time
+                KSh 250 unlock payment.
+            </p>
+
+            <p id="unlockStatus" class="form-message">
+                Checking trading status...
+            </p>
+
+            <label>Phone Number</label>
+
+            <input
+                id="unlockPhone"
+                type="tel"
+                placeholder="07XXXXXXXX"
+            >
+
+            <label>Payment Method</label>
+
+            <select id="unlockPaymentMethod">
+
+                <option value="mpesa">
+                    M-Pesa
+                </option>
+
+            </select>
+
+            <label>Transaction Reference (optional)</label>
+
+            <input
+                id="unlockReference"
+                type="text"
+                placeholder="Transaction reference"
+            >
+
+            <button
+                class="action"
+                onclick="purchaseUnlock()"
+            >
+                🔓 Request Trading Unlock — KSh 250
+            </button>
+
+            <button
+                class="secondary-action"
+                onclick="loadUnlockStatus()"
+            >
+                Refresh Trading Status
+            </button>
+
+            <p id="unlockMessage" class="form-message"></p>
+
+        </div>
+    `;
+
+    await loadUnlockStatus();
+
+    accountForms().scrollIntoView({
+        behavior:"smooth",
+        block:"nearest"
+    });
+
+}
+
+
+/* =========================================
+   LOAD UNLOCK STATUS
+========================================= */
+
+async function loadUnlockStatus(){
+
+    const status =
+        document.getElementById(
+            "unlockStatus"
+        );
+
+    if(!status){
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/unlock/status",
+            {
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to load trading status."
+            );
+
+        }
+
+        if(data.tradingUnlocked){
+
+            status.textContent =
+                "✅ Trading access is unlocked.";
+
+        }else{
+
+            status.textContent =
+                "🔒 Trading access is currently locked. " +
+                "Unlock fee: KSh " +
+                Number(data.unlockFee || 250).toLocaleString();
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "UNLOCK STATUS ERROR:",
+            error
+        );
+
+        status.textContent =
+            error.message ||
+            "Unable to load trading status.";
+
+    }
+
+}
+
+
+/* =========================================
+   PURCHASE TRADING UNLOCK
+========================================= */
+
+async function purchaseUnlock(){
+
+    const phone =
+        document.getElementById(
+            "unlockPhone"
+        ).value.trim();
+
+    const paymentMethod =
+        document.getElementById(
+            "unlockPaymentMethod"
+        ).value;
+
+    const transactionReference =
+        document.getElementById(
+            "unlockReference"
+        ).value.trim();
+
+    const message =
+        document.getElementById(
+            "unlockMessage"
+        );
+
+    if(!phone){
+
+        message.textContent =
+            "Please enter your phone number.";
+
+        return;
+
+    }
+
+    message.textContent =
+        "Creating trading unlock payment request...";
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/unlock/purchase",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    Authorization:
+                        "Bearer " + token
+                },
+
+                body:JSON.stringify({
+
+                    phone,
+                    paymentMethod,
+                    transactionReference:
+                        transactionReference || null
+
+                })
+
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to create unlock payment."
+            );
+
+        }
+
+        message.textContent =
+            "Trading unlock payment request created. " +
+            "Wait for admin approval.";
+
+        await loadUnlockStatus();
+
+    }catch(error){
+
+        console.error(
+            "UNLOCK PURCHASE ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to create unlock payment.";
+
+    }
+
+}
+
+
+/* =========================================
+   CLOSE ACCOUNT FORM
+========================================= */
+
+function closeAccountForm(){
+
+    accountForms().innerHTML = "";
+
+}
+
 
 
 /* =========================================
