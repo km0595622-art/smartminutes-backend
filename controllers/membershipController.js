@@ -210,7 +210,8 @@ async function getMembershipStatus(req, res) {
                 id,
                 membership_tier,
                 membership_fee,
-                membership_activated_at
+                membership_activated_at,
+                referral_code
             FROM users
             WHERE id = $1
             `,
@@ -233,6 +234,10 @@ async function getMembershipStatus(req, res) {
 
         return res.json({
             success: true,
+            user: {
+                id: user.id,
+                referral_code: user.referral_code
+            },
             membership: {
                 tier: user.membership_tier || "free",
                 name: tier.name,
