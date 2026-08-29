@@ -1050,7 +1050,7 @@ const API_BASE = window.location.origin;
 const token =
     localStorage.getItem("token");
 
-const savedUser =
+let savedUser =
     JSON.parse(
         localStorage.getItem("user") || "null"
     );
@@ -1059,6 +1059,55 @@ if(!token){
 
     window.location.href =
         "login.html";
+
+}
+
+
+/* =========================================
+   REFRESH USER PROFILE
+========================================= */
+
+async function refreshUserProfile(){
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/membership",
+            {
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        if(!response.ok){
+            return;
+        }
+
+        const data = await response.json();
+
+        if(data.user){
+
+            savedUser = {
+                ...savedUser,
+                ...data.user
+            };
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(savedUser)
+            );
+        }
+
+    }catch(error){
+
+        console.log(
+            "USER PROFILE REFRESH ERROR:",
+            error
+        );
+
+    }
 
 }
 
@@ -1153,7 +1202,9 @@ async function inviteFriends(){
     const inviteLink =
         window.location.origin +
         "/register.html?ref=" +
-        (savedUser?.id || "");
+        encodeURIComponent(
+            savedUser?.referral_code || ""
+        );
 
     const shareText =
         "Join me on SmartMinute! " +
@@ -1521,7 +1572,9 @@ function showMessage(text){
 
 }
 
-loadWallet();
+refreshUserProfile().then(() => {
+    loadWallet();
+});
 
 </script>
 
