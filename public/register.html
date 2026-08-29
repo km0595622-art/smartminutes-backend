@@ -284,6 +284,22 @@ button:disabled{
 
         <div class="gold-line"></div>
 
+        <div
+            id="referralInfo"
+            style="
+                display:none;
+                margin:0 0 18px;
+                padding:11px 12px;
+                border:1px solid #d9a52e;
+                border-radius:9px;
+                background:#fff8df;
+                color:#765817;
+                text-align:center;
+                font-size:13px;
+                font-weight:bold;
+            "
+        ></div>
+
         <form id="registerForm">
 
             <label for="name">Full Name</label>
@@ -365,6 +381,31 @@ button:disabled{
 
 const API_BASE = window.location.origin;
 
+// --------------------------------------------
+// REFERRAL CODE FROM INVITE LINK
+// --------------------------------------------
+
+const referralCode =
+    new URLSearchParams(window.location.search)
+        .get("ref");
+
+const referralInfo =
+    document.getElementById("referralInfo");
+
+if (referralCode) {
+
+    const cleanReferralCode =
+        referralCode.trim().toUpperCase();
+
+    referralInfo.textContent =
+        "Referral invitation detected: " +
+        cleanReferralCode;
+
+    referralInfo.style.display = "block";
+}
+
+
+
 const form =
     document.getElementById("registerForm");
 
@@ -406,7 +447,11 @@ form.addEventListener("submit", async function(e){
                 body:JSON.stringify({
                     name:name,
                     email:email,
-                    password:password
+                    password:password,
+                    referralCode:
+                        referralCode
+                            ? referralCode.trim().toUpperCase()
+                            : null
                 })
             }
         );
