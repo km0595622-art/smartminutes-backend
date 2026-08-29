@@ -934,6 +934,77 @@ async function loadWallet(){
 
 }
 
+
+/* =========================================
+   EARNING MEMBERSHIP TIER MENU
+========================================= */
+
+.earning-tiers{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    gap:10px;
+    margin-top:16px;
+}
+
+.earning-tier{
+    width:100%;
+    padding:13px 10px;
+    border-radius:12px;
+    border:1px solid #d9a52e;
+    background:linear-gradient(135deg,#071a31,#12385f);
+    color:#f0c34f;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.earning-tier:hover{
+    transform:translateY(-1px);
+    background:linear-gradient(135deg,#12385f,#1a4b78);
+}
+
+.earning-tier.active{
+    background:linear-gradient(135deg,#b88a24,#f0c34f);
+    color:#071a31;
+}
+
+.earning-tier.locked{
+    opacity:.55;
+}
+
+.tier-description{
+    margin:12px 0 4px;
+    color:#d9a52e;
+    font-weight:bold;
+}
+
+.task-card{
+    margin-top:14px;
+    padding:16px;
+    border:1px solid rgba(217,165,46,.55);
+    border-radius:14px;
+    background:rgba(7,26,49,.72);
+}
+
+.task-card h3{
+    color:#f0c34f;
+}
+
+.tier-lock{
+    margin-top:10px;
+    padding:10px;
+    border-radius:9px;
+    background:rgba(184,138,36,.12);
+    color:#f0c34f;
+    font-weight:bold;
+}
+
+@media(max-width:600px){
+    .earning-tiers{
+        grid-template-columns:1fr;
+    }
+}
+
 </style>
 
 <style>
@@ -2316,128 +2387,483 @@ async function startTasks(){
     const container =
         document.getElementById("tasksContainer");
 
-    showMessage("Loading available tasks...");
+    showMessage("Checking your account balance...");
 
     try {
 
-        const response = await fetch(
-            API_BASE + "/api/tasks",
-            {
-                headers: {
-                    Authorization: "Bearer " + token
+        /* =========================================
+           ADMIN BYPASS
+        ========================================= */
+
+        let isAdmin = false;
+
+        try {
+            const profileResponse = await fetch(
+                API_BASE + "/api/tasks",
+                {
+                    headers:{
+                        Authorization:"Bearer " + token
+                    }
                 }
+            );
+
+            if(profileResponse.ok){
+                const profileData =
+                    await profileResponse.json();
+
+                isAdmin = profileData.isAdmin === true;
             }
-        );
 
-        const data = await response.json();
+        } catch (_) {
+            /* Wallet check below remains authoritative. */
+        }
 
-        if (!response.ok) {
+
+        /* =========================================
+           BALANCE CHECK
+        ========================================= */
+
+        if(!isAdmin){
+
+            const walletResponse =
+                await fetch(
+                    API_BASE + "/api/wallet",
+                    {
+                        headers:{
+                            Authorization:
+                                "Bearer " + token
+                        }
+                    }
+                );
+
+            const walletData =
+                await walletResponse.json();
+
+            if(!walletResponse.ok){
+
+                throw new Error(
+                    walletData.message ||
+                    "Unable to verify your wallet."
+                );
+
+            }
+
+            const balance =
+                Number(
+                    walletData.wallet?.withdrawable_balance || 0
+                );
+
+            if(balance < 50){
+
+                container.innerHTML = "";
+
+                showMessage(
+                    "Insufficient balance. Please fund your account."
+                );
+
+                const message =
+                    document.getElementById("message");
+
+                if(message){
+                    message.scrollIntoView({
+                        behavior:"smooth",
+                        block:"center"
+                    });
+                }
+
+                return;
+            }
+        }
+
+
+        /* =========================================
+           LOAD TASKS
+        ========================================= */
+
+        showMessage("Loading earning options...");
+
+        const response =
+            await fetch(
+                API_BASE + "/api/tasks",
+                {
+                    headers:{
+                        Authorization:
+                            "Bearer " + token
+                    }
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
             throw new Error(
-                "HTTP " + response.status + ": " +
-                (data.message || "Failed to load tasks.")
+                data.message ||
+                "Failed to load tasks."
             );
         }
 
-        if (!data.tasks || data.tasks.length === 0) {
 
-            container.innerHTML =
-                "<p>No tasks are currently available.</p>";
+        /* =========================================
+           MEMBERSHIP TIERS
+        ========================================= */
 
-            showMessage("");
-            return;
-        }
+        const tiers = [
+            {
+                key:"free",
+                name:"FREE",
+                icon:"🆓"
+            },
+            {
+                key:"bronze",
+                name:"BRONZE",
+                icon:"🥉"
+            },
+            {
+                key:"silver",
+                name:"SILVER",
+                icon:"🥈"
+            },
+            {
+                key:"gold",
+                name:"GOLD",
+                icon:"🥇"
+            },
+            {
+                key:"diamond",
+                name:"DIAMOND",
+                icon:"💎"
+            },
+            {
+                key:"titanium",
+                name:"TITANIUM",
+                icon:"⚡"
+            },
+            {
+                key:"platinum",
+                name:"PLATINUM",
+                icon:"👑"
+            }
+        ];
 
-        container.innerHTML =
-            data.tasks.map(task => {
+        const userTier =
+            (data.membershipTier || "free").toLowerCase();
 
-                const externalUrl =
-                    typeof task.external_url === "string" &&
-                    (() => {
-                    try {
-                        const url = new URL(task.external_url);
+        const tierRank = {
+            free:0,
+            bronze:1,
+            silver:2,
+            gold:3,
+            diamond:4,
+            titanium:5,
+            platinum:6
+        };
+
+        const userRank =
+            tierRank[userTier] ?? 0;
+
+
+        /* =========================================
+           RENDER TIER MENU
+        ========================================= */
+
+        container.innerHTML = `
+            <div class="tier-description">
+                Choose your earning level:
+            </div>
+
+            <div class="earning-tiers">
+                ${tiers.map(tier => {
+
+                    const unlocked =
+                        isAdmin ||
+                        userRank >= tierRank[tier.key];
+
+                    return `
+                        <button
+                            class="earning-tier ${unlocked ? "" : "locked"}"
+                            data-tier="${tier.key}"
+                            onclick="showTierTasks('${tier.key}')"
+                        >
+                            ${tier.icon} ${tier.name}
+                            ${unlocked ? "" : " 🔒"}
+                        </button>
+                    `;
+
+                }).join("")}
+            </div>
+
+            <div id="tierTasks"></div>
+        `;
+
+        window.smartMinuteTasks =
+            Array.isArray(data.tasks)
+                ? data.tasks
+                : [];
+
+        window.smartMinuteTiers =
+            tiers;
+
+        window.smartMinuteUserTier =
+            userTier;
+
+        window.smartMinuteIsAdmin =
+            isAdmin;
+
+        showTierTasks(userTier);
+
+        showMessage(
+            "Choose a membership level to view earning tasks."
+        );
+
+    } catch(error){
+
+        console.error(
+            "TASK LOAD ERROR:",
+            error
+        );
+
+        container.innerHTML = "";
+
+        showMessage(
+            error.message ||
+            "Unable to load earning options."
+        );
+    }
+}
+
+
+/* =========================================
+   SHOW TASKS BY MEMBERSHIP TIER
+========================================= */
+
+function showTierTasks(tierKey){
+
+    const tasks =
+        window.smartMinuteTasks || [];
+
+    const userTier =
+        window.smartMinuteUserTier || "free";
+
+    const isAdmin =
+        window.smartMinuteIsAdmin === true;
+
+    const tierRank = {
+        free:0,
+        bronze:1,
+        silver:2,
+        gold:3,
+        diamond:4,
+        titanium:5,
+        platinum:6
+    };
+
+    const userRank =
+        tierRank[userTier] ?? 0;
+
+    const selectedRank =
+        tierRank[tierKey] ?? 0;
+
+    document
+        .querySelectorAll(".earning-tier")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.tier === tierKey
+            );
+
+        });
+
+    const tierContainer =
+        document.getElementById("tierTasks");
+
+    if(!tierContainer){
+        return;
+    }
+
+
+    /* =========================================
+       LOCKED MEMBERSHIP
+    ========================================= */
+
+    if(!isAdmin && selectedRank > userRank){
+
+        const tierName =
+            tierKey.charAt(0).toUpperCase() +
+            tierKey.slice(1);
+
+        tierContainer.innerHTML = `
+            <div class="task-card">
+                <h3>🔒 ${tierName} Membership</h3>
+
+                <p>
+                    Upgrade to ${tierName} membership
+                    to access these earning tasks.
+                </p>
+
+                <div class="tier-lock">
+                    Membership upgrade required.
+                </div>
+            </div>
+        `;
+
+        showMessage(
+            `Upgrade to ${tierName} membership to access these tasks.`
+        );
+
+        return;
+    }
+
+
+    /* =========================================
+       FILTER SELECTED TIER
+    ========================================= */
+
+    const selectedTasks =
+        tasks.filter(task => {
+
+            const required =
+                (task.required_membership || "free")
+                    .toLowerCase();
+
+            return required === tierKey;
+
+        });
+
+
+    if(selectedTasks.length === 0){
+
+        tierContainer.innerHTML = `
+            <div class="task-card">
+                <h3>No ${tierKey.toUpperCase()} tasks yet</h3>
+                <p>
+                    There are currently no tasks available
+                    for this membership level.
+                </p>
+            </div>
+        `;
+
+        showMessage(
+            "No tasks are currently available for this level."
+        );
+
+        return;
+    }
+
+
+    /* =========================================
+       RENDER TASKS
+    ========================================= */
+
+    tierContainer.innerHTML =
+        selectedTasks.map(task => {
+
+            const externalUrl =
+                typeof task.external_url === "string" &&
+                (() => {
+                    try{
+                        const url =
+                            new URL(task.external_url);
+
                         return url.protocol === "http:" ||
                                url.protocol === "https:";
-                    } catch (_) {
+
+                    }catch(_){
                         return false;
                     }
                 })()
-                        ? task.external_url
-                        : null;
+                    ? task.external_url
+                    : null;
 
-                return `
-                    <div class="task-card" data-task-id="${task.id}">
+            const accessible =
+                isAdmin ||
+                task.membershipAccess !== false;
 
-                        <h3>${task.title}</h3>
+            return `
+                <div
+                    class="task-card"
+                    data-task-id="${task.id}"
+                >
 
+                    <h3>${task.title}</h3>
+
+                    <p>
+                        <strong>Category:</strong>
+                        ${task.category || "General"}
+                    </p>
+
+                    <p>
+                        ${task.description || ""}
+                    </p>
+
+                    <p>
+                        <strong>Reward:</strong>
+                        KSh ${task.reward}
+                    </p>
+
+                    ${task.provider ? `
                         <p>
-                            <strong>Category:</strong>
-                            ${task.category || "General"}
+                            <strong>Provider:</strong>
+                            ${task.provider}
                         </p>
+                    ` : ""}
 
+                    ${task.requirements ? `
                         <p>
-                            ${task.description || ""}
+                            <strong>Requirements:</strong>
+                            ${task.requirements}
                         </p>
+                    ` : ""}
 
+                    ${task.risk_notice ? `
                         <p>
-                            <strong>Reward:</strong>
-                            KSh ${task.reward}
+                            <strong>Risk notice:</strong>
+                            ${task.risk_notice}
                         </p>
+                    ` : ""}
 
-                        ${task.provider ? `
-                            <p>
-                                <strong>Provider:</strong>
-                                ${task.provider}
-                            </p>
-                        ` : ""}
-
-                        ${task.requirements ? `
-                            <p>
-                                <strong>Requirements:</strong>
-                                ${task.requirements}
-                            </p>
-                        ` : ""}
-
-                        ${task.risk_notice ? `
-                            <p>
-                                <strong>Risk notice:</strong>
-                                ${task.risk_notice}
-                            </p>
-                        ` : ""}
-
+                    ${accessible ? `
                         <button
+                            class="action"
                             onclick="startTask(${task.id})"
                         >
                             Start Task
                         </button>
+                    ` : `
+                        <div class="tier-lock">
+                            🔒 Membership upgrade required
+                        </div>
+                    `}
 
-                        ${externalUrl ? `
-                            <button
-                                type="button"
-                                onclick="window.open('${externalUrl}', '_blank', 'noopener,noreferrer')"
-                            >
-                                Open Provider
-                            </button>
-                        ` : ""}
+                    ${externalUrl && accessible ? `
+                        <button
+                            type="button"
+                            class="secondary-action"
+                            onclick="window.open(
+                                '${externalUrl}',
+                                '_blank',
+                                'noopener,noreferrer'
+                            )"
+                        >
+                            Open Provider
+                        </button>
+                    ` : ""}
 
-                    </div>
-                `;
+                </div>
+            `;
 
-            }).join("");
+        }).join("");
 
-        showMessage(
-            data.tasks.length + " tasks available"
-        );
-
-    } catch (error) {
-
-        console.error("TASK LOAD ERROR:", error);
-
-        showMessage(
-            "Unable to load tasks."
-        );
-
-    }
-
+    showMessage(
+        selectedTasks.length +
+        " " +
+        tierKey.toUpperCase() +
+        " task" +
+        (selectedTasks.length === 1 ? "" : "s") +
+        " available"
+    );
 }
 
 

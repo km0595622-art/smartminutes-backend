@@ -58,16 +58,15 @@ async function getTasks(req, res) {
             `
         );
 
-        const availableTasks = result.rows.filter(task => {
-            if (isAdmin) {
-                return true;
-            }
-
-            return hasMembershipAccess(
-                user.membership_tier || "free",
-                task.required_membership || "free"
-            );
-        });
+        const availableTasks = result.rows.map(task => ({
+            ...task,
+            membershipAccess: isAdmin
+                ? true
+                : hasMembershipAccess(
+                    user.membership_tier || "free",
+                    task.required_membership || "free"
+                )
+        }));
 
         res.json({
             tradingUnlocked: user.trading_unlocked,
