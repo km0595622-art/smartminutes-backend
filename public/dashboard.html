@@ -1126,44 +1126,6 @@ async function loadWallet(){
     </div>
 
 
-
-    <!-- ACCOUNT & SECURITY -->
-
-    <div
-        id="accountSection"
-        class="section"
-    >
-
-        <h2>
-            🔐 Account & Security
-        </h2>
-
-        <button
-            class="action"
-            onclick="showWithdrawalForm()"
-        >
-            💸 Withdraw Funds
-        </button>
-
-        <button
-            class="action"
-            onclick="showKycForm()"
-        >
-            🪪 KYC Verification
-        </button>
-
-        <button
-            class="action"
-            onclick="showUnlockForm()"
-        >
-            🔓 Trading Access
-        </button>
-
-        <div id="accountForms"></div>
-
-    </div>
-
-
     <!-- PROFILE SETTINGS -->
 
     <div
@@ -1196,6 +1158,40 @@ async function loadWallet(){
             <span id="profileEmail">
                 Loading...
             </span>
+
+        </div>
+
+
+        <!-- ACCOUNT & SECURITY -->
+
+        <div class="profile-info">
+
+            <h3 style="margin:0 0 12px;color:#071a31;">
+                🔐 Account & Security
+            </h3>
+
+            <button
+                class="action"
+                onclick="showWithdrawalForm()"
+            >
+                💸 Withdraw Funds
+            </button>
+
+            <button
+                class="action"
+                onclick="showKycForm()"
+            >
+                🪪 KYC Verification
+            </button>
+
+            <button
+                class="action"
+                onclick="showUnlockForm()"
+            >
+                🔓 Trading Access
+            </button>
+
+            <div id="accountForms"></div>
 
         </div>
 
