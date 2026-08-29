@@ -2523,6 +2523,20 @@ async function startTask(taskId){
             "Unable to start task."
         );
 
+        if (
+            error.message ===
+            "Insufficient balance. Please fund your account."
+        ) {
+            const message = document.getElementById("message");
+
+            if (message) {
+                message.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+            }
+        }
+
     }
 
 }
