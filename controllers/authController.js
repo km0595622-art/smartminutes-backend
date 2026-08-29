@@ -1,6 +1,16 @@
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db");
+
+
+// ============================================
+ // REFERRAL CODE GENERATOR
+ // ============================================
+
+function generateReferralCode() {
+    return "SM" + crypto.randomBytes(6).toString("hex").toUpperCase();
+}
 
 
 // ============================================
@@ -95,8 +105,14 @@ exports.register = async (req, res) => {
         const {
             name,
             email,
-            password
+            password,
+            referralCode
         } = req.body;
+
+        const cleanReferralCode =
+            typeof referralCode === "string"
+                ? referralCode.trim().toUpperCase()
+                : null;
 
         // --------------------------------------------
         // BASIC VALIDATION
@@ -125,6 +141,39 @@ exports.register = async (req, res) => {
         // --------------------------------------------
 
         await client.query("BEGIN");
+
+        // --------------------------------------------
+        // VALIDATE REFERRAL CODE
+        // --------------------------------------------
+
+        let referrer = null;
+
+        if (cleanReferralCode) {
+
+            const referralResult = await client.query(
+                `
+                SELECT
+                    id,
+                    referral_code
+                FROM users
+                WHERE referral_code = $1
+                LIMIT 1
+                `,
+                [cleanReferralCode]
+            );
+
+            if (referralResult.rows.length === 0) {
+
+                await client.query("ROLLBACK");
+
+                return res.status(400).json({
+                    message: "Invalid referral code."
+                });
+            }
+
+            referrer = referralResult.rows[0];
+
+        }
 
         // --------------------------------------------
         // CHECK EXISTING USER
@@ -162,19 +211,23 @@ exports.register = async (req, res) => {
         // CREATE USER
         // --------------------------------------------
 
+        const newReferralCode = generateReferralCode();
+
         const userResult = await client.query(
             `
             INSERT INTO users
             (
                 name,
                 email,
-                password
+                password,
+                referral_code
             )
             VALUES
             (
                 $1,
                 $2,
-                $3
+                $3,
+                $4
             )
             RETURNING
                 id,
@@ -182,12 +235,14 @@ exports.register = async (req, res) => {
                 email,
                 trading_unlocked,
                 unlock_fee_paid,
-                unlock_paid_at
+                unlock_paid_at,
+                referral_code
             `,
             [
                 name,
                 normalizedEmail,
-                hashedPassword
+                hashedPassword,
+                newReferralCode
             ]
         );
 
@@ -255,6 +310,75 @@ exports.register = async (req, res) => {
         });
 
         // --------------------------------------------
+        // PROCESS REFERRAL
+        // --------------------------------------------
+
+        let referralCount = 0;
+        let bronzeGranted = false;
+
+        if (referrer && referrer.id !== user.id) {
+
+            await client.query(
+                `
+                INSERT INTO referrals
+                (
+                    referrer_id,
+                    referred_user_id,
+                    referral_code,
+                    status
+                )
+                VALUES
+                ($1, $2, $3, 'completed')
+                ON CONFLICT (referred_user_id)
+                DO NOTHING
+                `,
+                [
+                    referrer.id,
+                    user.id,
+                    cleanReferralCode
+                ]
+            );
+
+            const countResult = await client.query(
+                `
+                SELECT COUNT(*) AS referral_count
+                FROM referrals
+                WHERE referrer_id = $1
+                  AND status = 'completed'
+                `,
+                [referrer.id]
+            );
+
+            referralCount =
+                Number(countResult.rows[0]?.referral_count || 0);
+
+            // 100 verified referrals = FREE BRONZE
+            if (referralCount >= 100) {
+
+                const bronzeResult = await client.query(
+                    `
+                    UPDATE users
+                    SET
+                        membership_tier = 'bronze',
+                        membership_fee = 0,
+                        membership_activated_at =
+                            COALESCE(
+                                membership_activated_at,
+                                NOW()
+                            )
+                    WHERE id = $1
+                      AND membership_tier = 'free'
+                    RETURNING id
+                    `,
+                    [referrer.id]
+                );
+
+                bronzeGranted =
+                    bronzeResult.rows.length > 0;
+            }
+        }
+
+        // --------------------------------------------
         // COMMIT
         // --------------------------------------------
 
@@ -262,7 +386,12 @@ exports.register = async (req, res) => {
 
         return res.status(201).json({
             message: "Account created successfully",
-            user
+            user,
+            referral: {
+                referralCode: user.referral_code,
+                referralCount: referralCount,
+                bronzeGranted: bronzeGranted
+            }
         });
 
     } catch (err) {
@@ -347,7 +476,8 @@ exports.login = async (req, res) => {
                 role,
                 trading_unlocked,
                 unlock_fee_paid,
-                unlock_paid_at
+                unlock_paid_at,
+                referral_code
             FROM users
             WHERE LOWER(email) = LOWER($1)
             LIMIT 1
@@ -638,7 +768,8 @@ exports.login = async (req, res) => {
             user: {
                 id: user.id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                referral_code: user.referral_code
             }
         });
 
