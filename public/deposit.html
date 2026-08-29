@@ -166,7 +166,232 @@ input{
         padding:22px;
     }
 }
-</style></head><body><header><h2>SmartMinute</h2><button class="back" onclick="goBack()">
+</style>
+<style>
+/* ===== SMARTMINUTE DEPOSIT NAVY GOLD THEME ===== */
+
+/* GLOBAL DEPOSIT PAGE */
+html,
+body{
+    background:
+        radial-gradient(
+            circle at top,
+            #12345a 0%,
+            #071a31 48%,
+            #030b16 100%
+        ) !important;
+
+    color:#f4f6fa !important;
+    overflow-x:hidden;
+}
+
+/* FALLING KENYAN SHILLINGS */
+.ksh-rain{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+}
+
+.ksh{
+    position:absolute;
+    top:-80px;
+    color:#f0c34f !important;
+    font-size:20px;
+    font-weight:900;
+    opacity:.18;
+    text-shadow:
+        0 0 8px rgba(240,195,79,.45),
+        0 0 18px rgba(217,165,46,.25);
+
+    animation:kshFall linear infinite;
+}
+
+@keyframes kshFall{
+
+    0%{
+        transform:
+            translate3d(0,-100px,0)
+            rotate(0deg);
+
+        opacity:0;
+    }
+
+    10%{
+        opacity:.22;
+    }
+
+    50%{
+        opacity:.18;
+    }
+
+    90%{
+        opacity:.16;
+    }
+
+    100%{
+        transform:
+            translate3d(90px,110vh,0)
+            rotate(360deg);
+
+        opacity:0;
+    }
+}
+
+/* KEEP DEPOSIT CONTENT ABOVE MONEY */
+body > *:not(.ksh-rain){
+    position:relative;
+    z-index:1;
+}
+
+/* MAIN CONTAINERS / CARDS */
+.container,
+.card,
+.deposit-container,
+.deposit-card,
+form,
+section{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(7,26,49,.97),
+            rgba(10,38,68,.97)
+        ) !important;
+
+    color:#f4f6fa !important;
+
+    border-color:
+        rgba(217,165,46,.55) !important;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.38),
+        inset 0 1px 0 rgba(255,255,255,.04) !important;
+}
+
+/* HEADINGS */
+h1,
+h2,
+h3,
+h4,
+label{
+    color:#f0c34f !important;
+}
+
+/* NORMAL TEXT */
+p,
+span,
+small{
+    color:#d5dce6;
+}
+
+/* BALANCE */
+.balance,
+.current-balance,
+.amount{
+    color:#ffd45c !important;
+    text-shadow:
+        0 0 12px rgba(240,195,79,.22);
+}
+
+/* INPUTS */
+input,
+select{
+    background:
+        rgba(255,255,255,.06) !important;
+
+    color:#ffffff !important;
+
+    border:
+        1px solid rgba(217,165,46,.65) !important;
+
+    border-radius:12px !important;
+}
+
+input::placeholder{
+    color:#aeb9c8 !important;
+}
+
+/* AMOUNT BUTTONS */
+button{
+    border-radius:12px !important;
+}
+
+button,
+.amount-button,
+.deposit-button{
+    background:
+        linear-gradient(
+            135deg,
+            #d9a52e,
+            #f0c34f
+        ) !important;
+
+    color:#071a31 !important;
+
+    border:
+        1px solid #f0c34f !important;
+
+    font-weight:800 !important;
+
+    box-shadow:
+        0 5px 15px rgba(217,165,46,.22);
+}
+
+button:hover,
+.amount-button:hover,
+.deposit-button:hover{
+    filter:brightness(1.08);
+}
+
+/* IMPORTANT MESSAGE */
+.notice,
+.info,
+.alert,
+.warning{
+    background:
+        rgba(217,165,46,.10) !important;
+
+    color:#f4f6fa !important;
+
+    border:
+        1px solid rgba(217,165,46,.35) !important;
+}
+
+/* LINKS */
+a{
+    color:#f0c34f !important;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+
+    .ksh{
+        font-size:17px;
+    }
+
+}
+</style>
+
+</head><body>
+
+<div class="ksh-rain" aria-hidden="true">
+    <span class="ksh" style="left:3%;animation-duration:10s;animation-delay:-3s;">KSh</span>
+    <span class="ksh" style="left:12%;animation-duration:14s;animation-delay:-8s;">KSh</span>
+    <span class="ksh" style="left:22%;animation-duration:11s;animation-delay:-5s;">KSh</span>
+    <span class="ksh" style="left:32%;animation-duration:16s;animation-delay:-12s;">KSh</span>
+    <span class="ksh" style="left:42%;animation-duration:12s;animation-delay:-6s;">KSh</span>
+    <span class="ksh" style="left:52%;animation-duration:15s;animation-delay:-10s;">KSh</span>
+    <span class="ksh" style="left:62%;animation-duration:11s;animation-delay:-4s;">KSh</span>
+    <span class="ksh" style="left:72%;animation-duration:17s;animation-delay:-13s;">KSh</span>
+    <span class="ksh" style="left:82%;animation-duration:13s;animation-delay:-7s;">KSh</span>
+    <span class="ksh" style="left:92%;animation-duration:10s;animation-delay:-9s;">KSh</span>
+    <span class="ksh" style="left:7%;animation-duration:18s;animation-delay:-15s;">KSh</span>
+    <span class="ksh" style="left:57%;animation-duration:19s;animation-delay:-14s;">KSh</span>
+</div>
+<header><h2>SmartMinute</h2><button class="back" onclick="goBack()">
 ← Dashboard
 </button></header><div class="container"><div class="box"><h1>💳 Deposit</h1><p class="subtitle">
 Add money to your SmartMinute account
