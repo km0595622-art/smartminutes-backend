@@ -132,28 +132,6 @@ async function startTask(req, res) {
 
         if (req.user.role !== "admin") {
 
-            // Minimum balance required to start earning
-            const walletResult = await db.query(
-                `
-                SELECT withdrawable_balance
-                FROM wallets
-                WHERE user_id = $1
-                `,
-                [userId]
-            );
-
-            const withdrawableBalance = Number(
-                walletResult.rows[0]?.withdrawable_balance || 0
-            );
-
-            if (withdrawableBalance < 50) {
-                return res.status(403).json({
-                    message: "Insufficient balance. Please fund your account.",
-                    requiredBalance: 50,
-                    currentBalance: withdrawableBalance
-                });
-            }
-
             const userResult = await db.query(
                 `
                 SELECT
@@ -170,6 +148,31 @@ async function startTask(req, res) {
             const userTier = user?.membership_tier || "free";
             const requiredTier = task.required_membership || "free";
             const tradingUnlocked = user?.trading_unlocked === true;
+
+            // Free-tier tasks  require a minimum balance.
+            // Paid-tier tasks require at least KSh 50 withdrawable balance.
+            if (requiredTier !== "free") {
+                const walletResult = await db.query(
+                    `
+                    SELECT withdrawable_balance
+                    FROM wallets
+                    WHERE user_id = $1
+                    `,
+                    [userId]
+                );
+
+                const withdrawableBalance = Number(
+                    walletResult.rows[0]?.withdrawable_balance || 0
+                );
+
+                if (withdrawableBalance < 50) {
+                    return res.status(403).json({
+                        message: "Insufficient balance. Please fund your account.",
+                        requiredBalance: 50,
+                        currentBalance: withdrawableBalance
+                    });
+                }
+            }
 
             if (!hasMembershipAccess(userTier, requiredTier)) {
                 return res.status(403).json({
