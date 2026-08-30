@@ -1350,6 +1350,7 @@ router.post(
                     id,
                     user_id,
                     amount,
+                      currency,
                     payment_method,
                     transaction_reference,
                     status,
