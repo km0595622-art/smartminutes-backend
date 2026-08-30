@@ -19,20 +19,26 @@ const MEMBERSHIP_TIERS = {
 
     gold: {
         name: "Gold",
-        fee: 350,
+        fee: 500,
         rank: 3
+    },
+
+    diamond: {
+        name: "Diamond",
+        fee: 750,
+        rank: 4
     },
 
     titanium: {
         name: "Titanium",
-        fee: 450,
-        rank: 4
+        fee: 1000,
+        rank: 5
     },
 
     platinum: {
         name: "Platinum",
-        fee: 600,
-        rank: 5
+        fee: 1500,
+        rank: 6
     }
 };
 

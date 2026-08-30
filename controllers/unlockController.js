@@ -1,6 +1,7 @@
 const db = require("../config/db");
 
-const UNLOCK_FEE = 250.00;
+const UNLOCK_FEE = 10.00;
+const UNLOCK_CURRENCY = "USD";
 
 
 // ============================================
@@ -134,10 +135,11 @@ async function createUnlockPayment(req, res) {
                 amount,
                 payment_method,
                 transaction_reference,
+                currency,
                 status
             )
             VALUES
-            ($1, $2, $3, $4, 'pending')
+            ($1, $2, $3, $4, $5, 'pending')
             RETURNING
                 id,
                 user_id,
@@ -145,15 +147,17 @@ async function createUnlockPayment(req, res) {
                 payment_method,
                 transaction_reference,
                 status,
+                  currency,
                 created_at
             `,
             [
-                userId,
-                UNLOCK_FEE,
-                cleanPaymentMethod,
-                transactionReference
-                    ? String(transactionReference).trim()
-                    : null
+                  userId,
+                  UNLOCK_FEE,
+                  cleanPaymentMethod,
+                  transactionReference
+                      ? String(transactionReference).trim()
+                      : null,
+                    UNLOCK_CURRENCY
             ]
         );
 
@@ -216,12 +220,13 @@ async function getUnlockStatus(req, res) {
         const user = result.rows[0];
 
         return res.json({
-            success: true,
-            tradingUnlocked: user.trading_unlocked,
-            unlockFee: UNLOCK_FEE,
-            feePaid: user.unlock_fee_paid,
-            unlockedAt: user.unlock_paid_at
-        });
+              success: true,
+              tradingUnlocked: user.trading_unlocked,
+              unlockFee: UNLOCK_FEE,
+              currency: UNLOCK_CURRENCY,
+              feePaid: user.unlock_fee_paid,
+              unlockedAt: user.unlock_paid_at
+          });
 
     } catch (error) {
 

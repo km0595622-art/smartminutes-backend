@@ -2138,7 +2138,7 @@ async function showUnlockForm(){
 
             <p class="form-note">
                 Trading access requires a one-time
-                KSh 250 unlock payment.
+                $10 unlock payment.
             </p>
 
             <p id="unlockStatus" class="form-message">
@@ -2175,7 +2175,7 @@ async function showUnlockForm(){
                 class="action"
                 onclick="purchaseUnlock()"
             >
-                🔓 Request Trading Unlock — KSh 250
+                🔓 Request Trading Unlock — $10
             </button>
 
             <button
@@ -2248,8 +2248,9 @@ async function loadUnlockStatus(){
 
             status.textContent =
                 "🔒 Trading access is currently locked. " +
-                "Unlock fee: KSh " +
-                Number(data.unlockFee || 250).toLocaleString();
+                "Unlock fee: $" +
+                Number(data.unlockFee || 10).toLocaleString() +
+                " USD";
 
         }
 
@@ -2694,8 +2695,21 @@ function showTierTasks(tierKey){
             tierKey.charAt(0).toUpperCase() +
             tierKey.slice(1);
 
+        const tierFees = {
+            bronze:150,
+            silver:250,
+            gold:500,
+            diamond:750,
+            titanium:1000,
+            platinum:1500
+        };
+
+        const tierFee =
+            tierFees[tierKey] || 0;
+
         tierContainer.innerHTML = `
             <div class="task-card">
+
                 <h3>🔒 ${tierName} Membership</h3>
 
                 <p>
@@ -2706,6 +2720,40 @@ function showTierTasks(tierKey){
                 <div class="tier-lock">
                     Membership upgrade required.
                 </div>
+
+                <div style="
+                    margin:18px 0;
+                    padding:16px;
+                    border:1px solid rgba(212,175,55,.35);
+                    border-radius:12px;
+                    background:rgba(10,20,45,.65);
+                    text-align:center;
+                ">
+
+                    <div style="
+                        font-size:13px;
+                        opacity:.8;
+                        margin-bottom:5px;
+                    ">
+                        Membership Fee
+                    </div>
+
+                    <strong style="
+                        font-size:24px;
+                    ">
+                        KSh ${tierFee.toLocaleString()}
+                    </strong>
+
+                </div>
+
+                <button
+                    class="action"
+                    type="button"
+                    onclick="purchaseMembership('${tierKey}')"
+                >
+                    💳 Upgrade to ${tierName}
+                </button>
+
             </div>
         `;
 
@@ -2864,6 +2912,135 @@ function showTierTasks(tierKey){
         (selectedTasks.length === 1 ? "" : "s") +
         " available"
     );
+}
+
+
+/* =========================================
+   PURCHASE MEMBERSHIP
+========================================= */
+
+async function purchaseMembership(tierKey){
+
+    const tierFees = {
+        bronze:150,
+        silver:250,
+        gold:500,
+        diamond:750,
+        titanium:1000,
+        platinum:1500
+    };
+
+    const tierNames = {
+        bronze:"Bronze",
+        silver:"Silver",
+        gold:"Gold",
+        diamond:"Diamond",
+        titanium:"Titanium",
+        platinum:"Platinum"
+    };
+
+    const fee = tierFees[tierKey];
+    const tierName = tierNames[tierKey];
+
+    if(!fee || !tierName){
+
+        showMessage(
+            "Invalid membership tier."
+        );
+
+        return;
+    }
+
+    const confirmed = confirm(
+        "Upgrade to " +
+        tierName +
+        " membership for KSh " +
+        fee.toLocaleString() +
+        "?\\n\\n" +
+        "After payment, your membership will remain pending until an administrator verifies the payment."
+    );
+
+    if(!confirmed){
+        return;
+    }
+
+    const phone = prompt(
+        "Enter the M-Pesa phone number used for this membership payment:"
+    );
+
+    if(!phone || !phone.trim()){
+
+        showMessage(
+            "Phone number is required."
+        );
+
+        return;
+    }
+
+    showMessage(
+        "Creating membership payment request..."
+    );
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/membership/purchase",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    Authorization:
+                        "Bearer " + token
+                },
+
+                body:JSON.stringify({
+                    membershipTier:tierKey,
+                    phone:phone.trim()
+                })
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to create membership payment."
+            );
+
+        }
+
+        showMessage(
+            "Membership payment request created successfully. Please complete the payment and wait for administrator verification."
+        );
+
+        alert(
+            tierName +
+            " membership payment request created.\\n\\n" +
+            "Amount: KSh " +
+            Number(data.payment?.amount || fee).toLocaleString() +
+            "\\n" +
+            "Status: Pending\\n\\n" +
+            "Your membership will activate after payment verification."
+        );
+
+    }catch(error){
+
+        console.error(
+            "MEMBERSHIP PURCHASE ERROR:",
+            error
+        );
+
+        showMessage(
+            error.message ||
+            "Unable to create membership payment."
+        );
+
+    }
+
 }
 
 

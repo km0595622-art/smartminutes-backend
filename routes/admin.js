@@ -977,6 +977,7 @@ router.post(
                 "bronze",
                 "silver",
                 "gold",
+                "diamond",
                 "titanium",
                 "platinum"
             ];
@@ -1392,7 +1393,7 @@ router.post(
 
             }
 
-            if (Number(payment.amount) !== 250) {
+            if (Number(payment.amount) !== 10 || payment.currency !== "USD") {
 
                 await client.query("ROLLBACK");
 
@@ -1499,7 +1500,7 @@ router.post(
                 UPDATE users
                 SET
                     trading_unlocked = TRUE,
-                    unlock_fee_paid = 250.00,
+                    unlock_fee_paid = 10.00,
                     unlock_paid_at = NOW()
                 WHERE id = $1
                 RETURNING
