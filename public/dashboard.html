@@ -3112,10 +3112,17 @@ async function loadKycStatus(){
 
 async function showUnlockForm(){
 
-    accountForms().innerHTML = `
-        <div class="account-form">
+    const container =
+        document.getElementById("tasksContainer");
 
-            <h3> Trading Access</h3>
+    if(!container){
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="account-form trading-access-form">
+
+            <h3>Trading Access</h3>
 
             <p class="form-note">
                 Trading access requires a one-time
@@ -3156,7 +3163,7 @@ async function showUnlockForm(){
                 class="action"
                 onclick="purchaseUnlock()"
             >
-                 Request Trading Unlock — $10
+                Request Trading Unlock — $10
             </button>
 
             <button
@@ -3166,6 +3173,13 @@ async function showUnlockForm(){
                 Refresh Trading Status
             </button>
 
+            <button
+                class="secondary-action"
+                onclick="showEarningOptions()"
+            >
+                Back to Earning Options
+            </button>
+
             <p id="unlockMessage" class="form-message"></p>
 
         </div>
@@ -3173,14 +3187,12 @@ async function showUnlockForm(){
 
     await loadUnlockStatus();
 
-    accountForms().scrollIntoView({
+    container.scrollIntoView({
         behavior:"smooth",
-        block:"nearest"
+        block:"center"
     });
 
 }
-
-
 
 async function loadUnlockStatus(){
 
