@@ -364,7 +364,7 @@ body::before{
     </div>
 
     <section class="hero">
-        <div class="hero-icon">↗</div>
+        <div class="hero-icon"></div>
         <h1>Referral Center</h1>
         <p>
             Invite people to SmartMinute and complete your
@@ -377,7 +377,7 @@ body::before{
     <section class="card">
 
         <div class="card-title">
-            <h2>🟢 FREE TASK</h2>
+            <h2> FREE TASK</h2>
             <span class="badge free-badge">FREE</span>
         </div>
 
@@ -423,14 +423,14 @@ body::before{
             class="share-button"
             onclick="shareReferral()"
         >
-            📤 SHARE INVITE LINK
+             SHARE INVITE LINK
         </button>
 
         <div
             class="status"
             id="freeStatus"
         >
-            🔒 Invite 5 people to complete the Free Task.
+             Invite 5 people to complete the Free Task.
         </div>
 
     </section>
@@ -441,7 +441,7 @@ body::before{
     <section class="card bronze-card">
 
         <div class="card-title">
-            <h2>🥉 BRONZE</h2>
+            <h2> BRONZE</h2>
             <span class="badge bronze-badge">OPTION 2</span>
         </div>
 
@@ -478,7 +478,7 @@ body::before{
         </div>
 
         <div class="bronze-lock">
-            <div class="lock-icon">🔒</div>
+            <div class="lock-icon"></div>
             <div>
                 Bronze uses the existing
                 <strong>100 verified referral</strong>
@@ -494,7 +494,7 @@ body::before{
     <section class="card">
 
         <div class="card-title">
-            <h2>👥 Your Referrals</h2>
+            <h2> Your Referrals</h2>
         </div>
 
         <div
@@ -611,7 +611,7 @@ async function copyReferral(){
         await navigator.clipboard.writeText(link);
 
         showStatus(
-            "✅ Referral link copied!"
+            " Referral link copied!"
         );
 
     }catch(error){
@@ -671,7 +671,7 @@ async function shareReferral(){
             await navigator.clipboard.writeText(link);
 
             showStatus(
-                "✅ Invite link copied! Send it to your friends."
+                " Invite link copied! Send it to your friends."
             );
 
         }
@@ -807,13 +807,13 @@ async function loadReferrals(){
         if(free.completed){
 
             showStatus(
-                "✅ FREE TASK COMPLETED!"
+                " FREE TASK COMPLETED!"
             );
 
         }else{
 
             showStatus(
-                "🔒 " +
+                " " +
                 (freeRequired - freeProgress) +
                 " more referral(s) needed."
             );
@@ -876,7 +876,7 @@ async function loadReferrals(){
 
             list.innerHTML =
                 '<div class="empty">' +
-                'No referrals yet. Share your link to get started! 🚀' +
+                'No referrals yet. Share your link to get started! ' +
                 '</div>';
 
         }else{
@@ -894,8 +894,8 @@ async function loadReferrals(){
                             status === "verified" ||
                             status === "approved" ||
                             status === "completed"
-                                ? "✅"
-                                : "⏳";
+                                ? ""
+                                : "";
 
                         return (
                             '<div class="referral-item">' +

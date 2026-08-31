@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>SmartMinute Dashboard</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:
+        linear-gradient(
+            135deg,
+            #020914,
+            #071a35 55%,
+            #15100a
+        );
+    color:#172033;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* =========================================
+   FALLING MONEY BACKGROUND
+========================================= */
+
+.money-background{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+}
+
+.money{
+    position:absolute;
+    top:-160px;
+
+    font-size:82px;
+
+    opacity:.42;
+
+    filter:
+        drop-shadow(0 8px 8px rgba(0,0,0,.35))
+        drop-shadow(0 0 8px rgba(218,165,46,.18));
+
+    animation:
+        moneyFall linear infinite,
+        moneySwing ease-in-out infinite;
+
+    will-change:transform,top;
+}
+
+/* different positions */
+
+.money:nth-child(1){
+    left:2%;
+    font-size:88px;
+    animation-duration:13s,4s;
+    animation-delay:0s,0s;
+}
+
+.money:nth-child(2){
+    left:12%;
+    font-size:105px;
+    animation-duration:17s,5s;
+    animation-delay:2s,1s;
+}
+
+.money:nth-child(3){
+    left:23%;
+    font-size:78px;
+    animation-duration:14s,4s;
+    animation-delay:5s,2s;
+}
+
+.money:nth-child(4){
+    left:34%;
+    font-size:110px;
+    animation-duration:19s,6s;
+    animation-delay:1s,1s;
+}
+
+.money:nth-child(5){
+    left:47%;
+    font-size:86px;
+    animation-duration:15s,4s;
+    animation-delay:6s,0s;
+}
+
+.money:nth-child(6){
+    left:59%;
+    font-size:104px;
+    animation-duration:18s,5s;
+    animation-delay:3s,2s;
+}
+
+.money:nth-child(7){
+    left:71%;
+    font-size:82px;
+    animation-duration:13s,4s;
+    animation-delay:7s,1s;
+}
+
+.money:nth-child(8){
+    left:83%;
+    font-size:108px;
+    animation-duration:20s,6s;
+    animation-delay:2s,3s;
+}
+
+.money:nth-child(9){
+    left:94%;
+    font-size:84px;
+    animation-duration:16s,5s;
+    animation-delay:8s,0s;
+}
+
+/* FALLING */
+
+@keyframes moneyFall{
+
+    0%{
+        top:-180px;
+        opacity:0;
+        transform:
+            rotate(-25deg)
+            scale(.85);
+    }
+
+    10%{
+        opacity:.42;
+    }
+
+    50%{
+        opacity:.48;
+    }
+
+    90%{
+        opacity:.38;
+    }
+
+    100%{
+        top:115vh;
+        opacity:0;
+        transform:
+            rotate(360deg)
+            scale(1.05);
+    }
+
+}
+
+/* SIDE TO SIDE */
+
+@keyframes moneySwing{
+
+    0%{
+        margin-left:-25px;
+    }
+
+    50%{
+        margin-left:25px;
+    }
+
+    100%{
+        margin-left:-25px;
+    }
+
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:10;
+
+    height:78px;
+
+    padding:10px 16px;
+
+    background:rgba(3,13,27,.96);
+
+    border-bottom:
+        1px solid
+        rgba(218,165,46,.35);
+
+    box-shadow:
+        0 4px 20px
+        rgba(0,0,0,.35);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+/* =========================================
+   PROFILE BUTTON
+========================================= */
+
+.profile-button{
+    width:48px;
+    height:48px;
+
+    border-radius:50%;
+
+    border:2px solid #d9a52e;
+
+    background:#071a31;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 0 12px
+        rgba(218,165,46,.2);
+}
+
+.profile-icon{
+    width:25px;
+    height:25px;
+    position:relative;
+}
+
+.profile-icon:before{
+    content:"";
+
+    position:absolute;
+
+    width:10px;
+    height:10px;
+
+    border:2px solid #e8b83f;
+
+    border-radius:50%;
+
+    top:0;
+    left:50%;
+
+    transform:translateX(-50%);
+}
+
+.profile-icon:after{
+    content:"";
+
+    position:absolute;
+
+    width:22px;
+    height:11px;
+
+    border:2px solid #e8b83f;
+
+    border-radius:
+        14px 14px
+        8px 8px;
+
+    bottom:0;
+    left:50%;
+
+    transform:translateX(-50%);
+}
+
+/* =========================================
+   MELTING GOLD CLOCK
+========================================= */
+
+.brand{
+    text-align:center;
+    color:#e8b83f;
+}
+
+.logo{
+    width:48px;
+    height:48px;
+
+    border:3px solid #d9a52e;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            #17130a,
+            #07101f 70%
+        );
+
+    position:relative;
+
+    margin:auto;
+
+    box-shadow:
+        0 0 16px
+        rgba(218,165,46,.3);
+}
+
+.logo:before{
+    content:"";
+
+    position:absolute;
+
+    width:3px;
+    height:15px;
+
+    background:#f0c34f;
+
+    left:50%;
+    top:8px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius:3px;
+}
+
+.logo:after{
+    content:"";
+
+    position:absolute;
+
+    width:14px;
+    height:3px;
+
+    background:#f0c34f;
+
+    left:50%;
+    top:22px;
+
+    transform:rotate(35deg);
+
+    transform-origin:left center;
+
+    border-radius:3px;
+}
+
+.drop{
+    position:absolute;
+
+    background:
+        linear-gradient(
+            #f6d15b,
+            #b77b12
+        );
+
+    border-radius:
+        0 0 8px 8px;
+
+    box-shadow:
+        0 2px 5px
+        rgba(0,0,0,.25);
+}
+
+.drop1{
+    width:6px;
+    height:13px;
+    left:9px;
+    bottom:-10px;
+}
+
+.drop2{
+    width:8px;
+    height:17px;
+    left:19px;
+    bottom:-14px;
+}
+
+.drop3{
+    width:6px;
+    height:11px;
+    right:10px;
+    bottom:-8px;
+}
+
+.brand-name{
+    font-size:13px;
+    font-weight:bold;
+    margin-top:3px;
+}
+
+/* =========================================
+   INVITE
+========================================= */
+
+.invite-button{
+    width:48px;
+    height:48px;
+
+    border-radius:50%;
+
+    border:1px solid #b88a24;
+
+    background:#071a31;
+
+    color:#e8b83f;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 0 12px
+        rgba(218,165,46,.2);
+}
+
+.invite-button:active{
+    transform:scale(.94);
+}
+
+/* =========================================
+   MAIN
+========================================= */
+
+.container{
+    position:relative;
+    z-index:1;
+
+    max-width:900px;
+
+    margin:auto;
+
+    padding:
+        22px 16px
+        40px;
+}
+
+/* =========================================
+   WELCOME
+========================================= */
+
+.welcome{
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.98),
+            rgba(247,243,232,.98)
+        );
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:
+        0 12px 30px
+        rgba(0,0,0,.25);
+
+    border:
+        1px solid
+        rgba(218,165,46,.3);
+}
+
+.welcome h1{
+    margin:
+        0 0 8px;
+
+    color:#071a31;
+
+    font-size:27px;
+}
+
+.welcome p{
+    margin:0;
+    color:#687386;
+}
+
+/* =========================================
+   DEPOSIT
+========================================= */
+
+.deposit{
+    width:100%;
+
+    margin-top:18px;
+
+    padding:15px;
+
+    border:
+        1px solid
+        #b88a24;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #071a31,
+            #0d294b
+        );
+
+    color:#f0c34f;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.deposit:hover{
+    background:#0d3157;
+}
+
+/* =========================================
+   BALANCE CARDS
+========================================= */
+
+.cards{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(200px,1fr)
+        );
+
+    gap:15px;
+
+    margin-top:18px;
+}
+
+.card{
+    background:
+        rgba(255,255,255,.97);
+
+    border-radius:17px;
+
+    padding:21px;
+
+    box-shadow:
+        0 8px 22px
+        rgba(0,0,0,.22);
+
+    border-top:
+        3px solid
+        #d9a52e;
+}
+
+.card h3{
+    margin:
+        0 0 12px;
+
+    color:#4e596b;
+
+    font-size:15px;
+}
+
+.amount{
+    font-size:25px;
+
+    font-weight:bold;
+
+    color:#071a31;
+}
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+.section{
+    margin-top:18px;
+
+    background:
+        rgba(255,255,255,.97);
+
+    border-radius:17px;
+
+    padding:22px;
+
+    box-shadow:
+        0 8px 22px
+        rgba(0,0,0,.22);
+}
+
+.section h2{
+    margin-top:0;
+    color:#071a31;
+}
+
+.action{
+    width:100%;
+
+    margin-top:10px;
+
+    padding:14px;
+
+    border-radius:10px;
+
+    border:
+        1px solid
+        #b88a24;
+
+    background:#071a31;
+
+    color:#e8b83f;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.action:hover{
+    background:#0d294b;
+}
+
+/* =========================================
+   ACCOUNT FORMS
+========================================= */
+
+.account-form{
+
+    margin-top:15px;
+
+    padding:18px;
+
+    background:#f5f6f8;
+
+    border-radius:12px;
+
+    border:
+        1px solid
+        #d9a52e;
+
+}
+
+.account-form h3{
+
+    margin-top:0;
+
+    color:#071a31;
+
+}
+
+.form-note{
+
+    color:#687386;
+
+    font-size:13px;
+
+    line-height:1.5;
+
+}
+
+.account-form label{
+
+    display:block;
+
+    margin-top:12px;
+
+    margin-bottom:5px;
+
+    color:#4e596b;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+.account-form input,
+.account-form select{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:13px;
+
+    border:
+        1px solid
+        #ccd1d9;
+
+    border-radius:9px;
+
+    background:white;
+
+    color:#071a31;
+
+    font-size:15px;
+
+}
+
+.account-form input:focus,
+.account-form select:focus{
+
+    outline:none;
+
+    border-color:#b88a24;
+
+}
+
+.secondary-action{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:12px;
+
+    border:
+        1px solid
+        #b88a24;
+
+    border-radius:10px;
+
+    background:white;
+
+    color:#071a31;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+.secondary-action:hover{
+
+    background:#f0c34f;
+
+}
+
+.form-message{
+
+    margin-top:12px;
+
+    color:#687386;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    line-height:1.5;
+
+}
+
+
+/* =========================================
+   PROFILE PANEL
+========================================= */
+
+.profile-panel{
+    display:none;
+
+    margin-top:18px;
+
+    background:white;
+
+    border-radius:17px;
+
+    padding:22px;
+
+    box-shadow:
+        0 8px 22px
+        rgba(0,0,0,.25);
+}
+
+.profile-panel h2{
+    margin-top:0;
+    color:#071a31;
+}
+
+.profile-info{
+    background:#f5f6f8;
+
+    border-radius:10px;
+
+    padding:14px;
+
+    margin-bottom:12px;
+}
+
+.profile-info strong{
+    display:block;
+
+    color:#687386;
+
+    font-size:12px;
+
+    margin-bottom:4px;
+}
+
+.logout{
+    width:100%;
+
+    padding:13px;
+
+    border:0;
+
+    border-radius:9px;
+
+    background:#8b1e1e;
+
+    color:white;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+/* =========================================
+   LOAD WALLET
+========================================= */
+
+async function loadWallet(){
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/wallet",
+            {
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Failed to load wallet."
+            );
+
+        }
+
+        const wallet =
+            data.wallet;
+
+        const withdrawable =
+            Number(
+                wallet.withdrawable_balance || 0
+            );
+
+        document.getElementById(
+            "balance"
+        ).textContent =
+            "KSh " +
+            withdrawable.toLocaleString(
+                "en-KE",
+                {
+                    minimumFractionDigits:2,
+                    maximumFractionDigits:2
+                }
+            );
+
+    }catch(error){
+
+        console.error(
+            "WALLET LOAD ERROR:",
+            error
+        );
+
+        showMessage(
+            "Unable to load wallet balance."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+
+
+.message{
+    text-align:center;
+
+    margin-top:15px;
+
+    color:#b17f18;
+
+    font-weight:bold;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:500px){
+
+    header{
+        height:70px;
+        padding:8px 11px;
+    }
+
+    .profile-button,
+    .invite-button{
+        width:43px;
+        height:43px;
+    }
+
+    .logo{
+        width:43px;
+        height:43px;
+    }
+
+    .container{
+        padding:
+            17px 12px
+            35px;
+    }
+
+    .welcome{
+        padding:20px;
+    }
+
+    .welcome h1{
+        font-size:23px;
+    }
+
+    .money{
+        opacity:.34;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================
+     FALLING DOLLARS
+========================================= -->
+
+<div class="money-background">
+
+    <div class="money">💵</div>
+    <div class="money">💸</div>
+    <div class="money">💵</div>
+    <div class="money">💸</div>
+    <div class="money">💵</div>
+    <div class="money">💸</div>
+    <div class="money">💵</div>
+    <div class="money">💸</div>
+    <div class="money">💵</div>
+
+</div>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
+
+<header>
+
+    <!-- PROFILE -->
+
+    <button
+        class="profile-button"
+        onclick="toggleProfile()"
+        aria-label="Profile"
+    >
+        <span class="profile-icon"></span>
+    </button>
+
+
+    <!-- MELTING GOLD CLOCK -->
+
+    <div class="brand">
+
+        <div class="logo">
+
+            <span class="drop drop1"></span>
+            <span class="drop drop2"></span>
+            <span class="drop drop3"></span>
+
+        </div>
+
+        <div class="brand-name">
+            SmartMinute
+        </div>
+
+    </div>
+
+
+    <!-- INVITE -->
+
+    <button
+        class="invite-button"
+        onclick="inviteFriends()"
+        aria-label="Invite Friends"
+        title="Invite Friends"
+    >
+        ↗
+    </button>
+
+</header>
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
+<div class="container">
+
+
+    <!-- WELCOME -->
+
+    <div class="welcome">
+
+        <h1 id="welcomeName">
+            Welcome to SmartMinute 👋
+        </h1>
+
+        <p>
+            Earn smarter, complete tasks and grow your balance.
+        </p>
+
+    </div>
+
+
+    <!-- DEPOSIT -->
+
+    <button
+        class="deposit"
+        onclick="deposit()"
+    >
+        💳 Deposit Funds
+    </button>
+
+
+    <!-- BALANCES -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h3>
+                💰 Available Balance
+            </h3>
+
+            <div
+                class="amount"
+                id="balance"
+            >
+                KSh 0.00
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                📈 Total Earned
+            </h3>
+
+            <div
+                class="amount"
+                id="earned"
+            >
+                KSh 0.00
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                ✅ Tasks Completed
+            </h3>
+
+            <div
+                class="amount"
+                id="tasks"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="section">
+
+        <h2>
+            🚀 Quick Actions
+        </h2>
+
+        <button
+            class="action"
+            onclick="startTasks()"
+        >
+            🚀 Start Earning
+        </button>
+
+        <button
+            class="action"
+            onclick="deposit()"
+        >
+            💳 Make a Deposit
+        </button>
+
+        <p
+            id="message"
+            class="message"
+        ></p>
+
+        <div id="tasksContainer"></div>
+
+    </div>
+
+
+    <!-- PROFILE SETTINGS -->
+
+    <div
+        id="profilePanel"
+        class="profile-panel"
+    >
+
+        <h2>
+            👤 Profile Settings
+        </h2>
+
+        <div class="profile-info">
+
+            <strong>
+                NAME
+            </strong>
+
+            <span id="profileName">
+                Loading...
+            </span>
+
+        </div>
+
+        <div class="profile-info">
+
+            <strong>
+                EMAIL
+            </strong>
+
+            <span id="profileEmail">
+                Loading...
+            </span>
+
+        </div>
+
+
+        <!-- ACCOUNT & SECURITY -->
+
+        <div class="profile-info">
+
+            <h3 style="margin:0 0 12px;color:#071a31;">
+                🔐 Account & Security
+            </h3>
+
+            <button
+                class="action"
+                onclick="showWithdrawalForm()"
+            >
+                💸 Withdraw Funds
+            </button>
+
+            <button
+                class="action"
+                onclick="showKycForm()"
+            >
+                🪪 KYC Verification
+            </button>
+
+            <button
+                class="action"
+                onclick="showUnlockForm()"
+            >
+                🔓 Trading Access
+            </button>
+
+            <div id="accountForms"></div>
+
+        </div>
+
+        <button
+            class="logout"
+            onclick="logout()"
+        >
+            🚪 Logout
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   AUTHENTICATION
+========================================= */
+
+const API_BASE = window.location.origin;
+const token =
+    localStorage.getItem("token");
+
+let savedUser =
+    JSON.parse(
+        localStorage.getItem("user") || "null"
+    );
+
+if(!token){
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================
+   REFRESH USER PROFILE
+========================================= */
+
+async function refreshUserProfile(){
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/membership",
+            {
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        if(!response.ok){
+            return;
+        }
+
+        const data = await response.json();
+
+        if(data.user){
+
+            savedUser = {
+                ...savedUser,
+                ...data.user
+            };
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(savedUser)
+            );
+        }
+
+    }catch(error){
+
+        console.log(
+            "USER PROFILE REFRESH ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   USER INFORMATION
+========================================= */
+
+if(savedUser){
+
+    const name =
+        savedUser.name || "User";
+
+    const email =
+        savedUser.email || "";
+
+    document.getElementById(
+        "welcomeName"
+    ).textContent =
+        "Welcome, " + name + " 👋";
+
+    document.getElementById(
+        "profileName"
+    ).textContent =
+        name;
+
+    document.getElementById(
+        "profileEmail"
+    ).textContent =
+        email;
+
+}
+
+
+/* =========================================
+   PROFILE
+========================================= */
+
+function toggleProfile(){
+
+    const panel =
+        document.getElementById(
+            "profilePanel"
+        );
+
+    if(panel.style.display === "block"){
+
+        panel.style.display =
+            "none";
+
+    }else{
+
+        panel.style.display =
+            "block";
+
+        panel.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+
+    }
+
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+function logout(){
+
+    localStorage.removeItem(
+        "token"
+    );
+
+    localStorage.removeItem(
+        "user"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================
+   INVITE FRIENDS
+========================================= */
+
+async function inviteFriends(){
+
+    const inviteLink =
+        window.location.origin +
+        "/register.html?ref=" +
+        encodeURIComponent(
+            savedUser?.referral_code || ""
+        );
+
+    const shareText =
+        "Join me on SmartMinute! " +
+        "Earn smarter every minute. " +
+        "Create your account here: " +
+        inviteLink;
+
+    try{
+
+        if(navigator.share){
+
+            await navigator.share({
+
+                title:
+                    "Join SmartMinute",
+
+                text:
+                    shareText,
+
+                url:
+                    inviteLink
+
+            });
+
+        }else{
+
+            await navigator.clipboard.writeText(
+                inviteLink
+            );
+
+            showMessage(
+                "Invite link copied! Send it to your friends 📤"
+            );
+
+        }
+
+    }catch(error){
+
+        console.log(
+            "Share cancelled or unavailable."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   DEPOSIT
+========================================= */
+
+function deposit(){
+
+    window.location.href =
+        "deposit.html";
+
+}
+
+
+/* =========================================
+   ACCOUNT & SECURITY
+========================================= */
+
+function accountForms(){
+
+    return document.getElementById("accountForms");
+
+}
+
+
+/* =========================================
+   WITHDRAWAL FORM
+========================================= */
+
+function showWithdrawalForm(){
+
+    accountForms().innerHTML = `
+        <div class="account-form">
+
+            <h3>💸 Withdraw Funds</h3>
+
+            <p class="form-note">
+                Withdrawals are reviewed by SmartMinute before funds are released.
+                A KSh 100 withdrawal fee applies.
+            </p>
+
+            <label>Amount (KSh)</label>
+
+            <input
+                id="withdrawAmount"
+                type="number"
+                min="5000"
+                step="0.01"
+                placeholder="Minimum KSh 5,000"
+            >
+
+            <label>Withdrawal Method</label>
+
+            <select id="withdrawMethod">
+
+                <option value="mpesa">
+                    M-Pesa
+                </option>
+
+                <option value="bank">
+                    Bank
+                </option>
+
+            </select>
+
+            <label>Destination</label>
+
+            <input
+                id="withdrawDestination"
+                type="text"
+                placeholder="M-Pesa number or bank details"
+            >
+
+            <button
+                class="action"
+                onclick="submitWithdrawal()"
+            >
+                Submit Withdrawal Request
+            </button>
+
+            <button
+                class="secondary-action"
+                onclick="closeAccountForm()"
+            >
+                Cancel
+            </button>
+
+            <p id="withdrawMessage" class="form-message"></p>
+
+        </div>
+    `;
+
+    accountForms().scrollIntoView({
+        behavior:"smooth",
+        block:"nearest"
+    });
+
+}
+
+
+/* =========================================
+   SUBMIT WITHDRAWAL
+========================================= */
+
+async function submitWithdrawal(){
+
+    const amount =
+        Number(
+            document.getElementById(
+                "withdrawAmount"
+            ).value
+        );
+
+    const method =
+        document.getElementById(
+            "withdrawMethod"
+        ).value;
+
+    const destination =
+        document.getElementById(
+            "withdrawDestination"
+        ).value.trim();
+
+    const message =
+        document.getElementById(
+            "withdrawMessage"
+        );
+
+    if(!Number.isFinite(amount) || amount < 5000){
+
+        message.textContent =
+            "Minimum withdrawal amount is KSh 5,000.";
+
+        return;
+
+    }
+
+    if(!destination){
+
+        message.textContent =
+            "Please enter your withdrawal destination.";
+
+        return;
+
+    }
+
+    message.textContent =
+        "Submitting withdrawal request...";
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/withdrawal",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    Authorization:
+                        "Bearer " + token
+                },
+
+                body:JSON.stringify({
+
+                    amount,
+                    method,
+                    destination
+
+                })
+
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to create withdrawal."
+            );
+
+        }
+
+        message.textContent =
+            "Withdrawal request submitted successfully. " +
+            "Your funds are now reserved pending admin review.";
+
+        await loadWallet();
+
+    }catch(error){
+
+        console.error(
+            "WITHDRAWAL ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to submit withdrawal.";
+
+    }
+
+}
+
+
+/* =========================================
+   KYC FORM
+========================================= */
+
+async function showKycForm(){
+
+    accountForms().innerHTML = `
+        <div class="account-form">
+
+            <h3>🪪 KYC Verification</h3>
+
+            <p class="form-note">
+                Create your KYC profile and submit it for review.
+            </p>
+
+            <label>Country</label>
+
+            <input
+                id="kycCountry"
+                type="text"
+                value="Kenya"
+                placeholder="Enter your country"
+            >
+
+            <button
+                class="action"
+                onclick="startKyc()"
+            >
+                Start KYC Profile
+            </button>
+
+            <button
+                class="secondary-action"
+                onclick="submitKyc()"
+            >
+                Submit KYC for Review
+            </button>
+
+            <button
+                class="secondary-action"
+                onclick="loadKycStatus()"
+            >
+                Check KYC Status
+            </button>
+
+            <p id="kycMessage" class="form-message"></p>
+
+        </div>
+    `;
+
+    await loadKycStatus();
+
+    accountForms().scrollIntoView({
+        behavior:"smooth",
+        block:"nearest"
+    });
+
+}
+
+
+/* =========================================
+   START KYC
+========================================= */
+
+async function startKyc(){
+
+    const country =
+        document.getElementById(
+            "kycCountry"
+        ).value.trim();
+
+    const message =
+        document.getElementById(
+            "kycMessage"
+        );
+
+    message.textContent =
+        "Creating KYC profile...";
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/kyc/start",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    Authorization:
+                        "Bearer " + token
+                },
+
+                body:JSON.stringify({
+                    country
+                })
+
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to start KYC."
+            );
+
+        }
+
+        message.textContent =
+            "KYC profile ready. Status: " +
+            (data.kyc?.status || "not_started");
+
+    }catch(error){
+
+        console.error(
+            "START KYC ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to start KYC.";
+
+    }
+
+}
+
+
+/* =========================================
+   SUBMIT KYC
+========================================= */
+
+async function submitKyc(){
+
+    const message =
+        document.getElementById(
+            "kycMessage"
+        );
+
+    message.textContent =
+        "Submitting KYC for review...";
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/kyc/submit",
+            {
+                method:"POST",
+
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to submit KYC."
+            );
+
+        }
+
+        message.textContent =
+            "KYC submitted successfully. " +
+            "Status: pending review.";
+
+    }catch(error){
+
+        console.error(
+            "SUBMIT KYC ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to submit KYC.";
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD KYC STATUS
+========================================= */
+
+async function loadKycStatus(){
+
+    const message =
+        document.getElementById(
+            "kycMessage"
+        );
+
+    if(!message){
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/kyc",
+            {
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            if(response.status === 404){
+
+                message.textContent =
+                    "KYC profile has not been started yet.";
+
+                return;
+
+            }
+
+            throw new Error(
+                data.message ||
+                "Unable to load KYC status."
+            );
+
+        }
+
+        if(data.kyc){
+
+            message.textContent =
+                "Current KYC status: " +
+                data.kyc.status;
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "KYC STATUS ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to load KYC status.";
+
+    }
+
+}
+
+
+/* =========================================
+   TRADING UNLOCK FORM
+========================================= */
+
+async function showUnlockForm(){
+
+    accountForms().innerHTML = `
+        <div class="account-form">
+
+            <h3>🔓 Trading Access</h3>
+
+            <p class="form-note">
+                Trading access requires a one-time
+                KSh 250 unlock payment.
+            </p>
+
+            <p id="unlockStatus" class="form-message">
+                Checking trading status...
+            </p>
+
+            <label>Phone Number</label>
+
+            <input
+                id="unlockPhone"
+                type="tel"
+                placeholder="07XXXXXXXX"
+            >
+
+            <label>Payment Method</label>
+
+            <select id="unlockPaymentMethod">
+
+                <option value="mpesa">
+                    M-Pesa
+                </option>
+
+            </select>
+
+            <label>Transaction Reference (optional)</label>
+
+            <input
+                id="unlockReference"
+                type="text"
+                placeholder="Transaction reference"
+            >
+
+            <button
+                class="action"
+                onclick="purchaseUnlock()"
+            >
+                🔓 Request Trading Unlock — KSh 250
+            </button>
+
+            <button
+                class="secondary-action"
+                onclick="loadUnlockStatus()"
+            >
+                Refresh Trading Status
+            </button>
+
+            <p id="unlockMessage" class="form-message"></p>
+
+        </div>
+    `;
+
+    await loadUnlockStatus();
+
+    accountForms().scrollIntoView({
+        behavior:"smooth",
+        block:"nearest"
+    });
+
+}
+
+
+/* =========================================
+   LOAD UNLOCK STATUS
+========================================= */
+
+async function loadUnlockStatus(){
+
+    const status =
+        document.getElementById(
+            "unlockStatus"
+        );
+
+    if(!status){
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/unlock/status",
+            {
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to load trading status."
+            );
+
+        }
+
+        if(data.tradingUnlocked){
+
+            status.textContent =
+                "✅ Trading access is unlocked.";
+
+        }else{
+
+            status.textContent =
+                "🔒 Trading access is currently locked. " +
+                "Unlock fee: KSh " +
+                Number(data.unlockFee || 250).toLocaleString();
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "UNLOCK STATUS ERROR:",
+            error
+        );
+
+        status.textContent =
+            error.message ||
+            "Unable to load trading status.";
+
+    }
+
+}
+
+
+/* =========================================
+   PURCHASE TRADING UNLOCK
+========================================= */
+
+async function purchaseUnlock(){
+
+    const phone =
+        document.getElementById(
+            "unlockPhone"
+        ).value.trim();
+
+    const paymentMethod =
+        document.getElementById(
+            "unlockPaymentMethod"
+        ).value;
+
+    const transactionReference =
+        document.getElementById(
+            "unlockReference"
+        ).value.trim();
+
+    const message =
+        document.getElementById(
+            "unlockMessage"
+        );
+
+    if(!phone){
+
+        message.textContent =
+            "Please enter your phone number.";
+
+        return;
+
+    }
+
+    message.textContent =
+        "Creating trading unlock payment request...";
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/unlock/purchase",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    Authorization:
+                        "Bearer " + token
+                },
+
+                body:JSON.stringify({
+
+                    phone,
+                    paymentMethod,
+                    transactionReference:
+                        transactionReference || null
+
+                })
+
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Unable to create unlock payment."
+            );
+
+        }
+
+        message.textContent =
+            "Trading unlock payment request created. " +
+            "Wait for admin approval.";
+
+        await loadUnlockStatus();
+
+    }catch(error){
+
+        console.error(
+            "UNLOCK PURCHASE ERROR:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "Unable to create unlock payment.";
+
+    }
+
+}
+
+
+/* =========================================
+   CLOSE ACCOUNT FORM
+========================================= */
+
+function closeAccountForm(){
+
+    accountForms().innerHTML = "";
+
+}
+
+
+
+/* =========================================
+   TASKS
+========================================= */
+
+async function startTasks(){
+
+    const container =
+        document.getElementById("tasksContainer");
+
+    showMessage("Loading available tasks...");
+
+    try {
+
+        const response = await fetch(
+            API_BASE + "/api/tasks",
+            {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                "HTTP " + response.status + ": " +
+                (data.message || "Failed to load tasks.")
+            );
+        }
+
+        if (!data.tasks || data.tasks.length === 0) {
+
+            container.innerHTML =
+                "<p>No tasks are currently available.</p>";
+
+            showMessage("");
+            return;
+        }
+
+        container.innerHTML =
+            data.tasks.map(task => {
+
+                const externalUrl =
+                    typeof task.external_url === "string" &&
+                    (() => {
+                    try {
+                        const url = new URL(task.external_url);
+                        return url.protocol === "http:" ||
+                               url.protocol === "https:";
+                    } catch (_) {
+                        return false;
+                    }
+                })()
+                        ? task.external_url
+                        : null;
+
+                return `
+                    <div class="task-card" data-task-id="${task.id}">
+
+                        <h3>${task.title}</h3>
+
+                        <p>
+                            <strong>Category:</strong>
+                            ${task.category || "General"}
+                        </p>
+
+                        <p>
+                            ${task.description || ""}
+                        </p>
+
+                        <p>
+                            <strong>Reward:</strong>
+                            KSh ${task.reward}
+                        </p>
+
+                        ${task.provider ? `
+                            <p>
+                                <strong>Provider:</strong>
+                                ${task.provider}
+                            </p>
+                        ` : ""}
+
+                        ${task.requirements ? `
+                            <p>
+                                <strong>Requirements:</strong>
+                                ${task.requirements}
+                            </p>
+                        ` : ""}
+
+                        ${task.risk_notice ? `
+                            <p>
+                                <strong>Risk notice:</strong>
+                                ${task.risk_notice}
+                            </p>
+                        ` : ""}
+
+                        <button
+                            onclick="startTask(${task.id})"
+                        >
+                            Start Task
+                        </button>
+
+                        ${externalUrl ? `
+                            <button
+                                type="button"
+                                onclick="window.open('${externalUrl}', '_blank', 'noopener,noreferrer')"
+                            >
+                                Open Provider
+                            </button>
+                        ` : ""}
+
+                    </div>
+                `;
+
+            }).join("");
+
+        showMessage(
+            data.tasks.length + " tasks available"
+        );
+
+    } catch (error) {
+
+        console.error("TASK LOAD ERROR:", error);
+
+        showMessage(
+            "Unable to load tasks."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   START TASK
+========================================= */
+
+async function startTask(taskId){
+
+    showMessage("Starting task...");
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/tasks/" + taskId + "/start",
+            {
+                method:"POST",
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Failed to start task."
+            );
+
+        }
+
+        showMessage(
+            "Task started successfully! Complete it and submit it for verification."
+        );
+
+        const attempt =
+            data.attempt;
+
+        if(attempt && attempt.id){
+
+            const container =
+                document.getElementById(
+                    "tasksContainer"
+                );
+
+            const card =
+                container.querySelector(
+                    '[data-task-id="' + taskId + '"]'
+                );
+
+            if(card){
+
+                card.insertAdjacentHTML(
+                    "beforeend",
+                    `
+                    <button
+                        class="action"
+                        onclick="submitTask(${attempt.id})"
+                    >
+                        ✅ Submit Task
+                    </button>
+                    `
+                );
+
+            }
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "START TASK ERROR:",
+            error
+        );
+
+        showMessage(
+            error.message ||
+            "Unable to start task."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   SUBMIT TASK
+========================================= */
+
+async function submitTask(attemptId){
+
+    showMessage("Submitting task for verification...");
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/tasks/attempt/" + attemptId + "/submit",
+            {
+                method:"POST",
+                headers:{
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Failed to submit task."
+            );
+
+        }
+
+        showMessage(
+            "Task submitted successfully. Waiting for verification."
+        );
+
+        /*
+         * Disable the submit button that was just used.
+         */
+        const buttons =
+            document.querySelectorAll(
+                'button[onclick="submitTask(' + attemptId + ')"]'
+            );
+
+        buttons.forEach(button => {
+
+            button.disabled = true;
+            button.textContent = "⏳ Submitted";
+            button.style.opacity = "0.65";
+            button.style.cursor = "default";
+
+        });
+
+    }catch(error){
+
+        console.error(
+            "SUBMIT TASK ERROR:",
+            error
+        );
+
+        showMessage(
+            error.message ||
+            "Unable to submit task."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(text){
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+    message.textContent =
+        text;
+
+}
+
+refreshUserProfile().then(() => {
+    loadWallet();
+});
+
+</script>
+
+</body>
+</html>

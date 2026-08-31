@@ -273,7 +273,7 @@ header{
 }
 
 /* =========================================
-   LIVE ROTATING GOLD CLOCK
+   MELTING GOLD CLOCK
 ========================================= */
 
 .brand{
@@ -281,150 +281,67 @@ header{
     color:#e8b83f;
 }
 
-/* Clock body — realistic slow anticlockwise motion */
 .logo{
-    width:64px;
-    height:64px;
+    width:48px;
+    height:48px;
+
     border:3px solid #d9a52e;
+
     border-radius:50%;
+
     background:
         radial-gradient(
-            circle at 38% 32%,
-            #3b2b08 0%,
-            #17130a 38%,
-            #07101f 76%
+            circle,
+            #17130a,
+            #07101f 70%
         );
 
     position:relative;
+
     margin:auto;
 
     box-shadow:
-        0 0 8px rgba(218,165,46,.35),
-        0 0 20px rgba(218,165,46,.22),
-        inset 0 0 12px rgba(246,209,91,.12);
-
-    animation:
-        clockBodyAnti 18s linear infinite;
-
-    transform-origin:center center;
+        0 0 16px
+        rgba(218,165,46,.3);
 }
 
-/* Inner golden rim */
-.logo::marker{
-    content:"";
-}
-
-/* Minute hand */
 .logo:before{
     content:"";
+
     position:absolute;
 
     width:3px;
-    height:22px;
+    height:15px;
 
-    background:
-        linear-gradient(
-            to bottom,
-            #fff0a0,
-            #f0c34f 45%,
-            #b77b12
-        );
+    background:#f0c34f;
 
     left:50%;
-    top:50%;
+    top:8px;
 
     transform:
-        translate(-50%,-100%)
-        rotate(0deg);
+        translateX(-50%);
 
-    transform-origin:
-        50% 100%;
-
-    border-radius:4px;
-
-    box-shadow:
-        0 0 4px rgba(240,195,79,.8),
-        0 0 9px rgba(218,165,46,.45);
-
-    animation:
-        clockMinute 6s linear infinite;
-
-    z-index:5;
+    border-radius:3px;
 }
 
-/* Hour hand */
 .logo:after{
     content:"";
+
     position:absolute;
 
-    width:16px;
-    height:4px;
+    width:14px;
+    height:3px;
 
-    background:
-        linear-gradient(
-            to right,
-            #fff0a0,
-            #f0c34f,
-            #b77b12
-        );
+    background:#f0c34f;
 
     left:50%;
-    top:50%;
+    top:22px;
 
-    transform:
-        translateY(-50%)
-        rotate(35deg);
+    transform:rotate(35deg);
 
-    transform-origin:
-        0% 50%;
+    transform-origin:left center;
 
-    border-radius:4px;
-
-    box-shadow:
-        0 0 4px rgba(240,195,79,.8),
-        0 0 9px rgba(218,165,46,.45);
-
-    animation:
-        clockHour 18s linear infinite;
-
-    z-index:5;
-}
-
-/* Realistic clockwise hand movement */
-@keyframes clockMinute{
-    from{
-        transform:
-            translate(-50%,-100%)
-            rotate(0deg);
-    }
-    to{
-        transform:
-            translate(-50%,-100%)
-            rotate(360deg);
-    }
-}
-
-@keyframes clockHour{
-    from{
-        transform:
-            translateY(-50%)
-            rotate(35deg);
-    }
-    to{
-        transform:
-            translateY(-50%)
-            rotate(395deg);
-    }
-}
-
-/* Clock body moves anticlockwise */
-@keyframes clockBodyAnti{
-    from{
-        transform:rotate(0deg);
-    }
-    to{
-        transform:rotate(-360deg);
-    }
+    border-radius:3px;
 }
 
 .drop{
@@ -433,7 +350,6 @@ header{
     background:
         linear-gradient(
             #f6d15b,
-            #d9a52e 45%,
             #b77b12
         );
 
@@ -441,114 +357,64 @@ header{
         0 0 8px 8px;
 
     box-shadow:
-        0 2px 5px rgba(0,0,0,.25),
-        0 0 7px rgba(218,165,46,.28);
+        0 2px 5px
+        rgba(0,0,0,.25);
 }
 
 .drop1{
-    width:7px;
-    height:14px;
-    left:10px;
-    bottom:-11px;
+    width:6px;
+    height:13px;
+    left:9px;
+    bottom:-10px;
 }
 
 .drop2{
-    width:9px;
-    height:18px;
-    left:26px;
-    bottom:-15px;
+    width:8px;
+    height:17px;
+    left:19px;
+    bottom:-14px;
 }
 
 .drop3{
-    width:7px;
-    height:12px;
-    right:11px;
-    bottom:-9px;
+    width:6px;
+    height:11px;
+    right:10px;
+    bottom:-8px;
 }
 
 .brand-name{
     font-size:13px;
     font-weight:bold;
-    margin-top:5px;
-    color:#e8b83f;
-    text-shadow:
-        0 0 4px rgba(218,165,46,.55),
-        0 0 10px rgba(218,165,46,.25);
+    margin-top:3px;
 }
-
 
 /* =========================================
    INVITE
 ========================================= */
 
 .invite-button{
-    width:44px;
-    height:44px;
+    width:48px;
+    height:48px;
 
     border-radius:50%;
 
-    border:1px solid #00f5ff;
+    border:1px solid #b88a24;
 
-    background:
-        radial-gradient(
-            circle,
-            rgba(0,245,255,.18),
-            rgba(8,20,42,.96) 65%
-        );
+    background:#071a31;
 
-    color:#00f5ff;
+    color:#e8b83f;
 
-    font-size:21px;
-    font-weight:900;
+    font-size:22px;
 
     cursor:pointer;
 
     box-shadow:
-        0 0 7px #00f5ff,
-        0 0 16px rgba(0,245,255,.45),
-        inset 0 0 10px rgba(0,245,255,.12);
-
-    text-shadow:
-        0 0 6px #00f5ff,
-        0 0 12px rgba(0,245,255,.7);
-
-    animation:
-        inviteNeonPulse 2.2s ease-in-out infinite;
-
-    transition:
-        transform .15s ease,
-        box-shadow .2s ease;
-}
-
-.invite-button:hover{
-    box-shadow:
-        0 0 10px #00f5ff,
-        0 0 24px rgba(0,245,255,.65),
-        0 0 40px rgba(157,0,255,.25),
-        inset 0 0 13px rgba(0,245,255,.16);
+        0 0 12px
+        rgba(218,165,46,.2);
 }
 
 .invite-button:active{
-    transform:scale(.91);
-}
-
-@keyframes inviteNeonPulse{
-
-    0%,100%{
-        box-shadow:
-            0 0 7px #00f5ff,
-            0 0 16px rgba(0,245,255,.4),
-            inset 0 0 10px rgba(0,245,255,.1);
-    }
-
-    50%{
-        box-shadow:
-            0 0 10px #00f5ff,
-            0 0 25px rgba(0,245,255,.7),
-            0 0 38px rgba(157,0,255,.25),
-            inset 0 0 14px rgba(0,245,255,.18);
-    }
-
+    transform:scale(.94);
 }
 
 /* =========================================
@@ -1306,699 +1172,6 @@ section,
     <span class="ksh" style="left:93%;animation-duration:10s;animation-delay:-9s;">KSh</span>
 </div>
 
-
-<style id="smartminute-celebration-css">
-.sm-celebration-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(3, 10, 25, .82);
-    backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
-    z-index: 9998;
-    animation: smBackdropIn .35s ease forwards;
-}
-
-.sm-celebration-card {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%) scale(.85);
-    width: min(90vw, 430px);
-    padding: 32px 24px 28px;
-    border: 1px solid rgba(255, 215, 90, .55);
-    border-radius: 26px;
-    background:
-        radial-gradient(circle at 50% 0%, rgba(255, 215, 90, .16), transparent 45%),
-        linear-gradient(145deg, #101c38, #071126);
-    box-shadow:
-        0 0 0 1px rgba(255,255,255,.04),
-        0 25px 80px rgba(0,0,0,.65),
-        0 0 45px rgba(255,193,7,.16);
-    text-align: center;
-    overflow: hidden;
-    z-index: 9999;
-    animation: smCelebrationIn .55s cubic-bezier(.17,.89,.32,1.28) forwards;
-}
-
-.sm-sticker-cloud {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.sm-sticker-cloud span {
-    position: absolute;
-    font-size: 28px;
-    animation: smStickerFloat 3s ease-in-out infinite;
-    filter: drop-shadow(0 5px 10px rgba(0,0,0,.3));
-}
-
-.sm-sticker-cloud span:nth-child(1) {
-    left: 8%;
-    top: 13%;
-}
-
-.sm-sticker-cloud span:nth-child(2) {
-    right: 9%;
-    top: 18%;
-    animation-delay: .45s;
-}
-
-.sm-sticker-cloud span:nth-child(3) {
-    left: 13%;
-    bottom: 17%;
-    animation-delay: .9s;
-}
-
-.sm-sticker-cloud span:nth-child(4) {
-    right: 12%;
-    bottom: 13%;
-    animation-delay: 1.35s;
-}
-
-.sm-main-sticker {
-    position: relative;
-    width: 92px;
-    height: 92px;
-    margin: 0 auto 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,215,90,.28), rgba(255,215,90,.05));
-    border: 1px solid rgba(255,215,90,.4);
-    box-shadow:
-        0 0 30px rgba(255,193,7,.25),
-        inset 0 0 20px rgba(255,255,255,.04);
-    font-size: 54px;
-    animation: smStickerPop .7s cubic-bezier(.17,.89,.32,1.4) .15s both;
-}
-
-.sm-celebration-title {
-    position: relative;
-    margin: 0 0 10px;
-    color: #ffd75a;
-    font-size: clamp(25px, 7vw, 34px);
-    font-weight: 900;
-    letter-spacing: .3px;
-    text-shadow: 0 0 18px rgba(255,215,90,.2);
-}
-
-.sm-celebration-message {
-    position: relative;
-    margin: 0 auto 22px;
-    max-width: 330px;
-    color: rgba(255,255,255,.82);
-    font-size: 15px;
-    line-height: 1.55;
-}
-
-.sm-celebration-close {
-    position: relative;
-    min-width: 150px;
-    padding: 12px 22px;
-    border: 0;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #f7c948, #d9a514);
-    color: #071126;
-    font-size: 15px;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 8px 24px rgba(217,165,20,.28);
-}
-
-.sm-celebration-close:active {
-    transform: scale(.97);
-}
-
-.sm-celebrating .sm-celebration-card {
-    animation: smCelebrationIn .55s cubic-bezier(.17,.89,.32,1.28) forwards;
-}
-
-.sm-celebration-hide .sm-celebration-card {
-    animation: smCelebrationOut .3s ease forwards;
-}
-
-.sm-celebration-hide .sm-celebration-backdrop {
-    animation: smBackdropOut .3s ease forwards;
-}
-
-@keyframes smCelebrationIn {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(.72) rotate(-2deg);
-    }
-    65% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.04) rotate(.5deg);
-    }
-    100% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1) rotate(0);
-    }
-}
-
-@keyframes smCelebrationOut {
-    from {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-    to {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(.88);
-    }
-}
-
-@keyframes smBackdropIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes smBackdropOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-@keyframes smStickerPop {
-    0% {
-        opacity: 0;
-        transform: scale(.2) rotate(-20deg);
-    }
-    70% {
-        opacity: 1;
-        transform: scale(1.12) rotate(5deg);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1) rotate(0);
-    }
-}
-
-@keyframes smStickerFloat {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-9px) rotate(7deg);
-    }
-}
-
-@media (max-width: 480px) {
-    .sm-celebration-card {
-        width: calc(100vw - 30px);
-        padding: 28px 18px 24px;
-        border-radius: 22px;
-    }
-
-    .sm-main-sticker {
-        width: 82px;
-        height: 82px;
-        font-size: 48px;
-    }
-
-    .sm-sticker-cloud span {
-        font-size: 24px;
-    }
-
-    .sm-celebration-message {
-        font-size: 14px;
-    }
-}
-</style>
-
-
-<style id="smartminute-neon-deposit">
-
-/* SMARTMINUTE NEON DEPOSIT THEME */
-
-.deposit{
-    position:relative;
-    overflow:hidden;
-    border:1px solid rgba(255,0,214,.78) !important;
-    border-radius:18px !important;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(105,0,255,.36),
-            rgba(255,0,153,.30),
-            rgba(255,215,0,.20)
-        ) !important;
-    color:#ffffff !important;
-    font-weight:900;
-    letter-spacing:.3px;
-    text-shadow:
-        0 0 6px rgba(255,255,255,.70),
-        0 0 14px rgba(255,0,214,.75);
-    box-shadow:
-        0 0 10px rgba(123,0,255,.55),
-        0 0 24px rgba(255,0,153,.38),
-        0 0 45px rgba(255,220,0,.14),
-        inset 0 0 18px rgba(255,0,214,.10);
-    animation:smNeonDepositPulse 3s ease-in-out infinite;
-    transition:transform .2s ease, box-shadow .2s ease;
-}
-
-.deposit::before{
-    content:"";
-    position:absolute;
-    inset:-2px;
-    border-radius:inherit;
-    background:
-        linear-gradient(
-            115deg,
-            transparent 15%,
-            transparent 35%,
-            rgba(255,235,0,.78) 48%,
-            rgba(255,0,153,.70) 55%,
-            transparent 75%
-        );
-    transform:translateX(-120%);
-    animation:smNeonDepositSweep 3.8s ease-in-out infinite;
-    pointer-events:none;
-}
-
-.deposit::after{
-    content:"";
-    position:absolute;
-    width:120px;
-    height:120px;
-    right:-55px;
-    top:-65px;
-    border-radius:50%;
-    background:rgba(255,0,153,.28);
-    filter:blur(28px);
-    pointer-events:none;
-}
-
-.deposit:hover{
-    transform:translateY(-2px) scale(1.015);
-    border-color:rgba(255,235,0,.95) !important;
-    box-shadow:
-        0 0 16px rgba(123,0,255,.78),
-        0 0 34px rgba(255,0,153,.60),
-        0 0 58px rgba(255,220,0,.30),
-        inset 0 0 22px rgba(255,0,214,.16);
-}
-
-.deposit:active{
-    transform:scale(.97);
-}
-
-@keyframes smNeonDepositPulse{
-    0%,100%{
-        box-shadow:
-            0 0 10px rgba(123,0,255,.55),
-            0 0 24px rgba(255,0,153,.35),
-            0 0 45px rgba(255,220,0,.12),
-            inset 0 0 18px rgba(255,0,214,.10);
-    }
-
-    50%{
-        box-shadow:
-            0 0 18px rgba(123,0,255,.78),
-            0 0 38px rgba(255,0,153,.56),
-            0 0 62px rgba(255,220,0,.23),
-            inset 0 0 25px rgba(255,0,214,.16);
-    }
-}
-
-@keyframes smNeonDepositSweep{
-    0%,25%{
-        transform:translateX(-120%);
-    }
-
-    65%,100%{
-        transform:translateX(120%);
-    }
-}
-
-/* BALANCE CARD */
-
-.balance-card{
-    background:
-        radial-gradient(
-            circle at 15% 20%,
-            rgba(123,0,255,.22),
-            transparent 38%
-        ),
-        radial-gradient(
-            circle at 85% 75%,
-            rgba(255,0,153,.20),
-            transparent 40%
-        ),
-        linear-gradient(
-            145deg,
-            rgba(24,8,55,.97),
-            rgba(9,5,25,.98)
-        ) !important;
-
-    border-color:rgba(255,0,214,.34) !important;
-
-    box-shadow:
-        0 8px 30px rgba(0,0,0,.45),
-        0 0 25px rgba(123,0,255,.16),
-        inset 0 0 22px rgba(255,0,153,.05) !important;
-}
-
-/* CARD HEADINGS */
-
-.card h3{
-    color:#ffe52b !important;
-    text-shadow:
-        0 0 7px rgba(255,225,30,.75),
-        0 0 16px rgba(255,0,153,.32);
-}
-
-/* MONEY AMOUNTS */
-
-.amount{
-    color:#fff45c !important;
-    text-shadow:
-        0 0 5px rgba(255,240,70,.90),
-        0 0 14px rgba(255,0,153,.48),
-        0 0 28px rgba(123,0,255,.32);
-}
-
-/* MONEY FLOW */
-
-.money-flow span{
-    filter:
-        drop-shadow(0 0 6px rgba(255,0,214,.75))
-        drop-shadow(0 0 12px rgba(123,0,255,.45));
-}
-
-/* SECTIONS */
-
-.section{
-    border-color:rgba(255,0,153,.28) !important;
-    box-shadow:
-        0 8px 28px rgba(0,0,0,.40),
-        0 0 22px rgba(123,0,255,.12),
-        inset 0 0 20px rgba(255,0,153,.04) !important;
-}
-
-/* FORM CONTROLS */
-
-input,
-select{
-    border-color:rgba(255,0,214,.42) !important;
-    background:rgba(20,7,42,.90) !important;
-    color:#ffffff !important;
-}
-
-input:focus,
-select:focus{
-    border-color:#ffe52b !important;
-    box-shadow:
-        0 0 8px rgba(255,225,30,.60),
-        0 0 18px rgba(255,0,153,.34) !important;
-}
-
-/* ERROR STATES */
-
-.error,
-[class*="error"]{
-    color:#ff3d58 !important;
-    text-shadow:0 0 9px rgba(255,0,55,.58);
-}
-
-/* CONTENT ABOVE ANIMATIONS */
-
-header,
-.container,
-.cards,
-.section,
-.welcome,
-.deposit{
-    position:relative;
-    z-index:2;
-}
-
-/* MOBILE */
-
-@media(max-width:600px){
-
-    .deposit{
-        border-radius:16px !important;
-        box-shadow:
-            0 0 12px rgba(123,0,255,.58),
-            0 0 25px rgba(255,0,153,.36),
-            inset 0 0 18px rgba(255,0,214,.10);
-    }
-
-    .deposit:hover{
-        transform:none;
-    }
-
-    .card,
-    .section{
-        box-shadow:
-            0 6px 24px rgba(0,0,0,.38),
-            0 0 18px rgba(123,0,255,.11) !important;
-    }
-}
-
-</style>
-
-
-
-<style id="smWithdrawMinimumStyle">
-
-.withdraw-action{
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    justify-content:center !important;
-    gap:4px;
-}
-
-.withdraw-title{
-    font-weight:800;
-}
-
-.withdraw-minimum{
-    display:block;
-    font-size:15px;
-    font-weight:710;
-    opacity:.89;
-    letter-spacing:.2px;
-}
-
-</style>
-
-<style id="smStartEarningWheelStyle">
-
-/* ==================================================
-   SMARTMINUTE START EARNING — FAST WHEEL MOTION
-   Does NOT rotate the button itself.
-================================================== */
-
-.action.start-earning-action{
-    position:relative;
-    overflow:hidden;
-}
-
-.action.start-earning-action .earning-wheel{
-    display:inline-block;
-    margin-right:7px;
-    transform-origin:50% 50%;
-    animation:smEarningWheel .38s linear infinite;
-    will-change:transform;
-}
-
-@keyframes smEarningWheel{
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
-}
-
-.action.start-earning-action:hover .earning-wheel{
-    animation-duration:.24s;
-}
-
-@media (prefers-reduced-motion:reduce){
-    .action.start-earning-action .earning-wheel{
-        animation:none;
-    }
-}
-
-
-/* ==================================================
-   TOP HEADER — CLEAN FIT
-   Existing logo animation remains untouched.
-================================================== */
-
-header{
-    min-height:78px;
-    padding:9px 14px;
-}
-
-.brand{
-    flex:1;
-    min-width:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.profile-button{
-    flex-shrink:0;
-}
-
-@media(max-width:520px){
-
-    header{
-        height:auto;
-        min-height:70px;
-        padding:8px 10px;
-        gap:8px;
-    }
-
-    .logo{
-        width:58px;
-        height:58px;
-    }
-
-    .profile-button{
-        width:44px;
-        height:44px;
-    }
-
-}
-
-</style>
-
-
-<style id="smStartEarningCircle">
-
-.action.start-earning-action{
-    width:170px !important;
-    height:170px !important;
-    min-height:170px !important;
-
-    margin:22px auto !important;
-
-    border-radius:50% !important;
-
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    justify-content:center !important;
-
-    gap:9px;
-    padding:18px !important;
-
-    position:relative;
-    overflow:hidden;
-
-    border:2px solid rgba(0,255,170,.65) !important;
-
-    box-shadow:
-        0 0 12px rgba(0,255,170,.18),
-        0 0 28px rgba(0,255,170,.12),
-        inset 0 0 20px rgba(0,255,170,.08);
-
-    animation:smEarningCirclePulse 1.8s ease-in-out infinite;
-}
-
-.action.start-earning-action::before{
-    content:"";
-    position:absolute;
-    inset:7px;
-    border-radius:50%;
-    border:1px solid rgba(0,255,170,.28);
-    pointer-events:none;
-}
-
-.action.start-earning-action .earning-wheel{
-    display:block;
-    width:54px;
-    height:54px;
-
-    font-size:48px;
-    line-height:54px;
-
-    margin:0;
-
-    transform-origin:50% 50%;
-
-    animation:smEarningWheel .30s linear infinite;
-
-    will-change:transform;
-}
-
-.action.start-earning-action .earning-text{
-    position:relative;
-    z-index:2;
-
-    font-size:18px;
-    font-weight:900;
-
-    white-space:nowrap;
-}
-
-@keyframes smEarningWheel{
-    from{transform:rotate(0deg)}
-    to{transform:rotate(360deg)}
-}
-
-@keyframes smEarningCirclePulse{
-    0%,100%{
-        box-shadow:
-            0 0 12px rgba(0,255,170,.16),
-            0 0 28px rgba(0,255,170,.08),
-            inset 0 0 20px rgba(0,255,170,.06);
-    }
-
-    50%{
-        box-shadow:
-            0 0 20px rgba(0,255,170,.28),
-            0 0 42px rgba(0,255,170,.16),
-            inset 0 0 26px rgba(0,255,170,.10);
-    }
-}
-
-.action.start-earning-action:hover{
-    transform:scale(1.04);
-}
-
-.action.start-earning-action:active{
-    transform:scale(.97);
-}
-
-@media(max-width:520px){
-    .action.start-earning-action{
-        width:155px !important;
-        height:155px !important;
-        min-height:155px !important;
-    }
-
-    .action.start-earning-action .earning-wheel{
-        width:48px;
-        height:48px;
-        font-size:43px;
-        line-height:48px;
-    }
-
-    .action.start-earning-action .earning-text{
-        font-size:17px;
-    }
-}
-
-@media(prefers-reduced-motion:reduce){
-    .action.start-earning-action,
-    .action.start-earning-action .earning-wheel{
-        animation:none;
-    }
-}
-
-</style>
-
 </head>
 
 <body>
@@ -2009,15 +1182,15 @@ header{
 
 <div class="money-background">
 
-    <div class="money"></div>
-    <div class="money"></div>
-    <div class="money"></div>
-    <div class="money"></div>
-    <div class="money"></div>
-    <div class="money"></div>
-    <div class="money"></div>
-    <div class="money"></div>
-    <div class="money"></div>
+    <div class="money">💵</div>
+    <div class="money">💸</div>
+    <div class="money">💵</div>
+    <div class="money">💸</div>
+    <div class="money">💵</div>
+    <div class="money">💸</div>
+    <div class="money">💵</div>
+    <div class="money">💸</div>
+    <div class="money">💵</div>
 
 </div>
 
@@ -2062,11 +1235,11 @@ header{
 
     <button
         class="invite-button"
-        onclick="window.location.href='referrals.html'"
+        onclick="inviteFriends()"
         aria-label="Invite Friends"
         title="Invite Friends"
     >
-
+        ↗
     </button>
 
 </header>
@@ -2084,7 +1257,7 @@ header{
     <div class="welcome">
 
         <h1 id="welcomeName">
-            Welcome to SmartMinute
+            Welcome to SmartMinute 👋
         </h1>
 
         <p>
@@ -2094,188 +1267,24 @@ header{
     </div>
 
 
-<style>
-.deposit{
-position:relative;
-.deposit{
-position:relative;
-overflow:hidden;
-border:1px solid rgba(0,255,170,.45);
-animation:depositPulse 3.8s ease-in-out infinite;
-box-shadow:0 0 8px rgba(0,255,170,.10),0 0 18px rgba(0,255,170,.04);
-}
-.deposit::before{
-content:"";
-position:absolute;
-inset:0;
-border-radius:inherit;
-background:linear-gradient(110deg,transparent 20%,rgba(0,255,170,.16) 50%,transparent 80%);
-transform:translateX(-120%);
-animation:depositSweep 4.5s ease-in-out infinite;
-pointer-events:none;
-}
-@keyframes depositPulse{
-0%,100%{box-shadow:0 0 8px rgba(0,255,170,.10),0 0 18px rgba(0,255,170,.04)}
-50%{box-shadow:0 0 16px rgba(0,255,170,.28),0 0 34px rgba(0,255,170,.12)}
-}
-@keyframes depositSweep{
-0%,35%{transform:translateX(-120%)}
-65%,100%{transform:translateX(120%)}
-}
-</style>
     <!-- DEPOSIT -->
 
     <button
         class="deposit"
         onclick="deposit()"
     >
-         Deposit Funds
+        💳 Deposit Funds
     </button>
 
-
-<style>
-.balance-card{
-position:relative;
-overflow:hidden;
-animation:balanceShake 4s ease-in-out infinite;
-box-shadow:0 0 10px rgba(0,255,170,.10),inset 0 0 20px rgba(0,255,170,.03);
-}
-
-.balance-card::before{
-content:"";
-position:absolute;
-inset:-2px;
-border-radius:inherit;
-border:1px solid rgba(0,255,170,.18);
-box-shadow:0 0 10px rgba(0,255,170,.10),0 0 24px rgba(0,255,170,.04);
-animation:balanceAura 3.5s ease-in-out infinite;
-pointer-events:none;
-}
-
-.balance-card h3,
-.balance-card .amount{
-position:relative;
-z-index:1;
-}
-
-@keyframes balanceAura{
-0%,100%{opacity:.45;transform:scale(.995)}
-50%{opacity:1;transform:scale(1.01)}
-}
-
-@keyframes balanceShake{
-0%,82%,100%{transform:translateX(0) rotate(0deg)}
-84%{transform:translateX(-2px) rotate(-.35deg)}
-86%{transform:translateX(2px) rotate(.35deg)}
-88%{transform:translateX(-1px) rotate(-.2deg)}
-90%{transform:translateX(1px) rotate(.2deg)}
-92%{transform:translateX(0) rotate(0deg)}
-}
-</style>
-    <!-- MONEY FLOW -->
-
-<style>
-.money-flow{
-position:fixed;
-inset:0;
-pointer-events:none;
-overflow:hidden;
-z-index:0;
-}
-
-.money-flow span{
-position:absolute;
-top:-55px;
-font-size:24px;
-opacity:0;
-filter:drop-shadow(0 0 7px rgba(0,255,170,.45));
-animation:moneyToBalance linear infinite;
-}
-
-.money-flow span:nth-child(1){
-left:8%;
-animation-duration:6s;
-animation-delay:0s;
-}
-
-.money-flow span:nth-child(2){
-left:24%;
-animation-duration:7s;
-animation-delay:1.2s;
-}
-
-.money-flow span:nth-child(3){
-left:42%;
-animation-duration:5.8s;
-animation-delay:2.2s;
-}
-
-.money-flow span:nth-child(4){
-left:61%;
-animation-duration:6.5s;
-animation-delay:.5s;
-}
-
-.money-flow span:nth-child(5){
-left:79%;
-animation-duration:7.2s;
-animation-delay:2.8s;
-}
-
-.money-flow span:nth-child(6){
-left:92%;
-animation-duration:6.2s;
-animation-delay:1.6s;
-}
-
-@keyframes moneyToBalance{
-0%{
-transform:translateY(-70px) translateX(0) rotate(0deg) scale(.7);
-opacity:0;
-}
-12%{
-opacity:.55;
-}
-40%{
-transform:translateY(28vh) translateX(-10px) rotate(120deg) scale(1);
-opacity:.5;
-}
-65%{
-transform:translateY(47vh) translateX(12px) rotate(220deg) scale(.85);
-opacity:.4;
-}
-82%{
-transform:translateY(57vh) translateX(0) rotate(300deg) scale(.55);
-opacity:.25;
-}
-94%{
-transform:translateY(62vh) translateX(0) rotate(350deg) scale(.25);
-opacity:.12;
-}
-100%{
-transform:translateY(64vh) translateX(0) rotate(360deg) scale(.05);
-opacity:0;
-}
-}
-</style>
-
-<div class="money-flow" aria-hidden="true">
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-<span></span>
-</div>
 
     <!-- BALANCES -->
 
     <div class="cards">
 
-        <div class="card balance-card">
+        <div class="card">
 
             <h3>
-                 Available Balance
+                💰 Available Balance
             </h3>
 
             <div
@@ -2291,7 +1300,7 @@ opacity:0;
         <div class="card">
 
             <h3>
-                 Total Earned
+                📈 Total Earned
             </h3>
 
             <div
@@ -2307,7 +1316,7 @@ opacity:0;
         <div class="card">
 
             <h3>
-                 Tasks Completed
+                ✅ Tasks Completed
             </h3>
 
             <div
@@ -2322,20 +1331,27 @@ opacity:0;
     </div>
 
 
-    <!-- START EARNING -->
+    <!-- QUICK ACTIONS -->
 
     <div class="section">
 
+        <h2>
+            🚀 Quick Actions
+        </h2>
+
         <button
-            class="action start-earning-action"
-            onclick="showEarningOptions()"
-            aria-label="Start Earning"
+            class="action"
+            onclick="startTasks()"
         >
-            <span class="earning-wheel" aria-hidden="true"></span>
-            <span class="earning-text">Start Earning</span>
+            🚀 Start Earning
         </button>
 
-
+        <button
+            class="action"
+            onclick="deposit()"
+        >
+            💳 Make a Deposit
+        </button>
 
         <p
             id="message"
@@ -2355,7 +1371,7 @@ opacity:0;
     >
 
         <h2>
-             Profile Settings
+            👤 Profile Settings
         </h2>
 
         <div class="profile-info">
@@ -2388,25 +1404,28 @@ opacity:0;
         <div class="profile-info">
 
             <h3 style="margin:0 0 12px;color:#071a31;">
-                 Account & Security
+                🔐 Account & Security
             </h3>
 
             <button
-                class="action withdraw-action"
+                class="action"
                 onclick="showWithdrawalForm()"
-                aria-label="Withdraw Funds. Minimum withdrawal KSh 5,000"
             >
-                <span class="withdraw-title"> Withdraw Funds</span>
-                <span class="withdraw-minimum">
-                    Minimum withdrawal: KSh 5,000
-                </span>
+                💸 Withdraw Funds
             </button>
 
             <button
                 class="action"
                 onclick="showKycForm()"
             >
-                 KYC Verification
+                🪪 KYC Verification
+            </button>
+
+            <button
+                class="action"
+                onclick="showUnlockForm()"
+            >
+                🔓 Trading Access
             </button>
 
             <div id="accountForms"></div>
@@ -2417,7 +1436,7 @@ opacity:0;
             class="logout"
             onclick="logout()"
         >
-             Logout
+            🚪 Logout
         </button>
 
     </div>
@@ -2512,7 +1531,7 @@ if(savedUser){
     document.getElementById(
         "welcomeName"
     ).textContent =
-        "Welcome, " + name + " ";
+        "Welcome, " + name + " 👋";
 
     document.getElementById(
         "profileName"
@@ -2621,7 +1640,7 @@ async function inviteFriends(){
             );
 
             showMessage(
-                "Invite link copied! Send it to your friends "
+                "Invite link copied! Send it to your friends 📤"
             );
 
         }
@@ -2669,7 +1688,7 @@ function showWithdrawalForm(){
     accountForms().innerHTML = `
         <div class="account-form">
 
-            <h3> Withdraw Funds</h3>
+            <h3>💸 Withdraw Funds</h3>
 
             <p class="form-note">
                 Withdrawals are reviewed by SmartMinute before funds are released.
@@ -2851,7 +1870,7 @@ async function showKycForm(){
     accountForms().innerHTML = `
         <div class="account-form">
 
-            <h3> KYC Verification</h3>
+            <h3>🪪 KYC Verification</h3>
 
             <p class="form-note">
                 Create your KYC profile and submit it for review.
@@ -3115,7 +2134,7 @@ async function showUnlockForm(){
     accountForms().innerHTML = `
         <div class="account-form">
 
-            <h3> Trading Access</h3>
+            <h3>🔓 Trading Access</h3>
 
             <p class="form-note">
                 Trading access requires a one-time
@@ -3156,7 +2175,7 @@ async function showUnlockForm(){
                 class="action"
                 onclick="purchaseUnlock()"
             >
-                 Request Trading Unlock — $10
+                🔓 Request Trading Unlock — $10
             </button>
 
             <button
@@ -3181,6 +2200,9 @@ async function showUnlockForm(){
 }
 
 
+/* =========================================
+   LOAD UNLOCK STATUS
+========================================= */
 
 async function loadUnlockStatus(){
 
@@ -3220,24 +2242,14 @@ async function loadUnlockStatus(){
         if(data.tradingUnlocked){
 
             status.textContent =
-                " Trading access is unlocked.";
-
-            if(!sessionStorage.getItem("smartMinuteUnlockCelebrated")){
-                sessionStorage.setItem(
-                    "smartMinuteUnlockCelebrated",
-                    "1"
-                );
-
-                celebrateTradingUnlock();
-            }
+                "✅ Trading access is unlocked.";
 
         }else{
 
             status.textContent =
-                " Trading access is currently locked. " +
-                "Unlock fee: $" +
-                Number(data.unlockFee || 10).toLocaleString() +
-                " USD";
+                "🔒 Trading access is currently locked. " +
+                "Unlock fee: KSh " +
+                Number(data.unlockFee || 10).toLocaleString();
 
         }
 
@@ -3256,6 +2268,10 @@ async function loadUnlockStatus(){
 
 }
 
+
+/* =========================================
+   PURCHASE TRADING UNLOCK
+========================================= */
 
 async function purchaseUnlock(){
 
@@ -3351,248 +2367,6 @@ async function purchaseUnlock(){
 
 
 /* =========================================
-   SMARTMINUTE CELEBRATION NOTIFICATIONS
-========================================= */
-
-function smartMinuteCelebration(title, message, sticker){
-
-    const old =
-        document.getElementById("smartMinuteCelebration");
-
-    if(old){
-        old.remove();
-    }
-
-    const overlay =
-        document.createElement("div");
-
-    overlay.id =
-        "smartMinuteCelebration";
-
-    overlay.innerHTML = `
-        <div class="sm-celebration-backdrop"></div>
-
-        <div class="sm-celebration-card">
-
-            <div class="sm-sticker-cloud"
-                 aria-hidden="true">
-
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-
-            </div>
-
-            <div class="sm-main-sticker">
-                ${sticker || ""}
-            </div>
-
-            <div class="sm-celebration-title">
-                ${title}
-            </div>
-
-            <div class="sm-celebration-message">
-                ${message}
-            </div>
-
-            <button
-                class="sm-celebration-close"
-                onclick="closeSmartMinuteCelebration()"
-            >
-                CONTINUE
-            </button>
-
-        </div>
-    `;
-
-    document.body.appendChild(overlay);
-
-    document.body.classList.add(
-        "sm-celebrating"
-    );
-
-    smartMinuteCelebrationSound();
-
-    if(
-        navigator.vibrate
-    ){
-        navigator.vibrate([
-            80,60,80,60,180
-        ]);
-    }
-
-    setTimeout(() => {
-
-        if(
-            document.getElementById(
-                "smartMinuteCelebration"
-            )
-        ){
-
-            closeSmartMinuteCelebration();
-
-        }
-
-    }, 9000);
-
-}
-
-
-/* =========================================
-   CELEBRATION SOUND
-========================================= */
-
-function smartMinuteCelebrationSound(){
-
-    try{
-
-        const AudioContext =
-            window.AudioContext ||
-            window.webkitAudioContext;
-
-        if(!AudioContext){
-            return;
-        }
-
-        const ctx =
-            new AudioContext();
-
-        const now =
-            ctx.currentTime;
-
-        const notes = [
-            523.25,
-            659.25,
-            783.99,
-            1046.50
-        ];
-
-        notes.forEach(
-            (frequency,index) => {
-
-                const oscillator =
-                    ctx.createOscillator();
-
-                const gain =
-                    ctx.createGain();
-
-                oscillator.type =
-                    "sine";
-
-                oscillator.frequency.value =
-                    frequency;
-
-                gain.gain.setValueAtTime(
-                    0.0001,
-                    now + index * 0.11
-                );
-
-                gain.gain.exponentialRampToValueAtTime(
-                    0.18,
-                    now + index * 0.11 + 0.025
-                );
-
-                gain.gain.exponentialRampToValueAtTime(
-                    0.0001,
-                    now + index * 0.11 + 0.42
-                );
-
-                oscillator.connect(gain);
-                gain.connect(ctx.destination);
-
-                oscillator.start(
-                    now + index * 0.11
-                );
-
-                oscillator.stop(
-                    now + index * 0.11 + 0.45
-                );
-
-            }
-        );
-
-        setTimeout(() => {
-
-            try{
-                ctx.close();
-            }catch(e){}
-
-        }, 1800);
-
-    }catch(error){
-
-        console.log(
-            "Celebration audio unavailable:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================
-   CLOSE CELEBRATION
-========================================= */
-
-function closeSmartMinuteCelebration(){
-
-    const overlay =
-        document.getElementById(
-            "smartMinuteCelebration"
-        );
-
-    if(overlay){
-
-        overlay.classList.add(
-            "sm-celebration-hide"
-        );
-
-        setTimeout(() => {
-
-            overlay.remove();
-
-        }, 350);
-
-    }
-
-    document.body.classList.remove(
-        "sm-celebrating"
-    );
-
-}
-
-
-/* =========================================
-   TIER UNLOCK CELEBRATION
-========================================= */
-
-function celebrateTradingUnlock(){
-
-    smartMinuteCelebration(
-        " CONGRATULATIONS! ",
-        "Trading access has been unlocked. Your new SmartMinute benefits are now active.",
-        ""
-    );
-
-}
-
-
-
-/* =========================================
-   SMARTMINUTE CELEBRATION NOTIFICATIONS
-========================================= */
-
-/* =========================================
    CLOSE ACCOUNT FORM
 ========================================= */
 
@@ -3602,52 +2376,6 @@ function closeAccountForm(){
 
 }
 
-
-
-/* =========================================
-   START EARNING OPTIONS
-========================================= */
-
-function showEarningOptions(){
-
-    const container =
-        document.getElementById("tasksContainer");
-
-    if(!container){
-        return;
-    }
-
-    container.innerHTML = `
-        <div class="account-form earning-options">
-
-            <h3> Start Earning</h3>
-
-            <p class="form-note">
-                Choose how you want to earn with SmartMinute.
-            </p>
-
-            <button
-                class="action"
-                onclick="showUnlockForm()"
-            >
-                 FX&BINARY TRADING
-            </button>
-
-            <button
-                class="action"
-                onclick="startTasks()"
-            >
-                 TASKS
-            </button>
-
-        </div>
-    `;
-
-    container.scrollIntoView({
-        behavior:"smooth",
-        block:"center"
-    });
-}
 
 
 /* =========================================
@@ -3785,37 +2513,37 @@ async function startTasks(){
             {
                 key:"free",
                 name:"FREE",
-                icon:""
+                icon:"🆓"
             },
             {
                 key:"bronze",
                 name:"BRONZE",
-                icon:""
+                icon:"🥉"
             },
             {
                 key:"silver",
                 name:"SILVER",
-                icon:""
+                icon:"🥈"
             },
             {
                 key:"gold",
                 name:"GOLD",
-                icon:""
+                icon:"🥇"
             },
             {
                 key:"diamond",
                 name:"DIAMOND",
-                icon:""
+                icon:"💎"
             },
             {
                 key:"titanium",
                 name:"TITANIUM",
-                icon:""
+                icon:"⚡"
             },
             {
                 key:"platinum",
                 name:"PLATINUM",
-                icon:""
+                icon:"👑"
             }
         ];
 
@@ -3859,7 +2587,7 @@ async function startTasks(){
                             onclick="showTierTasks('${tier.key}')"
                         >
                             ${tier.icon} ${tier.name}
-                            ${unlocked ? "" : " "}
+                            ${unlocked ? "" : " 🔒"}
                         </button>
                     `;
 
@@ -3966,22 +2694,9 @@ function showTierTasks(tierKey){
             tierKey.charAt(0).toUpperCase() +
             tierKey.slice(1);
 
-        const tierFees = {
-            bronze:150,
-            silver:250,
-            gold:500,
-            diamond:750,
-            titanium:1000,
-            platinum:1500
-        };
-
-        const tierFee =
-            tierFees[tierKey] || 0;
-
         tierContainer.innerHTML = `
             <div class="task-card">
-
-                <h3> ${tierName} Membership</h3>
+                <h3>🔒 ${tierName} Membership</h3>
 
                 <p>
                     Upgrade to ${tierName} membership
@@ -3991,40 +2706,6 @@ function showTierTasks(tierKey){
                 <div class="tier-lock">
                     Membership upgrade required.
                 </div>
-
-                <div style="
-                    margin:18px 0;
-                    padding:16px;
-                    border:1px solid rgba(212,175,55,.35);
-                    border-radius:12px;
-                    background:rgba(10,20,45,.65);
-                    text-align:center;
-                ">
-
-                    <div style="
-                        font-size:13px;
-                        opacity:.8;
-                        margin-bottom:5px;
-                    ">
-                        Membership Fee
-                    </div>
-
-                    <strong style="
-                        font-size:24px;
-                    ">
-                        KSh ${tierFee.toLocaleString()}
-                    </strong>
-
-                </div>
-
-                <button
-                    class="action"
-                    type="button"
-                    onclick="purchaseMembership('${tierKey}')"
-                >
-                     Upgrade to ${tierName}
-                </button>
-
             </div>
         `;
 
@@ -4152,7 +2833,7 @@ function showTierTasks(tierKey){
                         </button>
                     ` : `
                         <div class="tier-lock">
-                             Membership upgrade required
+                            🔒 Membership upgrade required
                         </div>
                     `}
 
@@ -4183,135 +2864,6 @@ function showTierTasks(tierKey){
         (selectedTasks.length === 1 ? "" : "s") +
         " available"
     );
-}
-
-
-/* =========================================
-   PURCHASE MEMBERSHIP
-========================================= */
-
-async function purchaseMembership(tierKey){
-
-    const tierFees = {
-        bronze:150,
-        silver:250,
-        gold:500,
-        diamond:750,
-        titanium:1000,
-        platinum:1500
-    };
-
-    const tierNames = {
-        bronze:"Bronze",
-        silver:"Silver",
-        gold:"Gold",
-        diamond:"Diamond",
-        titanium:"Titanium",
-        platinum:"Platinum"
-    };
-
-    const fee = tierFees[tierKey];
-    const tierName = tierNames[tierKey];
-
-    if(!fee || !tierName){
-
-        showMessage(
-            "Invalid membership tier."
-        );
-
-        return;
-    }
-
-    const confirmed = confirm(
-        "Upgrade to " +
-        tierName +
-        " membership for KSh " +
-        fee.toLocaleString() +
-        "?\\n\\n" +
-        "After payment, your membership will remain pending until an administrator verifies the payment."
-    );
-
-    if(!confirmed){
-        return;
-    }
-
-    const phone = prompt(
-        "Enter the M-Pesa phone number used for this membership payment:"
-    );
-
-    if(!phone || !phone.trim()){
-
-        showMessage(
-            "Phone number is required."
-        );
-
-        return;
-    }
-
-    showMessage(
-        "Creating membership payment request..."
-    );
-
-    try{
-
-        const response = await fetch(
-            API_BASE + "/api/membership/purchase",
-            {
-                method:"POST",
-
-                headers:{
-                    "Content-Type":"application/json",
-                    Authorization:
-                        "Bearer " + token
-                },
-
-                body:JSON.stringify({
-                    membershipTier:tierKey,
-                    phone:phone.trim()
-                })
-            }
-        );
-
-        const data =
-            await response.json();
-
-        if(!response.ok){
-
-            throw new Error(
-                data.message ||
-                "Unable to create membership payment."
-            );
-
-        }
-
-        showMessage(
-            "Membership payment request created successfully. Please complete the payment and wait for administrator verification."
-        );
-
-        alert(
-            tierName +
-            " membership payment request created.\\n\\n" +
-            "Amount: KSh " +
-            Number(data.payment?.amount || fee).toLocaleString() +
-            "\\n" +
-            "Status: Pending\\n\\n" +
-            "Your membership will activate after payment verification."
-        );
-
-    }catch(error){
-
-        console.error(
-            "MEMBERSHIP PURCHASE ERROR:",
-            error
-        );
-
-        showMessage(
-            error.message ||
-            "Unable to create membership payment."
-        );
-
-    }
-
 }
 
 
@@ -4376,7 +2928,7 @@ async function startTask(taskId){
                         class="action"
                         onclick="submitTask(${attempt.id})"
                     >
-                         Submit Task
+                        ✅ Submit Task
                     </button>
                     `
                 );
@@ -4464,7 +3016,7 @@ async function submitTask(attemptId){
         buttons.forEach(button => {
 
             button.disabled = true;
-            button.textContent = " Submitted";
+            button.textContent = "⏳ Submitted";
             button.style.opacity = "0.65";
             button.style.cursor = "default";
 
@@ -4509,311 +3061,5 @@ refreshUserProfile().then(() => {
 
 </script>
 
-
-
-
-
-<style id="smartminute-green-theme">
-
-/* =========================================
-   WELCOME — LUMINOUS GREEN FIRE
-========================================= */
-.welcome{
-    position:relative !important;
-    overflow:hidden !important;
-    background:
-        radial-gradient(circle at 50% 0%,rgba(0,255,170,.16),transparent 58%),
-        linear-gradient(145deg,rgba(3,28,19,.98),rgba(1,12,8,.97)) !important;
-    border:1px solid rgba(0,255,170,.55) !important;
-    box-shadow:
-        0 0 8px rgba(0,255,170,.18),
-        0 0 22px rgba(0,255,170,.10),
-        inset 0 0 25px rgba(0,255,170,.045) !important;
-    animation:welcomeBurn 4s ease-in-out infinite !important;
-}
-
-.welcome::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(105deg,transparent 25%,rgba(0,255,170,.10) 50%,transparent 75%);
-    transform:translateX(-120%);
-    animation:welcomeSweep 5s ease-in-out infinite;
-    pointer-events:none;
-}
-
-.welcome h1{
-    position:relative !important;
-    z-index:1 !important;
-    color:#8affd5 !important;
-    text-shadow:
-        0 0 4px rgba(0,255,170,.75),
-        0 0 10px rgba(0,255,170,.55),
-        0 0 22px rgba(0,255,170,.28) !important;
-    animation:welcomeTextBurn 3.2s ease-in-out infinite !important;
-}
-
-.welcome p{
-    position:relative !important;
-    z-index:1 !important;
-    color:rgba(190,255,231,.82) !important;
-    text-shadow:
-        0 0 5px rgba(0,255,170,.35),
-        0 0 12px rgba(0,255,170,.16) !important;
-}
-
-@keyframes welcomeBurn{
-    0%,100%{
-        box-shadow:
-            0 0 8px rgba(0,255,170,.16),
-            0 0 20px rgba(0,255,170,.07),
-            inset 0 0 20px rgba(0,255,170,.035);
-    }
-    50%{
-        box-shadow:
-            0 0 14px rgba(0,255,170,.32),
-            0 0 34px rgba(0,255,170,.15),
-            inset 0 0 30px rgba(0,255,170,.065);
-    }
-}
-
-@keyframes welcomeTextBurn{
-    0%,100%{
-        text-shadow:
-            0 0 4px rgba(0,255,170,.65),
-            0 0 10px rgba(0,255,170,.38),
-            0 0 18px rgba(0,255,170,.16);
-    }
-    50%{
-        text-shadow:
-            0 0 5px rgba(0,255,170,.95),
-            0 0 13px rgba(0,255,170,.72),
-            0 0 27px rgba(0,255,170,.38);
-    }
-}
-
-@keyframes welcomeSweep{
-    0%,35%{transform:translateX(-120%)}
-    65%,100%{transform:translateX(120%)}
-}
-
-/* =========================================================
-   SMARTMINUTE GREEN NEON THEME
-   Final visual override
-========================================================= */
-
-html,
-body{
-    background:
-        radial-gradient(circle at 50% 20%,
-            rgba(0,255,170,.07),
-            transparent 38%),
-        linear-gradient(
-            145deg,
-            #020806 0%,
-            #03130d 48%,
-            #010504 100%
-        ) !important;
-    color:#eafff6 !important;
-}
-
-/* Main page atmosphere */
-
-body::before{
-    background:
-        radial-gradient(
-            circle,
-            rgba(0,255,170,.055) 0%,
-            transparent 62%
-        ) !important;
-}
-
-/* Header */
-
-header{
-    background:rgba(2,12,8,.88) !important;
-    border-bottom:1px solid rgba(0,255,170,.16) !important;
-    box-shadow:
-        0 4px 22px rgba(0,255,170,.06) !important;
-}
-
-/* Welcome text */
-
-.welcome h1{
-    color:#effff8 !important;
-    text-shadow:
-        0 0 12px rgba(0,255,170,.12);
-}
-
-.welcome p{
-    color:#8fb5a7 !important;
-}
-
-/* Cards */
-
-.card,
-.section{
-    background:
-        linear-gradient(
-            145deg,
-            rgba(5,25,17,.94),
-            rgba(2,12,8,.91)
-        ) !important;
-    border:1px solid rgba(0,255,170,.13) !important;
-    box-shadow:
-        0 8px 30px rgba(0,0,0,.35),
-        inset 0 0 25px rgba(0,255,170,.025) !important;
-}
-
-/* Card headings */
-
-.card h3{
-    color:#b8e8d3 !important;
-}
-
-/* Amounts */
-
-.amount{
-    color:#dfffee !important;
-    text-shadow:
-        0 0 10px rgba(0,255,170,.16);
-}
-
-/* Deposit button */
-
-.deposit{
-    border:1px solid rgba(0,255,170,.42) !important;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(0,255,170,.13),
-            rgba(0,90,60,.20)
-        ) !important;
-    color:#dffff1 !important;
-    text-shadow:
-        0 0 8px rgba(0,255,170,.25);
-}
-
-/* Available balance */
-
-.balance-card{
-    background:
-        radial-gradient(
-            circle at 50% 45%,
-            rgba(0,255,170,.09),
-            transparent 68%
-        ),
-        linear-gradient(
-            145deg,
-            rgba(4,28,19,.96),
-            rgba(1,10,7,.94)
-        ) !important;
-}
-
-/* Balance aura */
-
-.balance-card::before{
-    border-color:rgba(0,255,170,.22) !important;
-}
-
-/* Money flow stays behind all content */
-
-.money-flow{
-    z-index:0 !important;
-}
-
-.money-flow span{
-    filter:
-        drop-shadow(0 0 7px rgba(0,255,170,.35));
-}
-
-/* Keep dashboard content above animation */
-
-header,
-.container,
-.cards,
-.section,
-.welcome,
-.deposit{
-    position:relative;
-    z-index:2;
-}
-
-/* Subtle green page glow */
-
-.container::after{
-    content:"";
-    position:fixed;
-    left:50%;
-    bottom:-180px;
-    width:420px;
-    height:420px;
-    transform:translateX(-50%);
-    border-radius:50%;
-    background:rgba(0,255,170,.035);
-    filter:blur(80px);
-    pointer-events:none;
-    z-index:-1;
-}
-
-/* Mobile refinement */
-
-@media(max-width:600px){
-
-    .card,
-    .section{
-        box-shadow:
-            0 6px 22px rgba(0,0,0,.30),
-            inset 0 0 18px rgba(0,255,170,.022) !important;
-    }
-
-    .money-flow span{
-        font-size:19px;
-    }
-
-    .deposit{
-        box-shadow:
-            0 0 10px rgba(0,255,170,.12),
-            0 0 22px rgba(0,255,170,.05) !important;
-    }
-}
-
-
-/* WELCOME TEXT — DARK WITH GREEN FIRE */
-.welcome h1{
-    color:#06140f !important;
-    text-shadow:
-        0 0 2px rgba(0,255,170,.95),
-        0 0 7px rgba(0,255,170,.85),
-        0 0 16px rgba(0,255,170,.65),
-        0 0 28px rgba(0,255,170,.35) !important;
-    animation:welcomeDarkTextBurn 3.2s ease-in-out infinite !important;
-}
-
-.welcome p{
-    color:#071a31 !important;
-    text-shadow:
-        0 0 3px rgba(0,255,170,.75),
-        0 0 8px rgba(0,255,170,.50) !important;
-}
-
-@keyframes welcomeDarkTextBurn{
-    0%,100%{
-        color:#06140f;
-        text-shadow:
-            0 0 2px rgba(0,255,170,.85),
-            0 0 7px rgba(0,255,170,.65),
-            0 0 15px rgba(0,255,170,.40);
-    }
-    50%{
-        color:#020b07;
-        text-shadow:
-            0 0 3px rgba(0,255,170,1),
-            0 0 9px rgba(0,255,170,.95),
-            0 0 20px rgba(0,255,170,.70),
-            0 0 32px rgba(0,255,170,.40);
-    }
-}
-</style>
 </body>
 </html>
