@@ -1790,91 +1790,8 @@ header,
 <style id="smStartEarningWheelStyle">
 
 /* ==================================================
-   SMARTMINUTE START EARNING — FAST WHEEL MOTION
-   Does NOT rotate the button itself.
+   SMARTMINUTE START EARNING — FINAL COMBINED STYLE
 ================================================== */
-
-.action.start-earning-action{
-    position:relative;
-    overflow:hidden;
-}
-
-.action.start-earning-action .earning-wheel{
-    display:inline-block;
-    margin-right:7px;
-    transform-origin:50% 50%;
-    animation:smEarningWheel .38s linear infinite;
-    will-change:transform;
-}
-
-@keyframes smEarningWheel{
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
-}
-
-.action.start-earning-action:hover .earning-wheel{
-    animation-duration:.24s;
-}
-
-@media (prefers-reduced-motion:reduce){
-    .action.start-earning-action .earning-wheel{
-        animation:none;
-    }
-}
-
-
-/* ==================================================
-   TOP HEADER — CLEAN FIT
-   Existing logo animation remains untouched.
-================================================== */
-
-header{
-    min-height:78px;
-    padding:9px 14px;
-}
-
-.brand{
-    flex:1;
-    min-width:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.profile-button{
-    flex-shrink:0;
-}
-
-@media(max-width:520px){
-
-    header{
-        height:auto;
-        min-height:70px;
-        padding:8px 10px;
-        gap:8px;
-    }
-
-    .logo{
-        width:58px;
-        height:58px;
-    }
-
-    .profile-button{
-        width:44px;
-        height:44px;
-    }
-
-}
-
-</style>
-
-
-<style id="smStartEarningCircle">
 
 .action.start-earning-action{
     width:170px !important;
@@ -1997,7 +1914,56 @@ header{
     }
 }
 
+
+/* ==================================================
+   TOP HEADER — CLEAN FIT
+   Existing logo animation remains untouched.
+================================================== */
+
+header{
+    min-height:78px;
+    padding:9px 14px;
+}
+
+.brand{
+    flex:1;
+    min-width:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.profile-button{
+    flex-shrink:0;
+}
+
+@media(max-width:520px){
+
+    header{
+        height:auto;
+        min-height:70px;
+        padding:8px 10px;
+        gap:8px;
+    }
+
+    .logo{
+        width:58px;
+        height:58px;
+    }
+
+    .profile-button{
+        width:44px;
+        height:44px;
+    }
+
+}
+
 </style>
+
+
+
+
+
 
 </head>
 
