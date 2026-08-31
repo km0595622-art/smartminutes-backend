@@ -1346,7 +1346,131 @@ small strong,
 }
 
 </style>
-\n</head><body>
+\n<style id="smAmountPhoneUpgrade">
+
+/* ==================================================
+   SMARTMINUTE AMOUNT SELECTION
+   ================================================== */
+
+.amount-options button{
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        filter .18s ease;
+}
+
+.amount-options button.selected{
+    transform:translateY(-2px) scale(1.02);
+
+    box-shadow:
+        0 0 12px rgba(240,195,79,.55),
+        0 0 25px rgba(217,165,46,.28);
+
+    filter:brightness(1.08);
+}
+
+.amount-options button:active{
+    transform:scale(.97);
+}
+
+/* ==================================================
+   AMOUNT INPUT
+   ================================================== */
+
+#amount{
+    color:#ffffff !important;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.075),
+            rgba(255,255,255,.035)
+        ) !important;
+
+    border:
+        1px solid rgba(240,195,79,.75) !important;
+
+    box-shadow:
+        0 0 0 1px rgba(240,195,79,.08),
+        0 0 16px rgba(217,165,46,.08);
+
+    font-weight:700;
+}
+
+#amount::placeholder{
+    color:#9da9b8 !important;
+    opacity:1 !important;
+}
+
+/* ==================================================
+   M-PESA PHONE INPUT
+   ================================================== */
+
+#phone{
+    color:#ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.075),
+            rgba(255,255,255,.035)
+        ) !important;
+
+    border:
+        1px solid rgba(240,195,79,.75) !important;
+
+    box-shadow:
+        0 0 0 1px rgba(240,195,79,.08),
+        0 0 16px rgba(217,165,46,.08);
+
+    font-weight:700;
+}
+
+#phone::placeholder{
+    color:#9da9b8 !important;
+    opacity:1 !important;
+}
+
+#amount:focus,
+#phone:focus{
+    outline:none !important;
+
+    border-color:#f0c34f !important;
+
+    box-shadow:
+        0 0 0 2px rgba(240,195,79,.14),
+        0 0 22px rgba(240,195,79,.20) !important;
+}
+
+</style>
+
+<style id="smPhoneCustomStyle">
+#phone{
+    width:100% !important;
+    background:#f5f9ff !important;
+    color:#17365d !important;
+    border:2px solid #b9d5ff !important;
+    border-radius:12px !important;
+    padding:13px !important;
+    font-size:16px !important;
+    font-weight:600 !important;
+    box-shadow:0 4px 14px rgba(0,102,255,.08) !important;
+}
+
+#phone::placeholder{
+    color:#7d91aa !important;
+    opacity:1 !important;
+}
+
+#phone:focus{
+    outline:none !important;
+    background:#ffffff !important;
+    border-color:#0066ff !important;
+    box-shadow:
+        0 0 0 3px rgba(0,102,255,.10),
+        0 6px 18px rgba(0,102,255,.12) !important;
+}
+</style>
+</head><body>
 
 <div class="ksh-rain" aria-hidden="true">
     <span class="ksh" style="left:3%;animation-duration:10s;animation-delay:-3s;">KSh</span>
@@ -1362,7 +1486,7 @@ small strong,
     <span class="ksh" style="left:7%;animation-duration:18s;animation-delay:-15s;">KSh</span>
     <span class="ksh" style="left:57%;animation-duration:19s;animation-delay:-14s;">KSh</span>
 </div>
-<header><h2>SmartMinute</h2><button class="back" onclick="goBack()">
+<header><h2>SmartMinute</h2><button type="button" class="back" onclick="goBack()">
 ← Dashboard
 </button></header><div class="container"><div class="box"><h1>💳 Deposit</h1><p class="subtitle">
 Add money to your SmartMinute account
@@ -1406,24 +1530,24 @@ min="50"
 placeholder="Or enter your own amount"
 required
 
-«»
+
 
 <label for="phone">
 M-Pesa Phone Number
 </label><input
 id="phone"
 type="tel"
-placeholder="07XXXXXXXX"
+placeholder="07xxx / 01xxx"
 required
 
-«»
+
 
 <button
 id="depositButton"
 class="deposit-button"
 type="submit"
 
-«»
+
 
 💳 Continue Deposit
 </button>
@@ -1443,7 +1567,7 @@ SMARTMINUTE DEPOSIT
 */
 
 
-<script id="smBalancePositiveState">
+
 (function smBalancePositiveState(){
 
     const balanceBox = document.querySelector(".balance");
@@ -1482,8 +1606,7 @@ SMARTMINUTE DEPOSIT
     );
 
 })();
-</script>
-\nconst token = localStorage.getItem("token");
+const token = localStorage.getItem("token");
 
 if(!token){
 
@@ -1509,9 +1632,60 @@ SELECT AMOUNT
 
 function setAmount(amount){
 
-    document.getElementById("amount").value = amount;
+    const amountInput =
+        document.getElementById("amount");
 
-    document.getElementById("message").textContent = "";
+    const message =
+        document.getElementById("message");
+
+    /*
+    Insert selected amount into the amount field
+    */
+
+    amountInput.value = amount;
+
+    /*
+    Clear previous message
+    */
+
+    message.textContent = "";
+
+    /*
+    Remove previous selected state
+    */
+
+    document
+        .querySelectorAll(".amount-options button")
+        .forEach(button => {
+            button.classList.remove("selected");
+        });
+
+    /*
+    Highlight the button that was selected
+    */
+
+    const buttons =
+        document.querySelectorAll(".amount-options button");
+
+    buttons.forEach(button => {
+
+        const buttonAmount =
+            Number(
+                button.textContent
+                    .replace(/[^0-9.]/g, "")
+            );
+
+        if(buttonAmount === Number(amount)){
+            button.classList.add("selected");
+        }
+
+    });
+
+    /*
+    Bring the selected amount field into focus
+    */
+
+    amountInput.focus();
 
 }
 
