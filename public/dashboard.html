@@ -273,7 +273,7 @@ header{
 }
 
 /* =========================================
-   MELTING GOLD CLOCK
+   LIVE ROTATING GOLD CLOCK
 ========================================= */
 
 .brand{
@@ -281,67 +281,150 @@ header{
     color:#e8b83f;
 }
 
+/* Clock body — realistic slow anticlockwise motion */
 .logo{
-    width:48px;
-    height:48px;
-
+    width:64px;
+    height:64px;
     border:3px solid #d9a52e;
-
     border-radius:50%;
-
     background:
         radial-gradient(
-            circle,
-            #17130a,
-            #07101f 70%
+            circle at 38% 32%,
+            #3b2b08 0%,
+            #17130a 38%,
+            #07101f 76%
         );
 
     position:relative;
-
     margin:auto;
 
     box-shadow:
-        0 0 16px
-        rgba(218,165,46,.3);
+        0 0 8px rgba(218,165,46,.35),
+        0 0 20px rgba(218,165,46,.22),
+        inset 0 0 12px rgba(246,209,91,.12);
+
+    animation:
+        clockBodyAnti 18s linear infinite;
+
+    transform-origin:center center;
 }
 
+/* Inner golden rim */
+.logo::marker{
+    content:"";
+}
+
+/* Minute hand */
 .logo:before{
     content:"";
-
     position:absolute;
 
     width:3px;
-    height:15px;
+    height:22px;
 
-    background:#f0c34f;
+    background:
+        linear-gradient(
+            to bottom,
+            #fff0a0,
+            #f0c34f 45%,
+            #b77b12
+        );
 
     left:50%;
-    top:8px;
+    top:50%;
 
     transform:
-        translateX(-50%);
+        translate(-50%,-100%)
+        rotate(0deg);
 
-    border-radius:3px;
+    transform-origin:
+        50% 100%;
+
+    border-radius:4px;
+
+    box-shadow:
+        0 0 4px rgba(240,195,79,.8),
+        0 0 9px rgba(218,165,46,.45);
+
+    animation:
+        clockMinute 6s linear infinite;
+
+    z-index:5;
 }
 
+/* Hour hand */
 .logo:after{
     content:"";
-
     position:absolute;
 
-    width:14px;
-    height:3px;
+    width:16px;
+    height:4px;
 
-    background:#f0c34f;
+    background:
+        linear-gradient(
+            to right,
+            #fff0a0,
+            #f0c34f,
+            #b77b12
+        );
 
     left:50%;
-    top:22px;
+    top:50%;
 
-    transform:rotate(35deg);
+    transform:
+        translateY(-50%)
+        rotate(35deg);
 
-    transform-origin:left center;
+    transform-origin:
+        0% 50%;
 
-    border-radius:3px;
+    border-radius:4px;
+
+    box-shadow:
+        0 0 4px rgba(240,195,79,.8),
+        0 0 9px rgba(218,165,46,.45);
+
+    animation:
+        clockHour 18s linear infinite;
+
+    z-index:5;
+}
+
+/* Realistic clockwise hand movement */
+@keyframes clockMinute{
+    from{
+        transform:
+            translate(-50%,-100%)
+            rotate(0deg);
+    }
+    to{
+        transform:
+            translate(-50%,-100%)
+            rotate(360deg);
+    }
+}
+
+@keyframes clockHour{
+    from{
+        transform:
+            translateY(-50%)
+            rotate(35deg);
+    }
+    to{
+        transform:
+            translateY(-50%)
+            rotate(395deg);
+    }
+}
+
+/* Clock body moves anticlockwise */
+@keyframes clockBodyAnti{
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(-360deg);
+    }
 }
 
 .drop{
@@ -350,6 +433,7 @@ header{
     background:
         linear-gradient(
             #f6d15b,
+            #d9a52e 45%,
             #b77b12
         );
 
@@ -357,36 +441,41 @@ header{
         0 0 8px 8px;
 
     box-shadow:
-        0 2px 5px
-        rgba(0,0,0,.25);
+        0 2px 5px rgba(0,0,0,.25),
+        0 0 7px rgba(218,165,46,.28);
 }
 
 .drop1{
-    width:6px;
-    height:13px;
-    left:9px;
-    bottom:-10px;
+    width:7px;
+    height:14px;
+    left:10px;
+    bottom:-11px;
 }
 
 .drop2{
-    width:8px;
-    height:17px;
-    left:19px;
-    bottom:-14px;
+    width:9px;
+    height:18px;
+    left:26px;
+    bottom:-15px;
 }
 
 .drop3{
-    width:6px;
-    height:11px;
-    right:10px;
-    bottom:-8px;
+    width:7px;
+    height:12px;
+    right:11px;
+    bottom:-9px;
 }
 
 .brand-name{
     font-size:13px;
     font-weight:bold;
-    margin-top:3px;
+    margin-top:5px;
+    color:#e8b83f;
+    text-shadow:
+        0 0 4px rgba(218,165,46,.55),
+        0 0 10px rgba(218,165,46,.25);
 }
+
 
 /* =========================================
    INVITE
