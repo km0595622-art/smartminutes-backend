@@ -36,14 +36,22 @@ const createDeposit = async (req, res) => {
     }
 
     // Basic Kenyan phone validation
-    const normalizedPhone = String(phone)
-      .replace(/\s+/g, "")
-      .replace(/^\+/, "");
+    let normalizedPhone = String(phone)
+      .replace(/[[:space:]]+/g, "")
+      .replace(/^[+]/, "");
 
-    if (!/^2547\d{8}$/.test(normalizedPhone)) {
+    if (normalizedPhone.startsWith("07") && normalizedPhone.length === 10) {
+      normalizedPhone = "254" + normalizedPhone.slice(1);
+    }
+
+    if (normalizedPhone.startsWith("01") && normalizedPhone.length === 10) {
+      normalizedPhone = "254" + normalizedPhone.slice(1);
+    }
+
+    if (!(normalizedPhone.startsWith("2547") || normalizedPhone.startsWith("2541")) || normalizedPhone.length !== 12) {
       return res.status(400).json({
         success: false,
-        message: "Enter a valid Kenyan M-Pesa number, e.g. 2547XXXXXXXX"
+        message: "Enter a valid Kenyan M-Pesa number, e.g. 0712345678 or 0112345678"
       });
     }
 
