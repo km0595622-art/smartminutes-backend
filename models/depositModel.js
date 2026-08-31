@@ -27,6 +27,32 @@ async function createDeposit(userId, amount, phone) {
 }
 
 
+async function findDepositByCheckoutRequestId(
+    checkoutRequestId
+) {
+
+    const result = await db.query(
+        `
+        SELECT
+            id,
+            user_id,
+            amount,
+            phone,
+            status,
+            transaction_id,
+            checkout_request_id,
+            created_at
+        FROM deposits
+        WHERE checkout_request_id = $1
+        LIMIT 1
+        `,
+        [checkoutRequestId]
+    );
+
+    return result.rows[0];
+}
+
+
 async function findDepositById(id, userId) {
 
     const result = await db.query(
@@ -223,5 +249,6 @@ async function confirmDeposit(
 module.exports = {
     createDeposit,
     findDepositById,
+    findDepositByCheckoutRequestId,
     confirmDeposit
 };

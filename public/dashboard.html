@@ -1306,6 +1306,227 @@ section,
     <span class="ksh" style="left:93%;animation-duration:10s;animation-delay:-9s;">KSh</span>
 </div>
 
+
+<style id="smartminute-celebration-css">
+.sm-celebration-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 10, 25, .82);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    z-index: 9998;
+    animation: smBackdropIn .35s ease forwards;
+}
+
+.sm-celebration-card {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(.85);
+    width: min(90vw, 430px);
+    padding: 32px 24px 28px;
+    border: 1px solid rgba(255, 215, 90, .55);
+    border-radius: 26px;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 215, 90, .16), transparent 45%),
+        linear-gradient(145deg, #101c38, #071126);
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.04),
+        0 25px 80px rgba(0,0,0,.65),
+        0 0 45px rgba(255,193,7,.16);
+    text-align: center;
+    overflow: hidden;
+    z-index: 9999;
+    animation: smCelebrationIn .55s cubic-bezier(.17,.89,.32,1.28) forwards;
+}
+
+.sm-sticker-cloud {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.sm-sticker-cloud span {
+    position: absolute;
+    font-size: 28px;
+    animation: smStickerFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,.3));
+}
+
+.sm-sticker-cloud span:nth-child(1) {
+    left: 8%;
+    top: 13%;
+}
+
+.sm-sticker-cloud span:nth-child(2) {
+    right: 9%;
+    top: 18%;
+    animation-delay: .45s;
+}
+
+.sm-sticker-cloud span:nth-child(3) {
+    left: 13%;
+    bottom: 17%;
+    animation-delay: .9s;
+}
+
+.sm-sticker-cloud span:nth-child(4) {
+    right: 12%;
+    bottom: 13%;
+    animation-delay: 1.35s;
+}
+
+.sm-main-sticker {
+    position: relative;
+    width: 92px;
+    height: 92px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,215,90,.28), rgba(255,215,90,.05));
+    border: 1px solid rgba(255,215,90,.4);
+    box-shadow:
+        0 0 30px rgba(255,193,7,.25),
+        inset 0 0 20px rgba(255,255,255,.04);
+    font-size: 54px;
+    animation: smStickerPop .7s cubic-bezier(.17,.89,.32,1.4) .15s both;
+}
+
+.sm-celebration-title {
+    position: relative;
+    margin: 0 0 10px;
+    color: #ffd75a;
+    font-size: clamp(25px, 7vw, 34px);
+    font-weight: 900;
+    letter-spacing: .3px;
+    text-shadow: 0 0 18px rgba(255,215,90,.2);
+}
+
+.sm-celebration-message {
+    position: relative;
+    margin: 0 auto 22px;
+    max-width: 330px;
+    color: rgba(255,255,255,.82);
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.sm-celebration-close {
+    position: relative;
+    min-width: 150px;
+    padding: 12px 22px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #f7c948, #d9a514);
+    color: #071126;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(217,165,20,.28);
+}
+
+.sm-celebration-close:active {
+    transform: scale(.97);
+}
+
+.sm-celebrating .sm-celebration-card {
+    animation: smCelebrationIn .55s cubic-bezier(.17,.89,.32,1.28) forwards;
+}
+
+.sm-celebration-hide .sm-celebration-card {
+    animation: smCelebrationOut .3s ease forwards;
+}
+
+.sm-celebration-hide .sm-celebration-backdrop {
+    animation: smBackdropOut .3s ease forwards;
+}
+
+@keyframes smCelebrationIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.72) rotate(-2deg);
+    }
+    65% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.04) rotate(.5deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0);
+    }
+}
+
+@keyframes smCelebrationOut {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.88);
+    }
+}
+
+@keyframes smBackdropIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes smBackdropOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes smStickerPop {
+    0% {
+        opacity: 0;
+        transform: scale(.2) rotate(-20deg);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.12) rotate(5deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+
+@keyframes smStickerFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-9px) rotate(7deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .sm-celebration-card {
+        width: calc(100vw - 30px);
+        padding: 28px 18px 24px;
+        border-radius: 22px;
+    }
+
+    .sm-main-sticker {
+        width: 82px;
+        height: 82px;
+        font-size: 48px;
+    }
+
+    .sm-sticker-cloud span {
+        font-size: 24px;
+    }
+
+    .sm-celebration-message {
+        font-size: 14px;
+    }
+}
+</style>
+
 </head>
 
 <body>
@@ -2498,9 +2719,6 @@ async function showUnlockForm(){
 }
 
 
-/* =========================================
-   LOAD UNLOCK STATUS
-========================================= */
 
 async function loadUnlockStatus(){
 
@@ -2542,6 +2760,15 @@ async function loadUnlockStatus(){
             status.textContent =
                 "✅ Trading access is unlocked.";
 
+            if(!sessionStorage.getItem("smartMinuteUnlockCelebrated")){
+                sessionStorage.setItem(
+                    "smartMinuteUnlockCelebrated",
+                    "1"
+                );
+
+                celebrateTradingUnlock();
+            }
+
         }else{
 
             status.textContent =
@@ -2567,10 +2794,6 @@ async function loadUnlockStatus(){
 
 }
 
-
-/* =========================================
-   PURCHASE TRADING UNLOCK
-========================================= */
 
 async function purchaseUnlock(){
 
@@ -2664,6 +2887,248 @@ async function purchaseUnlock(){
 
 }
 
+
+/* =========================================
+   SMARTMINUTE CELEBRATION NOTIFICATIONS
+========================================= */
+
+function smartMinuteCelebration(title, message, sticker){
+
+    const old =
+        document.getElementById("smartMinuteCelebration");
+
+    if(old){
+        old.remove();
+    }
+
+    const overlay =
+        document.createElement("div");
+
+    overlay.id =
+        "smartMinuteCelebration";
+
+    overlay.innerHTML = `
+        <div class="sm-celebration-backdrop"></div>
+
+        <div class="sm-celebration-card">
+
+            <div class="sm-sticker-cloud"
+                 aria-hidden="true">
+
+                <span>🎊</span>
+                <span>🎉</span>
+                <span>✨</span>
+                <span>🎊</span>
+                <span>🎉</span>
+                <span>💚</span>
+                <span>🎊</span>
+                <span>🎉</span>
+                <span>✨</span>
+                <span>🎊</span>
+                <span>🎉</span>
+                <span>💰</span>
+
+            </div>
+
+            <div class="sm-main-sticker">
+                ${sticker || "🎉"}
+            </div>
+
+            <div class="sm-celebration-title">
+                ${title}
+            </div>
+
+            <div class="sm-celebration-message">
+                ${message}
+            </div>
+
+            <button
+                class="sm-celebration-close"
+                onclick="closeSmartMinuteCelebration()"
+            >
+                CONTINUE
+            </button>
+
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    document.body.classList.add(
+        "sm-celebrating"
+    );
+
+    smartMinuteCelebrationSound();
+
+    if(
+        navigator.vibrate
+    ){
+        navigator.vibrate([
+            80,60,80,60,180
+        ]);
+    }
+
+    setTimeout(() => {
+
+        if(
+            document.getElementById(
+                "smartMinuteCelebration"
+            )
+        ){
+
+            closeSmartMinuteCelebration();
+
+        }
+
+    }, 9000);
+
+}
+
+
+/* =========================================
+   CELEBRATION SOUND
+========================================= */
+
+function smartMinuteCelebrationSound(){
+
+    try{
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if(!AudioContext){
+            return;
+        }
+
+        const ctx =
+            new AudioContext();
+
+        const now =
+            ctx.currentTime;
+
+        const notes = [
+            523.25,
+            659.25,
+            783.99,
+            1046.50
+        ];
+
+        notes.forEach(
+            (frequency,index) => {
+
+                const oscillator =
+                    ctx.createOscillator();
+
+                const gain =
+                    ctx.createGain();
+
+                oscillator.type =
+                    "sine";
+
+                oscillator.frequency.value =
+                    frequency;
+
+                gain.gain.setValueAtTime(
+                    0.0001,
+                    now + index * 0.11
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    0.18,
+                    now + index * 0.11 + 0.025
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    0.0001,
+                    now + index * 0.11 + 0.42
+                );
+
+                oscillator.connect(gain);
+                gain.connect(ctx.destination);
+
+                oscillator.start(
+                    now + index * 0.11
+                );
+
+                oscillator.stop(
+                    now + index * 0.11 + 0.45
+                );
+
+            }
+        );
+
+        setTimeout(() => {
+
+            try{
+                ctx.close();
+            }catch(e){}
+
+        }, 1800);
+
+    }catch(error){
+
+        console.log(
+            "Celebration audio unavailable:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   CLOSE CELEBRATION
+========================================= */
+
+function closeSmartMinuteCelebration(){
+
+    const overlay =
+        document.getElementById(
+            "smartMinuteCelebration"
+        );
+
+    if(overlay){
+
+        overlay.classList.add(
+            "sm-celebration-hide"
+        );
+
+        setTimeout(() => {
+
+            overlay.remove();
+
+        }, 350);
+
+    }
+
+    document.body.classList.remove(
+        "sm-celebrating"
+    );
+
+}
+
+
+/* =========================================
+   TIER UNLOCK CELEBRATION
+========================================= */
+
+function celebrateTradingUnlock(){
+
+    smartMinuteCelebration(
+        "🎊 CONGRATULATIONS! 🎉",
+        "Trading access has been unlocked. Your new SmartMinute benefits are now active.",
+        "🏆"
+    );
+
+}
+
+
+
+/* =========================================
+   SMARTMINUTE CELEBRATION NOTIFICATIONS
+========================================= */
 
 /* =========================================
    CLOSE ACCOUNT FORM
