@@ -3447,10 +3447,90 @@ refreshUserProfile().then(() => {
 
 </script>
 
-</body>
-</html>
 
 <style id="smartminute-green-theme">
+
+/* =========================================
+   WELCOME — LUMINOUS GREEN FIRE
+========================================= */
+.welcome{
+    position:relative !important;
+    overflow:hidden !important;
+    background:
+        radial-gradient(circle at 50% 0%,rgba(0,255,170,.16),transparent 58%),
+        linear-gradient(145deg,rgba(3,28,19,.98),rgba(1,12,8,.97)) !important;
+    border:1px solid rgba(0,255,170,.55) !important;
+    box-shadow:
+        0 0 8px rgba(0,255,170,.18),
+        0 0 22px rgba(0,255,170,.10),
+        inset 0 0 25px rgba(0,255,170,.045) !important;
+    animation:welcomeBurn 4s ease-in-out infinite !important;
+}
+
+.welcome::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(105deg,transparent 25%,rgba(0,255,170,.10) 50%,transparent 75%);
+    transform:translateX(-120%);
+    animation:welcomeSweep 5s ease-in-out infinite;
+    pointer-events:none;
+}
+
+.welcome h1{
+    position:relative !important;
+    z-index:1 !important;
+    color:#8affd5 !important;
+    text-shadow:
+        0 0 4px rgba(0,255,170,.75),
+        0 0 10px rgba(0,255,170,.55),
+        0 0 22px rgba(0,255,170,.28) !important;
+    animation:welcomeTextBurn 3.2s ease-in-out infinite !important;
+}
+
+.welcome p{
+    position:relative !important;
+    z-index:1 !important;
+    color:rgba(190,255,231,.82) !important;
+    text-shadow:
+        0 0 5px rgba(0,255,170,.35),
+        0 0 12px rgba(0,255,170,.16) !important;
+}
+
+@keyframes welcomeBurn{
+    0%,100%{
+        box-shadow:
+            0 0 8px rgba(0,255,170,.16),
+            0 0 20px rgba(0,255,170,.07),
+            inset 0 0 20px rgba(0,255,170,.035);
+    }
+    50%{
+        box-shadow:
+            0 0 14px rgba(0,255,170,.32),
+            0 0 34px rgba(0,255,170,.15),
+            inset 0 0 30px rgba(0,255,170,.065);
+    }
+}
+
+@keyframes welcomeTextBurn{
+    0%,100%{
+        text-shadow:
+            0 0 4px rgba(0,255,170,.65),
+            0 0 10px rgba(0,255,170,.38),
+            0 0 18px rgba(0,255,170,.16);
+    }
+    50%{
+        text-shadow:
+            0 0 5px rgba(0,255,170,.95),
+            0 0 13px rgba(0,255,170,.72),
+            0 0 27px rgba(0,255,170,.38);
+    }
+}
+
+@keyframes welcomeSweep{
+    0%,35%{transform:translateX(-120%)}
+    65%,100%{transform:translateX(120%)}
+}
 
 /* =========================================================
    SMARTMINUTE GREEN NEON THEME
