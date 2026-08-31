@@ -1527,6 +1527,240 @@ section,
 }
 </style>
 
+
+<style id="smartminute-neon-deposit">
+
+/* SMARTMINUTE NEON DEPOSIT THEME */
+
+.deposit{
+    position:relative;
+    overflow:hidden;
+    border:1px solid rgba(255,0,214,.78) !important;
+    border-radius:18px !important;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(105,0,255,.36),
+            rgba(255,0,153,.30),
+            rgba(255,215,0,.20)
+        ) !important;
+    color:#ffffff !important;
+    font-weight:900;
+    letter-spacing:.3px;
+    text-shadow:
+        0 0 6px rgba(255,255,255,.70),
+        0 0 14px rgba(255,0,214,.75);
+    box-shadow:
+        0 0 10px rgba(123,0,255,.55),
+        0 0 24px rgba(255,0,153,.38),
+        0 0 45px rgba(255,220,0,.14),
+        inset 0 0 18px rgba(255,0,214,.10);
+    animation:smNeonDepositPulse 3s ease-in-out infinite;
+    transition:transform .2s ease, box-shadow .2s ease;
+}
+
+.deposit::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    border-radius:inherit;
+    background:
+        linear-gradient(
+            115deg,
+            transparent 15%,
+            transparent 35%,
+            rgba(255,235,0,.78) 48%,
+            rgba(255,0,153,.70) 55%,
+            transparent 75%
+        );
+    transform:translateX(-120%);
+    animation:smNeonDepositSweep 3.8s ease-in-out infinite;
+    pointer-events:none;
+}
+
+.deposit::after{
+    content:"";
+    position:absolute;
+    width:120px;
+    height:120px;
+    right:-55px;
+    top:-65px;
+    border-radius:50%;
+    background:rgba(255,0,153,.28);
+    filter:blur(28px);
+    pointer-events:none;
+}
+
+.deposit:hover{
+    transform:translateY(-2px) scale(1.015);
+    border-color:rgba(255,235,0,.95) !important;
+    box-shadow:
+        0 0 16px rgba(123,0,255,.78),
+        0 0 34px rgba(255,0,153,.60),
+        0 0 58px rgba(255,220,0,.30),
+        inset 0 0 22px rgba(255,0,214,.16);
+}
+
+.deposit:active{
+    transform:scale(.97);
+}
+
+@keyframes smNeonDepositPulse{
+    0%,100%{
+        box-shadow:
+            0 0 10px rgba(123,0,255,.55),
+            0 0 24px rgba(255,0,153,.35),
+            0 0 45px rgba(255,220,0,.12),
+            inset 0 0 18px rgba(255,0,214,.10);
+    }
+
+    50%{
+        box-shadow:
+            0 0 18px rgba(123,0,255,.78),
+            0 0 38px rgba(255,0,153,.56),
+            0 0 62px rgba(255,220,0,.23),
+            inset 0 0 25px rgba(255,0,214,.16);
+    }
+}
+
+@keyframes smNeonDepositSweep{
+    0%,25%{
+        transform:translateX(-120%);
+    }
+
+    65%,100%{
+        transform:translateX(120%);
+    }
+}
+
+/* BALANCE CARD */
+
+.balance-card{
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(123,0,255,.22),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 85% 75%,
+            rgba(255,0,153,.20),
+            transparent 40%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(24,8,55,.97),
+            rgba(9,5,25,.98)
+        ) !important;
+
+    border-color:rgba(255,0,214,.34) !important;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.45),
+        0 0 25px rgba(123,0,255,.16),
+        inset 0 0 22px rgba(255,0,153,.05) !important;
+}
+
+/* CARD HEADINGS */
+
+.card h3{
+    color:#ffe52b !important;
+    text-shadow:
+        0 0 7px rgba(255,225,30,.75),
+        0 0 16px rgba(255,0,153,.32);
+}
+
+/* MONEY AMOUNTS */
+
+.amount{
+    color:#fff45c !important;
+    text-shadow:
+        0 0 5px rgba(255,240,70,.90),
+        0 0 14px rgba(255,0,153,.48),
+        0 0 28px rgba(123,0,255,.32);
+}
+
+/* MONEY FLOW */
+
+.money-flow span{
+    filter:
+        drop-shadow(0 0 6px rgba(255,0,214,.75))
+        drop-shadow(0 0 12px rgba(123,0,255,.45));
+}
+
+/* SECTIONS */
+
+.section{
+    border-color:rgba(255,0,153,.28) !important;
+    box-shadow:
+        0 8px 28px rgba(0,0,0,.40),
+        0 0 22px rgba(123,0,255,.12),
+        inset 0 0 20px rgba(255,0,153,.04) !important;
+}
+
+/* FORM CONTROLS */
+
+input,
+select{
+    border-color:rgba(255,0,214,.42) !important;
+    background:rgba(20,7,42,.90) !important;
+    color:#ffffff !important;
+}
+
+input:focus,
+select:focus{
+    border-color:#ffe52b !important;
+    box-shadow:
+        0 0 8px rgba(255,225,30,.60),
+        0 0 18px rgba(255,0,153,.34) !important;
+}
+
+/* ERROR STATES */
+
+.error,
+[class*="error"]{
+    color:#ff3d58 !important;
+    text-shadow:0 0 9px rgba(255,0,55,.58);
+}
+
+/* CONTENT ABOVE ANIMATIONS */
+
+header,
+.container,
+.cards,
+.section,
+.welcome,
+.deposit{
+    position:relative;
+    z-index:2;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .deposit{
+        border-radius:16px !important;
+        box-shadow:
+            0 0 12px rgba(123,0,255,.58),
+            0 0 25px rgba(255,0,153,.36),
+            inset 0 0 18px rgba(255,0,214,.10);
+    }
+
+    .deposit:hover{
+        transform:none;
+    }
+
+    .card,
+    .section{
+        box-shadow:
+            0 6px 24px rgba(0,0,0,.38),
+            0 0 18px rgba(123,0,255,.11) !important;
+    }
+}
+
+</style>
+
 </head>
 
 <body>
