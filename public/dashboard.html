@@ -1761,6 +1761,219 @@ header,
 
 </style>
 
+
+<style id="smStartEarningWheelStyle">
+
+/* ==================================================
+   SMARTMINUTE START EARNING — FAST WHEEL MOTION
+   Does NOT rotate the button itself.
+================================================== */
+
+.action.start-earning-action{
+    position:relative;
+    overflow:hidden;
+}
+
+.action.start-earning-action .earning-wheel{
+    display:inline-block;
+    margin-right:7px;
+    transform-origin:50% 50%;
+    animation:smEarningWheel .38s linear infinite;
+    will-change:transform;
+}
+
+@keyframes smEarningWheel{
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.action.start-earning-action:hover .earning-wheel{
+    animation-duration:.24s;
+}
+
+@media (prefers-reduced-motion:reduce){
+    .action.start-earning-action .earning-wheel{
+        animation:none;
+    }
+}
+
+
+/* ==================================================
+   TOP HEADER — CLEAN FIT
+   Existing logo animation remains untouched.
+================================================== */
+
+header{
+    min-height:78px;
+    padding:9px 14px;
+}
+
+.brand{
+    flex:1;
+    min-width:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.profile-button{
+    flex-shrink:0;
+}
+
+@media(max-width:520px){
+
+    header{
+        height:auto;
+        min-height:70px;
+        padding:8px 10px;
+        gap:8px;
+    }
+
+    .logo{
+        width:58px;
+        height:58px;
+    }
+
+    .profile-button{
+        width:44px;
+        height:44px;
+    }
+
+}
+
+</style>
+
+
+<style id="smStartEarningCircle">
+
+.action.start-earning-action{
+    width:170px !important;
+    height:170px !important;
+    min-height:170px !important;
+
+    margin:22px auto !important;
+
+    border-radius:50% !important;
+
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+
+    gap:9px;
+    padding:18px !important;
+
+    position:relative;
+    overflow:hidden;
+
+    border:2px solid rgba(0,255,170,.65) !important;
+
+    box-shadow:
+        0 0 12px rgba(0,255,170,.18),
+        0 0 28px rgba(0,255,170,.12),
+        inset 0 0 20px rgba(0,255,170,.08);
+
+    animation:smEarningCirclePulse 1.8s ease-in-out infinite;
+}
+
+.action.start-earning-action::before{
+    content:"";
+    position:absolute;
+    inset:7px;
+    border-radius:50%;
+    border:1px solid rgba(0,255,170,.28);
+    pointer-events:none;
+}
+
+.action.start-earning-action .earning-wheel{
+    display:block;
+    width:54px;
+    height:54px;
+
+    font-size:48px;
+    line-height:54px;
+
+    margin:0;
+
+    transform-origin:50% 50%;
+
+    animation:smEarningWheel .30s linear infinite;
+
+    will-change:transform;
+}
+
+.action.start-earning-action .earning-text{
+    position:relative;
+    z-index:2;
+
+    font-size:18px;
+    font-weight:900;
+
+    white-space:nowrap;
+}
+
+@keyframes smEarningWheel{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+
+@keyframes smEarningCirclePulse{
+    0%,100%{
+        box-shadow:
+            0 0 12px rgba(0,255,170,.16),
+            0 0 28px rgba(0,255,170,.08),
+            inset 0 0 20px rgba(0,255,170,.06);
+    }
+
+    50%{
+        box-shadow:
+            0 0 20px rgba(0,255,170,.28),
+            0 0 42px rgba(0,255,170,.16),
+            inset 0 0 26px rgba(0,255,170,.10);
+    }
+}
+
+.action.start-earning-action:hover{
+    transform:scale(1.04);
+}
+
+.action.start-earning-action:active{
+    transform:scale(.97);
+}
+
+@media(max-width:520px){
+    .action.start-earning-action{
+        width:155px !important;
+        height:155px !important;
+        min-height:155px !important;
+    }
+
+    .action.start-earning-action .earning-wheel{
+        width:48px;
+        height:48px;
+        font-size:43px;
+        line-height:48px;
+    }
+
+    .action.start-earning-action .earning-text{
+        font-size:17px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    .action.start-earning-action,
+    .action.start-earning-action .earning-wheel{
+        animation:none;
+    }
+}
+
+</style>
+
 </head>
 
 <body>
@@ -2093,18 +2306,15 @@ opacity:0;
         </h2>
 
         <button
-            class="action"
+            class="action start-earning-action"
             onclick="startTasks()"
+            aria-label="Start Earning"
         >
-            🚀 Start Earning
+            <span class="earning-wheel" aria-hidden="true">🚀</span>
+            <span class="earning-text">Start Earning</span>
         </button>
 
-        <button
-            class="action"
-            onclick="deposit()"
-        >
-            💳 Make a Deposit
-        </button>
+
 
         <p
             id="message"
