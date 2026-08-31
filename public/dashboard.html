@@ -3713,6 +3713,42 @@ header,
     }
 }
 
+
+/* WELCOME TEXT — DARK WITH GREEN FIRE */
+.welcome h1{
+    color:#06140f !important;
+    text-shadow:
+        0 0 2px rgba(0,255,170,.95),
+        0 0 7px rgba(0,255,170,.85),
+        0 0 16px rgba(0,255,170,.65),
+        0 0 28px rgba(0,255,170,.35) !important;
+    animation:welcomeDarkTextBurn 3.2s ease-in-out infinite !important;
+}
+
+.welcome p{
+    color:#071a31 !important;
+    text-shadow:
+        0 0 3px rgba(0,255,170,.75),
+        0 0 8px rgba(0,255,170,.50) !important;
+}
+
+@keyframes welcomeDarkTextBurn{
+    0%,100%{
+        color:#06140f;
+        text-shadow:
+            0 0 2px rgba(0,255,170,.85),
+            0 0 7px rgba(0,255,170,.65),
+            0 0 15px rgba(0,255,170,.40);
+    }
+    50%{
+        color:#020b07;
+        text-shadow:
+            0 0 3px rgba(0,255,170,1),
+            0 0 9px rgba(0,255,170,.95),
+            0 0 20px rgba(0,255,170,.70),
+            0 0 32px rgba(0,255,170,.40);
+    }
+}
 </style>
 
 </body>
