@@ -376,6 +376,135 @@ a{
 </style>
 
 
+
+<style id="smartminute-important-green-notice">
+/* SMARTMINUTE IMPORTANT PAYMENT NOTICE */
+
+.sm-important-notice,
+.important-notice,
+.deposit-notice,
+.note {
+    position: relative !important;
+    overflow: hidden !important;
+    margin-top: 18px !important;
+    padding: 18px 18px !important;
+    border: 1px solid rgba(0,255,140,.65) !important;
+    border-radius: 18px !important;
+
+    background:
+        radial-gradient(
+            circle at 0% 50%,
+            rgba(0,255,120,.22),
+            transparent 55%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(0,90,45,.58),
+            rgba(0,35,25,.78),
+            rgba(0,15,20,.90)
+        ) !important;
+
+    color: #eafff3 !important;
+
+    box-shadow:
+        0 0 10px rgba(0,255,120,.30),
+        0 0 24px rgba(0,255,170,.18),
+        inset 0 0 22px rgba(0,255,120,.08) !important;
+
+    text-shadow:
+        0 0 5px rgba(120,255,180,.55) !important;
+
+    animation: smImportantGreenFade 3.5s ease-in-out infinite;
+}
+
+.sm-important-notice::before,
+.important-notice::before,
+.deposit-notice::before,
+.note::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            100deg,
+            transparent 15%,
+            rgba(0,255,140,.20) 45%,
+            rgba(170,255,210,.30) 50%,
+            rgba(0,255,140,.12) 55%,
+            transparent 85%
+        );
+    transform: translateX(-120%);
+    animation: smImportantGreenSweep 4.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.sm-important-notice strong,
+.important-notice strong,
+.deposit-notice strong,
+.note strong {
+    display: block !important;
+    margin-bottom: 8px !important;
+    color: #63ff9d !important;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    text-shadow:
+        0 0 6px rgba(0,255,120,.75),
+        0 0 14px rgba(0,255,120,.35) !important;
+}
+
+.sm-important-notice p,
+.important-notice p,
+.deposit-notice p,
+.note p {
+    position: relative;
+    z-index: 2;
+    color: #e8fff1 !important;
+    line-height: 1.65 !important;
+    font-size: 13px !important;
+}
+
+@keyframes smImportantGreenFade {
+    0%,100% {
+        box-shadow:
+            0 0 8px rgba(0,255,120,.20),
+            0 0 18px rgba(0,255,170,.10),
+            inset 0 0 18px rgba(0,255,120,.05);
+    }
+
+    50% {
+        box-shadow:
+            0 0 16px rgba(0,255,120,.48),
+            0 0 34px rgba(0,255,170,.28),
+            inset 0 0 26px rgba(0,255,120,.12);
+    }
+}
+
+@keyframes smImportantGreenSweep {
+    0%,30% {
+        transform: translateX(-120%);
+    }
+
+    65%,100% {
+        transform: translateX(120%);
+    }
+}
+
+@media(max-width:600px) {
+    .sm-important-notice,
+    .important-notice,
+    .deposit-notice {
+        padding: 16px 14px !important;
+        border-radius: 16px !important;
+    }
+
+    .sm-important-notice p,
+    .important-notice p,
+    .deposit-notice p {
+        font-size: 12.5px !important;
+    }
+}
+</style>
+
 <style id="smartminute-full-neon-deposit">
 
 /* =========================================================
