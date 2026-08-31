@@ -1762,6 +1762,31 @@ header,
 </style>
 
 
+
+<style id="smWithdrawMinimumStyle">
+
+.withdraw-action{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:4px;
+}
+
+.withdraw-title{
+    font-weight:800;
+}
+
+.withdraw-minimum{
+    display:block;
+    font-size:15px;
+    font-weight:710;
+    opacity:.89;
+    letter-spacing:.2px;
+}
+
+</style>
+
 <style id="smStartEarningWheelStyle">
 
 /* ==================================================
@@ -2303,7 +2328,7 @@ opacity:0;
 
         <button
             class="action start-earning-action"
-            onclick="startTasks()"
+            onclick="showEarningOptions()"
             aria-label="Start Earning"
         >
             <span class="earning-wheel" aria-hidden="true">🚀</span>
@@ -2367,10 +2392,14 @@ opacity:0;
             </h3>
 
             <button
-                class="action"
+                class="action withdraw-action"
                 onclick="showWithdrawalForm()"
+                aria-label="Withdraw Funds. Minimum withdrawal KSh 5,000"
             >
-                💸 Withdraw Funds
+                <span class="withdraw-title">💸 Withdraw Funds</span>
+                <span class="withdraw-minimum">
+                    Minimum withdrawal: KSh 5,000
+                </span>
             </button>
 
             <button
@@ -2378,13 +2407,6 @@ opacity:0;
                 onclick="showKycForm()"
             >
                 🪪 KYC Verification
-            </button>
-
-            <button
-                class="action"
-                onclick="showUnlockForm()"
-            >
-                🔓 Trading Access
             </button>
 
             <div id="accountForms"></div>
@@ -3580,6 +3602,52 @@ function closeAccountForm(){
 
 }
 
+
+
+/* =========================================
+   START EARNING OPTIONS
+========================================= */
+
+function showEarningOptions(){
+
+    const container =
+        document.getElementById("tasksContainer");
+
+    if(!container){
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="account-form earning-options">
+
+            <h3>💥 Start Earning</h3>
+
+            <p class="form-note">
+                Choose how you want to earn with SmartMinute.
+            </p>
+
+            <button
+                class="action"
+                onclick="showUnlockForm()"
+            >
+                📈 FX&BINARY TRADING
+            </button>
+
+            <button
+                class="action"
+                onclick="startTasks()"
+            >
+                ✅ TASKS
+            </button>
+
+        </div>
+    `;
+
+    container.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+    });
+}
 
 
 /* =========================================
