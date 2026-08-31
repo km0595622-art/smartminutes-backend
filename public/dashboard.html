@@ -1312,6 +1312,35 @@ section,
     </div>
 
 
+<style>
+.deposit{
+position:relative;
+.deposit{
+position:relative;
+overflow:hidden;
+border:1px solid rgba(0,255,170,.45);
+animation:depositPulse 3.8s ease-in-out infinite;
+box-shadow:0 0 8px rgba(0,255,170,.10),0 0 18px rgba(0,255,170,.04);
+}
+.deposit::before{
+content:"";
+position:absolute;
+inset:0;
+border-radius:inherit;
+background:linear-gradient(110deg,transparent 20%,rgba(0,255,170,.16) 50%,transparent 80%);
+transform:translateX(-120%);
+animation:depositSweep 4.5s ease-in-out infinite;
+pointer-events:none;
+}
+@keyframes depositPulse{
+0%,100%{box-shadow:0 0 8px rgba(0,255,170,.10),0 0 18px rgba(0,255,170,.04)}
+50%{box-shadow:0 0 16px rgba(0,255,170,.28),0 0 34px rgba(0,255,170,.12)}
+}
+@keyframes depositSweep{
+0%,35%{transform:translateX(-120%)}
+65%,100%{transform:translateX(120%)}
+}
+</style>
     <!-- DEPOSIT -->
 
     <button
@@ -1322,11 +1351,146 @@ section,
     </button>
 
 
+<style>
+.balance-card{
+position:relative;
+overflow:hidden;
+animation:balanceShake 4s ease-in-out infinite;
+box-shadow:0 0 10px rgba(0,255,170,.10),inset 0 0 20px rgba(0,255,170,.03);
+}
+
+.balance-card::before{
+content:"";
+position:absolute;
+inset:-2px;
+border-radius:inherit;
+border:1px solid rgba(0,255,170,.18);
+box-shadow:0 0 10px rgba(0,255,170,.10),0 0 24px rgba(0,255,170,.04);
+animation:balanceAura 3.5s ease-in-out infinite;
+pointer-events:none;
+}
+
+.balance-card h3,
+.balance-card .amount{
+position:relative;
+z-index:1;
+}
+
+@keyframes balanceAura{
+0%,100%{opacity:.45;transform:scale(.995)}
+50%{opacity:1;transform:scale(1.01)}
+}
+
+@keyframes balanceShake{
+0%,82%,100%{transform:translateX(0) rotate(0deg)}
+84%{transform:translateX(-2px) rotate(-.35deg)}
+86%{transform:translateX(2px) rotate(.35deg)}
+88%{transform:translateX(-1px) rotate(-.2deg)}
+90%{transform:translateX(1px) rotate(.2deg)}
+92%{transform:translateX(0) rotate(0deg)}
+}
+</style>
+    <!-- MONEY FLOW -->
+
+<style>
+.money-flow{
+position:fixed;
+inset:0;
+pointer-events:none;
+overflow:hidden;
+z-index:0;
+}
+
+.money-flow span{
+position:absolute;
+top:-55px;
+font-size:24px;
+opacity:0;
+filter:drop-shadow(0 0 7px rgba(0,255,170,.45));
+animation:moneyToBalance linear infinite;
+}
+
+.money-flow span:nth-child(1){
+left:8%;
+animation-duration:6s;
+animation-delay:0s;
+}
+
+.money-flow span:nth-child(2){
+left:24%;
+animation-duration:7s;
+animation-delay:1.2s;
+}
+
+.money-flow span:nth-child(3){
+left:42%;
+animation-duration:5.8s;
+animation-delay:2.2s;
+}
+
+.money-flow span:nth-child(4){
+left:61%;
+animation-duration:6.5s;
+animation-delay:.5s;
+}
+
+.money-flow span:nth-child(5){
+left:79%;
+animation-duration:7.2s;
+animation-delay:2.8s;
+}
+
+.money-flow span:nth-child(6){
+left:92%;
+animation-duration:6.2s;
+animation-delay:1.6s;
+}
+
+@keyframes moneyToBalance{
+0%{
+transform:translateY(-70px) translateX(0) rotate(0deg) scale(.7);
+opacity:0;
+}
+12%{
+opacity:.55;
+}
+40%{
+transform:translateY(28vh) translateX(-10px) rotate(120deg) scale(1);
+opacity:.5;
+}
+65%{
+transform:translateY(47vh) translateX(12px) rotate(220deg) scale(.85);
+opacity:.4;
+}
+82%{
+transform:translateY(57vh) translateX(0) rotate(300deg) scale(.55);
+opacity:.25;
+}
+94%{
+transform:translateY(62vh) translateX(0) rotate(350deg) scale(.25);
+opacity:.12;
+}
+100%{
+transform:translateY(64vh) translateX(0) rotate(360deg) scale(.05);
+opacity:0;
+}
+}
+</style>
+
+<div class="money-flow" aria-hidden="true">
+<span>💸</span>
+<span>💵</span>
+<span>💸</span>
+<span>💵</span>
+<span>💸</span>
+<span>💵</span>
+</div>
+
     <!-- BALANCES -->
 
     <div class="cards">
 
-        <div class="card">
+        <div class="card balance-card">
 
             <h3>
                 💰 Available Balance
@@ -3282,6 +3446,194 @@ refreshUserProfile().then(() => {
 });
 
 </script>
+
+</body>
+</html>
+
+<style id="smartminute-green-theme">
+
+/* =========================================================
+   SMARTMINUTE GREEN NEON THEME
+   Final visual override
+========================================================= */
+
+html,
+body{
+    background:
+        radial-gradient(circle at 50% 20%,
+            rgba(0,255,170,.07),
+            transparent 38%),
+        linear-gradient(
+            145deg,
+            #020806 0%,
+            #03130d 48%,
+            #010504 100%
+        ) !important;
+    color:#eafff6 !important;
+}
+
+/* Main page atmosphere */
+
+body::before{
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,255,170,.055) 0%,
+            transparent 62%
+        ) !important;
+}
+
+/* Header */
+
+header{
+    background:rgba(2,12,8,.88) !important;
+    border-bottom:1px solid rgba(0,255,170,.16) !important;
+    box-shadow:
+        0 4px 22px rgba(0,255,170,.06) !important;
+}
+
+/* Welcome text */
+
+.welcome h1{
+    color:#effff8 !important;
+    text-shadow:
+        0 0 12px rgba(0,255,170,.12);
+}
+
+.welcome p{
+    color:#8fb5a7 !important;
+}
+
+/* Cards */
+
+.card,
+.section{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(5,25,17,.94),
+            rgba(2,12,8,.91)
+        ) !important;
+    border:1px solid rgba(0,255,170,.13) !important;
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.35),
+        inset 0 0 25px rgba(0,255,170,.025) !important;
+}
+
+/* Card headings */
+
+.card h3{
+    color:#b8e8d3 !important;
+}
+
+/* Amounts */
+
+.amount{
+    color:#dfffee !important;
+    text-shadow:
+        0 0 10px rgba(0,255,170,.16);
+}
+
+/* Deposit button */
+
+.deposit{
+    border:1px solid rgba(0,255,170,.42) !important;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,255,170,.13),
+            rgba(0,90,60,.20)
+        ) !important;
+    color:#dffff1 !important;
+    text-shadow:
+        0 0 8px rgba(0,255,170,.25);
+}
+
+/* Available balance */
+
+.balance-card{
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(0,255,170,.09),
+            transparent 68%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(4,28,19,.96),
+            rgba(1,10,7,.94)
+        ) !important;
+}
+
+/* Balance aura */
+
+.balance-card::before{
+    border-color:rgba(0,255,170,.22) !important;
+}
+
+/* Money flow stays behind all content */
+
+.money-flow{
+    z-index:0 !important;
+}
+
+.money-flow span{
+    filter:
+        drop-shadow(0 0 7px rgba(0,255,170,.35));
+}
+
+/* Keep dashboard content above animation */
+
+header,
+.container,
+.cards,
+.section,
+.welcome,
+.deposit{
+    position:relative;
+    z-index:2;
+}
+
+/* Subtle green page glow */
+
+.container::after{
+    content:"";
+    position:fixed;
+    left:50%;
+    bottom:-180px;
+    width:420px;
+    height:420px;
+    transform:translateX(-50%);
+    border-radius:50%;
+    background:rgba(0,255,170,.035);
+    filter:blur(80px);
+    pointer-events:none;
+    z-index:-1;
+}
+
+/* Mobile refinement */
+
+@media(max-width:600px){
+
+    .card,
+    .section{
+        box-shadow:
+            0 6px 22px rgba(0,0,0,.30),
+            inset 0 0 18px rgba(0,255,170,.022) !important;
+    }
+
+    .money-flow span{
+        font-size:19px;
+    }
+
+    .deposit{
+        box-shadow:
+            0 0 10px rgba(0,255,170,.12),
+            0 0 22px rgba(0,255,170,.05) !important;
+    }
+}
+
+</style>
 
 </body>
 </html>
