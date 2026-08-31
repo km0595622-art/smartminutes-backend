@@ -167,6 +167,154 @@ input{
     }
 }
 </style>
+<style id="smBalanceMoneyFlowStyle">
+
+.balance{
+    position:relative !important;
+    overflow:hidden !important;
+    isolation:isolate;
+    animation:smBalanceTableShake 5s ease-in-out infinite;
+}
+
+.balance > strong{
+    position:relative;
+    z-index:5;
+}
+
+#smBalanceMoneyFlow{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:1;
+}
+
+.smBalanceMoney{
+    position:absolute;
+    left:var(--x);
+    top:var(--y);
+    font-size:var(--size);
+    opacity:0;
+    animation:smMoneyToBalance var(--duration) ease-in-out infinite;
+    animation-delay:var(--delay);
+    transform:translate(0,0) scale(.65) rotate(0deg);
+    filter:
+        drop-shadow(0 0 5px rgba(255,0,214,.9))
+        drop-shadow(0 0 12px rgba(123,0,255,.65));
+}
+
+.smBalanceMoney:nth-child(2n){
+    filter:
+        drop-shadow(0 0 5px rgba(0,255,255,.9))
+        drop-shadow(0 0 12px rgba(0,140,255,.65));
+}
+
+.smBalanceMoney:nth-child(3n){
+    filter:
+        drop-shadow(0 0 5px rgba(255,235,0,.95))
+        drop-shadow(0 0 12px rgba(255,90,0,.65));
+}
+
+@keyframes smMoneyToBalance{
+    0%{
+        opacity:0;
+        transform:
+            translate(var(--sx),var(--sy))
+            scale(.55)
+            rotate(var(--rotate));
+    }
+
+    15%{
+        opacity:1;
+    }
+
+    72%{
+        opacity:.95;
+        transform:
+            translate(
+                calc(var(--sx) * -.18),
+                calc(var(--sy) * -.18)
+            )
+            scale(1)
+            rotate(calc(var(--rotate) * 1.4));
+    }
+
+    88%{
+        opacity:1;
+        transform:
+            translate(0,0)
+            scale(1.15)
+            rotate(0deg);
+    }
+
+    100%{
+        opacity:0;
+        transform:
+            translate(0,0)
+            scale(.25)
+            rotate(0deg);
+    }
+}
+
+@keyframes smBalanceTableShake{
+    0%,100%{
+        transform:translate3d(0,0,0);
+    }
+
+    92%{
+        transform:translate3d(0,0,0);
+    }
+
+    93%{
+        transform:translate3d(-1px,0,0) rotate(-.15deg);
+    }
+
+    94%{
+        transform:translate3d(2px,0,0) rotate(.18deg);
+    }
+
+    95%{
+        transform:translate3d(-2px,0,0) rotate(-.18deg);
+    }
+
+    96%{
+        transform:translate3d(1px,0,0) rotate(.12deg);
+    }
+
+    97%{
+        transform:translate3d(0,0,0) rotate(0);
+    }
+}
+
+.balance::after{
+    content:"";
+    position:absolute;
+    inset:-20%;
+    pointer-events:none;
+    z-index:2;
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(255,0,214,.12),
+            transparent 38%
+        );
+    animation:smBalanceAura 4s ease-in-out infinite;
+}
+
+@keyframes smBalanceAura{
+    0%,100%{
+        opacity:.35;
+        transform:scale(.92);
+    }
+
+    50%{
+        opacity:.85;
+        transform:scale(1.08);
+    }
+}
+
+</style>
+
 <style>
 /* ===== SMARTMINUTE DEPOSIT NAVY GOLD THEME ===== */
 
@@ -377,7 +525,154 @@ a{
 
 
 
-<style id="smartminute-important-green-notice">
+
+<style id="smartminute-balance-neon">
+
+/* SMARTMINUTE CURRENT BALANCE — RED / BLUE NEON */
+
+.balance{
+    position:relative !important;
+    overflow:hidden !important;
+    margin-bottom:20px !important;
+    padding:18px 20px !important;
+    border-radius:18px !important;
+
+    border:1px solid rgba(120,80,255,.48) !important;
+
+    background:
+        radial-gradient(
+            circle at 12% 50%,
+            rgba(255,0,70,.18),
+            transparent 42%
+        ),
+        radial-gradient(
+            circle at 88% 50%,
+            rgba(0,120,255,.18),
+            transparent 42%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(25,8,45,.96),
+            rgba(8,10,35,.98)
+        ) !important;
+
+    color:#ffffff !important;
+
+    box-shadow:
+        0 0 10px rgba(255,0,70,.18),
+        0 0 20px rgba(0,110,255,.18),
+        inset 0 0 20px rgba(120,0,255,.07) !important;
+
+    text-shadow:
+        0 0 6px rgba(255,255,255,.45) !important;
+
+    animation:smBalanceNeonFade 4s ease-in-out infinite;
+}
+
+.balance::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(
+            105deg,
+            transparent 15%,
+            rgba(255,0,70,.16) 42%,
+            rgba(255,255,255,.20) 50%,
+            rgba(0,120,255,.20) 58%,
+            transparent 85%
+        );
+    transform:translateX(-120%);
+    animation:smBalanceSweep 4.5s ease-in-out infinite;
+    pointer-events:none;
+}
+
+.balance::after{
+    content:"";
+    position:absolute;
+    width:100px;
+    height:100px;
+    right:-35px;
+    top:-45px;
+    border-radius:50%;
+    background:rgba(0,110,255,.20);
+    filter:blur(28px);
+    pointer-events:none;
+}
+
+.balance strong{
+    position:relative;
+    z-index:2;
+    display:block !important;
+    margin-top:7px !important;
+
+    color:#ff304f !important;
+
+    font-size:24px !important;
+    font-weight:1000 !important;
+    letter-spacing:.4px !important;
+
+    text-shadow:
+        0 0 5px rgba(255,0,55,.95),
+        0 0 12px rgba(255,0,55,.75),
+        0 0 25px rgba(255,0,55,.45) !important;
+
+    transition:
+        color .35s ease,
+        text-shadow .35s ease !important;
+}
+
+/* POSITIVE BALANCE — BLUE */
+
+.balance.positive strong{
+    color:#35a7ff !important;
+
+    text-shadow:
+        0 0 5px rgba(0,145,255,.98),
+        0 0 12px rgba(0,145,255,.80),
+        0 0 25px rgba(0,145,255,.50) !important;
+}
+
+@keyframes smBalanceNeonFade{
+    0%,100%{
+        box-shadow:
+            0 0 8px rgba(255,0,70,.16),
+            0 0 18px rgba(0,110,255,.16),
+            inset 0 0 18px rgba(120,0,255,.05);
+    }
+
+    50%{
+        box-shadow:
+            0 0 16px rgba(255,0,70,.34),
+            0 0 32px rgba(0,110,255,.32),
+            inset 0 0 25px rgba(120,0,255,.10);
+    }
+}
+
+@keyframes smBalanceSweep{
+    0%,28%{
+        transform:translateX(-120%);
+    }
+
+    65%,100%{
+        transform:translateX(120%);
+    }
+}
+
+@media(max-width:600px){
+
+    .balance{
+        padding:16px 15px !important;
+        border-radius:16px !important;
+    }
+
+    .balance strong{
+        font-size:21px !important;
+    }
+}
+
+</style>
+\n<style id="smartminute-important-green-notice">
 /* SMARTMINUTE IMPORTANT PAYMENT NOTICE */
 
 .sm-important-notice,
@@ -1076,9 +1371,26 @@ small strong,
 </button></header><div class="container"><div class="box"><h1>💳 Deposit</h1><p class="subtitle">
 Add money to your SmartMinute account
 </p><div class="balance">Current Balance
+<div id="smBalanceMoneyFlow" aria-hidden="true">
 
+<span class="smBalanceMoney" style="--x:-10%;--y:45%;--sx:-160px;--sy:0px;--size:24px;--duration:4.8s;--delay:-1s;--rotate:-25deg;">💸</span>
+
+<span class="smBalanceMoney" style="--x:110%;--y:25%;--sx:160px;--sy:-25px;--size:23px;--duration:5.4s;--delay:-3s;--rotate:22deg;">💵</span>
+
+<span class="smBalanceMoney" style="--x:50%;--y:-20%;--sx:0px;--sy:-150px;--size:25px;--duration:5.1s;--delay:-2s;--rotate:15deg;">💰</span>
+
+<span class="smBalanceMoney" style="--x:20%;--y:120%;--sx:-35px;--sy:155px;--size:22px;--duration:5.7s;--delay:-4s;--rotate:-18deg;">🪙</span>
+
+<span class="smBalanceMoney" style="--x:110%;--y:82%;--sx:165px;--sy:80px;--size:24px;--duration:4.9s;--delay:-1.8s;--rotate:30deg;">💳</span>
+
+<span class="smBalanceMoney" style="--x:-12%;--y:78%;--sx:-155px;--sy:75px;--size:23px;--duration:5.8s;--delay:-3.5s;--rotate:-30deg;">💰</span>
+
+<span class="smBalanceMoney" style="--x:76%;--y:-20%;--sx:65px;--sy:-150px;--size:22px;--duration:5.3s;--delay:-.5s;--rotate:20deg;">💸</span>
+
+<span class="smBalanceMoney" style="--x:35%;--y:120%;--sx:20px;--sy:155px;--size:24px;--duration:6s;--delay:-2.8s;--rotate:-20deg;">💵</span>
+
+</div>
 <strong>KSh 0.00</strong>
-
 </div><form id="depositForm"><label>
 Deposit Amount
 </label><div class="amount-options"><button type="button" onclick="setAmount(50)">
@@ -1134,7 +1446,48 @@ SMARTMINUTE DEPOSIT
 ==================================================
 */
 
-const token = localStorage.getItem("token");
+
+<script id="smBalancePositiveState">
+(function smBalancePositiveState(){
+
+    const balanceBox = document.querySelector(".balance");
+    if(!balanceBox) return;
+
+    const balanceValue = balanceBox.querySelector("strong");
+    if(!balanceValue) return;
+
+    const updateBalanceColor = () => {
+
+        const numericValue =
+            Number(
+                balanceValue.textContent
+                    .replace(/[^0-9.-]/g,"")
+            );
+
+        balanceBox.classList.toggle(
+            "positive",
+            Number.isFinite(numericValue) &&
+            numericValue > 0
+        );
+    };
+
+    updateBalanceColor();
+
+    const observer =
+        new MutationObserver(updateBalanceColor);
+
+    observer.observe(
+        balanceValue,
+        {
+            childList:true,
+            characterData:true,
+            subtree:true
+        }
+    );
+
+})();
+</script>
+\nconst token = localStorage.getItem("token");
 
 if(!token){
 
