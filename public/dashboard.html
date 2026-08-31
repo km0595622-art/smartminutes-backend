@@ -393,28 +393,73 @@ header{
 ========================================= */
 
 .invite-button{
-    width:48px;
-    height:48px;
+    width:44px;
+    height:44px;
 
     border-radius:50%;
 
-    border:1px solid #b88a24;
+    border:1px solid #00f5ff;
 
-    background:#071a31;
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,245,255,.18),
+            rgba(8,20,42,.96) 65%
+        );
 
-    color:#e8b83f;
+    color:#00f5ff;
 
-    font-size:22px;
+    font-size:21px;
+    font-weight:900;
 
     cursor:pointer;
 
     box-shadow:
-        0 0 12px
-        rgba(218,165,46,.2);
+        0 0 7px #00f5ff,
+        0 0 16px rgba(0,245,255,.45),
+        inset 0 0 10px rgba(0,245,255,.12);
+
+    text-shadow:
+        0 0 6px #00f5ff,
+        0 0 12px rgba(0,245,255,.7);
+
+    animation:
+        inviteNeonPulse 2.2s ease-in-out infinite;
+
+    transition:
+        transform .15s ease,
+        box-shadow .2s ease;
+}
+
+.invite-button:hover{
+    box-shadow:
+        0 0 10px #00f5ff,
+        0 0 24px rgba(0,245,255,.65),
+        0 0 40px rgba(157,0,255,.25),
+        inset 0 0 13px rgba(0,245,255,.16);
 }
 
 .invite-button:active{
-    transform:scale(.94);
+    transform:scale(.91);
+}
+
+@keyframes inviteNeonPulse{
+
+    0%,100%{
+        box-shadow:
+            0 0 7px #00f5ff,
+            0 0 16px rgba(0,245,255,.4),
+            inset 0 0 10px rgba(0,245,255,.1);
+    }
+
+    50%{
+        box-shadow:
+            0 0 10px #00f5ff,
+            0 0 25px rgba(0,245,255,.7),
+            0 0 38px rgba(157,0,255,.25),
+            inset 0 0 14px rgba(0,245,255,.18);
+    }
+
 }
 
 /* =========================================
@@ -1235,7 +1280,7 @@ section,
 
     <button
         class="invite-button"
-        onclick="inviteFriends()"
+        onclick="window.location.href='referrals.html'"
         aria-label="Invite Friends"
         title="Invite Friends"
     >
