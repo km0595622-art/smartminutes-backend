@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const db = require("../config/db");
 
-function authenticateToken(req, res, next) {
+async function authenticateToken(req, res, next) {
 
     try {
 
@@ -26,11 +27,107 @@ function authenticateToken(req, res, next) {
 
         const token = parts[1];
 
-        // SmartMinute uses JWT_KEY
         const decoded = jwt.verify(
             token,
             process.env.JWT_KEY
         );
+
+        if (!decoded.id) {
+            return res.status(401).json({
+                message: "Invalid authentication token."
+            });
+        }
+
+        /*
+        ============================================
+        CHECK ASSISTANT SECURITY STATE
+        ============================================
+        */
+
+        const securityResult = await db.query(
+            `
+            SELECT
+                assistant_frozen,
+                assistant_freeze_reason,
+                assistant_freeze_until,
+                assistant_terminated,
+                assistant_termination_reason
+            FROM user_security
+            WHERE user_id = $1
+            LIMIT 1
+            `,
+            [decoded.id]
+        );
+
+        if (securityResult.rows.length === 0) {
+            return res.status(401).json({
+                message: "Security profile unavailable."
+            });
+        }
+
+        const security = securityResult.rows[0];
+
+        /*
+        ============================================
+        PERMANENTLY TERMINATED ACCOUNT
+        ============================================
+        */
+
+        if (security.assistant_terminated) {
+
+            return res.status(403).json({
+                message:
+                    "This account has been permanently terminated."
+            });
+        }
+
+        /*
+        ============================================
+        TEMPORARILY FROZEN ACCOUNT
+        ============================================
+        */
+
+        if (security.assistant_frozen) {
+
+            const freezeUntil =
+                security.assistant_freeze_until
+                    ? new Date(security.assistant_freeze_until)
+                    : null;
+
+            /*
+            Automatic expiry of temporary freeze.
+            A permanent freeze has no expiry timestamp.
+            */
+
+            if (
+                freezeUntil &&
+                freezeUntil.getTime() <= Date.now()
+            ) {
+
+                await db.query(
+                    `
+                    UPDATE user_security
+                    SET
+                        assistant_frozen = FALSE,
+                        assistant_freeze_reason = NULL,
+                        assistant_frozen_at = NULL,
+                        assistant_freeze_until = NULL,
+                        updated_at = NOW()
+                    WHERE user_id = $1
+                    `,
+                    [decoded.id]
+                );
+
+            } else {
+
+                return res.status(403).json({
+                    message:
+                        "Account temporarily frozen for security review.",
+                    frozen_until:
+                        security.assistant_freeze_until || null
+                });
+            }
+        }
 
         req.user = decoded;
 
@@ -46,10 +143,7 @@ function authenticateToken(req, res, next) {
         return res.status(401).json({
             message: "Invalid or expired token."
         });
-
     }
-
 }
 
 module.exports = authenticateToken;
-
