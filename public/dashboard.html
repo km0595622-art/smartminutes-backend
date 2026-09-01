@@ -1414,6 +1414,31 @@ section,
     line-height: 1.55;
 }
 
+.sm-celebration-x {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,.07);
+    color: rgba(255,255,255,.78);
+    font-size: 28px;
+    line-height: 38px;
+    font-weight: 400;
+    text-align: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: transform .2s ease, background .2s ease, color .2s ease;
+}
+
+.sm-celebration-x:active {
+    transform: scale(.90);
+    background: rgba(255,255,255,.14);
+    color: #ffffff;
+}
+
 .sm-celebration-close {
     position: relative;
     min-width: 150px;
@@ -2003,9 +2028,233 @@ header{
 
 
 
+
+<style id="smActionOverlayStyle">
+
+/* =========================================
+   SMARTMINUTE ACTION FOREGROUND
+========================================= */
+
+.sm-action-overlay{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+
+    display:none;
+
+    padding:18px;
+
+    box-sizing:border-box;
+
+    background:rgba(2,10,20,.78);
+
+    backdrop-filter:blur(7px);
+    -webkit-backdrop-filter:blur(7px);
+
+    align-items:center;
+    justify-content:center;
+
+    overflow-y:auto;
+}
+
+.sm-action-overlay.active{
+    display:flex;
+}
+
+.sm-action-card{
+    position:relative;
+
+    width:min(100%, 560px);
+    max-height:calc(100vh - 36px);
+
+    overflow-y:auto;
+
+    box-sizing:border-box;
+
+    padding:22px;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(7,26,49,.98),
+            rgba(10,38,68,.98)
+        );
+
+    border:1px solid rgba(217,165,46,.65);
+
+    box-shadow:
+        0 20px 70px rgba(0,0,0,.65),
+        0 0 35px rgba(0,255,170,.08),
+        inset 0 1px 0 rgba(255,255,255,.05);
+
+    animation:smActionCardIn .22s ease-out;
+}
+
+.sm-action-close{
+    position:absolute;
+
+    top:10px;
+    right:10px;
+
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:0;
+
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:50%;
+
+    background:rgba(0,0,0,.28);
+
+    color:#fff;
+
+    font-size:25px;
+    font-weight:700;
+
+    line-height:1;
+
+    cursor:pointer;
+
+    z-index:20;
+
+    transition:
+        transform .18s ease,
+        background .18s ease;
+}
+
+.sm-action-close:hover{
+    transform:scale(1.08);
+    background:rgba(255,255,255,.12);
+}
+
+.sm-action-close:active{
+    transform:scale(.94);
+}
+
+.sm-action-content{
+    width:100%;
+    box-sizing:border-box;
+}
+
+.sm-action-content .account-form{
+    margin-top:0;
+}
+
+@keyframes smActionCardIn{
+    from{
+        opacity:0;
+        transform:scale(.94);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+@media(max-width:520px){
+
+    .sm-action-overlay{
+        padding:10px;
+    }
+
+    .sm-action-card{
+        width:100%;
+        max-height:calc(100vh - 20px);
+
+        padding:18px;
+
+        border-radius:18px;
+    }
+
+    .sm-action-close{
+        width:38px;
+        height:38px;
+        top:8px;
+        right:8px;
+    }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+    .sm-action-card{
+        animation:none;
+    }
+
+}
+
+
+<style id="smProfileForegroundStyle">
+
+/* =========================================
+   PROFILE FOREGROUND
+========================================= */
+
+.sm-action-card #profilePanel{
+
+    display:block !important;
+
+    margin:0 !important;
+
+    width:100%;
+
+    box-sizing:border-box;
+
+}
+
+.sm-action-card #profilePanel .profile-info{
+
+    margin-bottom:12px;
+
+}
+
+.sm-action-card #profilePanel .logout{
+
+    margin-top:14px;
+
+}
+
+</style>
 </head>
 
 <body>
+
+<!-- =========================================
+     SMARTMINUTE ACTION FOREGROUND
+========================================= -->
+
+<div
+    id="smActionOverlay"
+    class="sm-action-overlay"
+    aria-hidden="true"
+>
+    <div
+        class="sm-action-card"
+        role="dialog"
+        aria-modal="true"
+        aria-label="SmartMinute Action"
+    >
+
+        <button
+            type="button"
+            class="sm-action-close"
+            onclick="closeSmartMinuteAction()"
+            aria-label="Close"
+        >×</button>
+
+        <div id="smActionContent"></div>
+
+    </div>
+</div>
+
+
 
 <!-- =========================================
      FALLING DOLLARS
@@ -2531,6 +2780,133 @@ if(savedUser){
 }
 
 
+
+/* =========================================
+   SMARTMINUTE ACTION FOREGROUND CONTROLLER
+========================================= */
+
+function openSmartMinuteAction(content){
+
+    const overlay =
+        document.getElementById("smActionOverlay");
+
+    const target =
+        document.getElementById("smActionContent");
+
+    if(!overlay || !target){
+        return;
+    }
+
+    target.innerHTML = content || "";
+
+    overlay.classList.add("active");
+    overlay.setAttribute("aria-hidden","false");
+
+    document.body.classList.add(
+        "sm-action-open"
+    );
+
+}
+
+
+function closeSmartMinuteAction(){
+
+    const overlay =
+        document.getElementById(
+            "smActionOverlay"
+        );
+
+    const target =
+        document.getElementById(
+            "smActionContent"
+        );
+
+    const profile =
+        document.getElementById(
+            "profilePanel"
+        );
+
+
+    if(!overlay || !target){
+        return;
+    }
+
+
+    /* =========================================
+       RESTORE PROFILE TO ORIGINAL LOCATION
+    ========================================= */
+
+    if(
+        profile &&
+        profile.dataset.smMoved === "true" &&
+        profile._smOriginalParent
+    ){
+
+        profile.style.display = "none";
+
+        profile._smOriginalParent.insertBefore(
+            profile,
+            profile._smOriginalNextSibling
+        );
+
+        delete profile._smOriginalParent;
+        delete profile._smOriginalNextSibling;
+
+        profile.dataset.smMoved = "false";
+    }
+
+
+    /* =========================================
+       CLOSE FOREGROUND
+    ========================================= */
+
+    overlay.classList.remove(
+        "active"
+    );
+
+    overlay.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    target.innerHTML = "";
+
+    document.body.classList.remove(
+        "sm-action-open"
+    );
+
+}
+
+
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Escape"
+        ){
+
+            const overlay =
+                document.getElementById(
+                    "smActionOverlay"
+                );
+
+            if(
+                overlay &&
+                overlay.classList.contains("active")
+            ){
+
+                closeSmartMinuteAction();
+
+            }
+
+        }
+
+    }
+);
+
+
 /* =========================================
    PROFILE
 ========================================= */
@@ -2542,22 +2918,82 @@ function toggleProfile(){
             "profilePanel"
         );
 
-    if(panel.style.display === "block"){
+    const overlay =
+        document.getElementById(
+            "smActionOverlay"
+        );
 
-        panel.style.display =
-            "none";
+    const target =
+        document.getElementById(
+            "smActionContent"
+        );
 
-    }else{
 
-        panel.style.display =
-            "block";
-
-        panel.scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-        });
-
+    if(!panel || !overlay || !target){
+        return;
     }
+
+
+    /* =========================================
+       CLOSE PROFILE IF ALREADY OPEN
+    ========================================= */
+
+    if(
+        overlay.classList.contains("active") &&
+        panel.dataset.smMoved === "true"
+    ){
+
+        closeSmartMinuteAction();
+
+        return;
+    }
+
+
+    /* =========================================
+       REMEMBER ORIGINAL LOCATION
+    ========================================= */
+
+    panel._smOriginalParent =
+        panel.parentNode;
+
+    panel._smOriginalNextSibling =
+        panel.nextSibling;
+
+    panel.dataset.smMoved = "true";
+
+
+    /* =========================================
+       MOVE EXISTING PROFILE PANEL
+       INTO FOREGROUND
+    ========================================= */
+
+    target.innerHTML = "";
+
+    target.appendChild(panel);
+
+    panel.style.display = "block";
+
+
+    overlay.classList.add("active");
+
+    overlay.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    document.body.classList.add(
+        "sm-action-open"
+    );
+
+
+    /* =========================================
+       KEEP PROFILE CONTENT VISIBLE
+    ========================================= */
+
+    panel.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+    });
 
 }
 
@@ -2659,7 +3095,23 @@ function deposit(){
 
 function accountForms(){
 
-    return document.getElementById("accountForms");
+    const overlay =
+        document.getElementById("smActionOverlay");
+
+    if(
+        overlay &&
+        overlay.classList.contains("active")
+    ){
+
+        return document.getElementById(
+            "smActionContent"
+        );
+
+    }
+
+    return document.getElementById(
+        "accountForms"
+    );
 
 }
 
@@ -2670,10 +3122,10 @@ function accountForms(){
 
 function showWithdrawalForm(){
 
-    accountForms().innerHTML = `
+    openSmartMinuteAction(`
         <div class="account-form">
 
-            <h3> Withdraw Funds</h3>
+            <h3>Withdraw Funds</h3>
 
             <p class="form-note">
                 Withdrawals are reviewed by SmartMinute before funds are released.
@@ -2719,22 +3171,10 @@ function showWithdrawalForm(){
                 Submit Withdrawal Request
             </button>
 
-            <button
-                class="secondary-action"
-                onclick="closeAccountForm()"
-            >
-                Cancel
-            </button>
-
             <p id="withdrawMessage" class="form-message"></p>
 
         </div>
-    `;
-
-    accountForms().scrollIntoView({
-        behavior:"smooth",
-        block:"nearest"
-    });
+    `);
 
 }
 
@@ -2852,10 +3292,10 @@ async function submitWithdrawal(){
 
 async function showKycForm(){
 
-    accountForms().innerHTML = `
+    openSmartMinuteAction(`
         <div class="account-form">
 
-            <h3> KYC Verification</h3>
+            <h3>KYC Verification</h3>
 
             <p class="form-note">
                 Create your KYC profile and submit it for review.
@@ -2894,14 +3334,9 @@ async function showKycForm(){
             <p id="kycMessage" class="form-message"></p>
 
         </div>
-    `;
+    `);
 
     await loadKycStatus();
-
-    accountForms().scrollIntoView({
-        behavior:"smooth",
-        block:"nearest"
-    });
 
 }
 
@@ -3116,14 +3551,7 @@ async function loadKycStatus(){
 
 async function showUnlockForm(){
 
-    const container =
-        document.getElementById("tasksContainer");
-
-    if(!container){
-        return;
-    }
-
-    container.innerHTML = `
+    openSmartMinuteAction(`
         <div class="account-form trading-access-form">
 
             <h3>Trading Access</h3>
@@ -3177,24 +3605,12 @@ async function showUnlockForm(){
                 Refresh Trading Status
             </button>
 
-            <button
-                class="secondary-action"
-                onclick="showEarningOptions()"
-            >
-                Back to Earning Options
-            </button>
-
             <p id="unlockMessage" class="form-message"></p>
 
         </div>
-    `;
+    `);
 
     await loadUnlockStatus();
-
-    container.scrollIntoView({
-        behavior:"smooth",
-        block:"center"
-    });
 
 }
 
@@ -3389,6 +3805,15 @@ function smartMinuteCelebration(title, message, sticker){
         <div class="sm-celebration-backdrop"></div>
 
         <div class="sm-celebration-card">
+
+            <button
+                type="button"
+                class="sm-celebration-x"
+                aria-label="Close"
+                onclick="closeSmartMinuteCelebration()"
+            >
+                ×
+            </button>
 
             <div class="sm-sticker-cloud"
                  aria-hidden="true">
@@ -3614,7 +4039,7 @@ function celebrateTradingUnlock(){
 
 function closeAccountForm(){
 
-    accountForms().innerHTML = "";
+    closeSmartMinuteAction();
 
 }
 
@@ -3626,17 +4051,10 @@ function closeAccountForm(){
 
 function showEarningOptions(){
 
-    const container =
-        document.getElementById("tasksContainer");
-
-    if(!container){
-        return;
-    }
-
-    container.innerHTML = `
+    openSmartMinuteAction(`
         <div class="account-form earning-options">
 
-            <h3> Start Earning</h3>
+            <h3>Start Earning</h3>
 
             <p class="form-note">
                 Choose how you want to earn with SmartMinute.
@@ -3646,23 +4064,19 @@ function showEarningOptions(){
                 class="action"
                 onclick="showUnlockForm()"
             >
-                 FX&BINARY TRADING
+                FX&BINARY TRADING
             </button>
 
             <button
                 class="action"
                 onclick="startTasks()"
             >
-                 TASKS
+                TASKS
             </button>
 
         </div>
-    `;
+    `);
 
-    container.scrollIntoView({
-        behavior:"smooth",
-        block:"center"
-    });
 }
 
 
@@ -3673,6 +4087,7 @@ function showEarningOptions(){
 async function startTasks(){
 
     const container =
+        document.getElementById("smActionContent") ||
         document.getElementById("tasksContainer");
 
     showMessage("Checking your account balance...");
