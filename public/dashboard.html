@@ -5003,6 +5003,7 @@ async function requestSmartMinuteNotifications(){
 
     if (Notification.permission === "granted") {
         console.log("SmartMinute notifications already enabled.");
+        hideSmartMinuteNotificationBar();
         return;
     }
 
@@ -5024,6 +5025,8 @@ async function requestSmartMinuteNotifications(){
         );
 
         if (permission === "granted") {
+
+            hideSmartMinuteNotificationBar();
 
             new Notification(
                 "SmartMinute Notifications",
@@ -5053,6 +5056,17 @@ async function requestSmartMinuteNotifications(){
    NOTIFICATION ENABLE BUTTON
 ========================================= */
 
+function hideSmartMinuteNotificationBar(){
+
+    const bar = document.getElementById("smartMinuteNotificationBar");
+
+    if (bar) {
+        bar.style.display = "none";
+    }
+
+}
+
+
 function enableSmartMinuteNotifications(){
 
     requestSmartMinuteNotifications();
@@ -5067,6 +5081,11 @@ function enableSmartMinuteNotifications(){
 function startSmartMinuteNotifications(){
 
     if (!("Notification" in window)) {
+        return;
+    }
+
+    if (Notification.permission === "granted") {
+        hideSmartMinuteNotificationBar();
         return;
     }
 
@@ -5095,26 +5114,27 @@ refreshUserProfile().then(() => {
 
 
 <style>
+
+<style>
 /* =========================================================
-   SMARTMINUTE BRIGHT GREEN THEME
-   Final homepage visual override
+   SMARTMINUTE GOLD + GREEN + GRAY PREMIUM THEME
 ========================================================= */
 
 html,
 body{
     background:
         radial-gradient(
-            circle at 50% 10%,
-            rgba(0,255,170,.08),
+            circle at 50% 8%,
+            rgba(212,175,55,.10),
             transparent 42%
         ),
         linear-gradient(
             145deg,
-            #ffffff 0%,
-            #f7fffb 52%,
-            #effff8 100%
+            #f4f6f4 0%,
+            #ffffff 52%,
+            #eef2ef 100%
         ) !important;
-    color:#09251b !important;
+    color:#26332d !important;
 }
 
 /* Page atmosphere */
@@ -5123,7 +5143,7 @@ body::before{
     background:
         radial-gradient(
             circle,
-            rgba(0,255,170,.07) 0%,
+            rgba(212,175,55,.07) 0%,
             transparent 65%
         ) !important;
 }
@@ -5131,25 +5151,25 @@ body::before{
 /* Header */
 
 header{
-    background:rgba(255,255,255,.96) !important;
-    border-bottom:1px solid rgba(0,210,140,.28) !important;
+    background:rgba(255,255,255,.97) !important;
+    border-bottom:1px solid rgba(212,175,55,.35) !important;
     box-shadow:
-        0 4px 22px rgba(0,180,120,.10) !important;
+        0 4px 22px rgba(38,55,45,.10) !important;
 }
 
 /* Welcome */
 
 .welcome h1{
-    color:#063b29 !important;
+    color:#174d35 !important;
     text-shadow:
-        0 0 8px rgba(0,255,170,.16) !important;
+        0 0 8px rgba(212,175,55,.12) !important;
 }
 
 .welcome p{
-    color:#527568 !important;
+    color:#68736d !important;
 }
 
-/* Cards */
+/* Main cards */
 
 .card,
 .section,
@@ -5158,13 +5178,13 @@ header{
         linear-gradient(
             145deg,
             #ffffff,
-            #f7fffb
+            #f5f7f5
         ) !important;
-    color:#09251b !important;
-    border:1px solid rgba(0,210,140,.28) !important;
+    color:#26332d !important;
+    border:1px solid rgba(212,175,55,.28) !important;
     box-shadow:
-        0 8px 28px rgba(0,100,70,.09),
-        inset 0 0 24px rgba(0,255,170,.025) !important;
+        0 8px 28px rgba(38,55,45,.09),
+        inset 0 0 24px rgba(212,175,55,.025) !important;
 }
 
 /* Headings */
@@ -5173,15 +5193,15 @@ header{
 .section h2,
 .profile-panel h2,
 .profile-panel h3{
-    color:#08704a !important;
+    color:#174d35 !important;
 }
 
-/* Amounts */
+/* Money / amounts */
 
 .amount{
-    color:#00a86b !important;
+    color:#b58b00 !important;
     text-shadow:
-        0 0 12px rgba(0,220,145,.20) !important;
+        0 0 12px rgba(212,175,55,.22) !important;
 }
 
 /* Deposit */
@@ -5190,65 +5210,79 @@ header{
     background:
         linear-gradient(
             135deg,
-            #eafff6,
-            #d5ffed
+            #f8f1d8,
+            #fffaf0
         ) !important;
-    color:#006b46 !important;
-    border:1px solid rgba(0,190,125,.55) !important;
+    color:#174d35 !important;
+    border:1px solid rgba(212,175,55,.55) !important;
 }
 
 /* Account forms */
 
 .account-form{
     background:#ffffff !important;
-    color:#09251b !important;
-    border-color:rgba(0,190,125,.38) !important;
+    color:#26332d !important;
+    border-color:rgba(212,175,55,.38) !important;
 }
 
 .account-form label{
-    color:#08704a !important;
+    color:#174d35 !important;
 }
 
 .account-form input,
 .account-form select{
-    background:#f7fffb !important;
-    color:#09251b !important;
-    border-color:#9bcdb9 !important;
+    background:#f4f6f4 !important;
+    color:#26332d !important;
+    border-color:#b8c0ba !important;
 }
 
-/* Actions */
+/* Primary actions */
 
-.action,
+.action{
+    background:
+        linear-gradient(
+            135deg,
+            #17623f,
+            #0f4b30
+        ) !important;
+    color:#ffffff !important;
+    border:1px solid #c9a227 !important;
+    box-shadow:
+        0 5px 16px rgba(23,98,63,.18) !important;
+}
+
+/* Secondary actions */
+
 .secondary-action,
 .logout{
     background:
         linear-gradient(
             135deg,
-            #eafff6,
-            #d5ffed
+            #ffffff,
+            #eef1ee
         ) !important;
-    color:#006b46 !important;
-    border:1px solid #00b878 !important;
+    color:#174d35 !important;
+    border:1px solid #b9c1bb !important;
 }
 
-/* Balance */
+/* Balance card */
 
 .balance-card{
     background:
         radial-gradient(
             circle at 50% 45%,
-            rgba(0,255,170,.14),
+            rgba(212,175,55,.14),
             transparent 68%
         ),
         linear-gradient(
             145deg,
             #ffffff,
-            #effff8
+            #f0f3f0
         ) !important;
 }
 
 .balance-card::before{
-    border-color:rgba(0,210,140,.30) !important;
+    border-color:rgba(212,175,55,.35) !important;
 }
 
 /* KSh rain */
@@ -5259,9 +5293,9 @@ header{
 
 .money-flow span,
 .ksh{
-    color:#00b878 !important;
+    color:#b58b00 !important;
     text-shadow:
-        0 0 10px rgba(0,255,170,.35) !important;
+        0 0 8px rgba(212,175,55,.28) !important;
 }
 
 /* Content above animation */
@@ -5276,39 +5310,59 @@ header,
     z-index:2;
 }
 
-/* Green page glow */
+/* Notification bar */
 
-.container::after{
-    content:"";
-    position:fixed;
-    left:50%;
-    bottom:-180px;
-    width:420px;
-    height:420px;
-    transform:translateX(-50%);
-    border-radius:50%;
-    background:rgba(0,255,170,.05);
-    filter:blur(80px);
-    pointer-events:none;
-    z-index:-1;
+#smartMinuteNotificationBar{
+    border-color:rgba(212,175,55,.45) !important;
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f7f3e4
+        ) !important;
+    box-shadow:
+        0 6px 22px rgba(38,55,45,.10) !important;
 }
 
-@media(max-width:600px){
+#smartMinuteNotificationBar strong{
+    color:#174d35 !important;
+}
 
-    .card,
-    .section,
-    .profile-panel{
-        box-shadow:
-            0 6px 22px rgba(0,100,70,.08),
-            inset 0 0 18px rgba(0,255,170,.025) !important;
-    }
+#smartMinuteNotificationBar button{
+    border-color:#c9a227 !important;
+    background:
+        linear-gradient(
+            135deg,
+            #17623f,
+            #0f4b30
+        ) !important;
+    color:#ffffff !important;
+}
 
-    .deposit{
-        box-shadow:
-            0 0 12px rgba(0,220,145,.16),
-            0 0 24px rgba(0,255,170,.07) !important;
-    }
+/* Gold highlights */
+
+.gold,
+.highlight,
+.stat-value{
+    color:#b58b00 !important;
+}
+
+/* Green positive states */
+
+.success,
+.positive,
+.verified{
+    color:#17623f !important;
+}
+
+/* Neutral text */
+
+.muted,
+.secondary,
+small{
+    color:#68736d !important;
 }
 </style>
+
 </body>
 </html>
