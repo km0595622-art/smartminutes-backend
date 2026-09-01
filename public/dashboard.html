@@ -956,8 +956,8 @@ async function loadWallet(){
             API_BASE + "/api/wallet",
             {
                 headers:{
-                    Authorization:
-                        "Bearer " + token
+    Authorization:
+    "Bearer " + token
                 }
             }
         );
@@ -989,8 +989,8 @@ async function loadWallet(){
             withdrawable.toLocaleString(
                 "en-KE",
                 {
-                    minimumFractionDigits:2,
-                    maximumFractionDigits:2
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
                 }
             );
 
@@ -1299,6 +1299,50 @@ section,
     }
 }
 </style>
+
+
+<div id="smartMinuteNotificationBar"
+     style="
+        margin:14px 0;
+        padding:14px 16px;
+        border:1px solid rgba(0,190,125,.45);
+        border-radius:16px;
+        background:linear-gradient(135deg,#ffffff,#eafff6);
+        box-shadow:0 6px 22px rgba(0,160,105,.10);
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        flex-wrap:wrap;
+        position:relative;
+        z-index:3;
+     ">
+    <div>
+        <strong style="color:#006b46;">
+            SmartMinute Notifications
+        </strong>
+        <div style="margin-top:4px;color:#527568;font-size:13px;">
+            Get important account and earning updates.
+        </div>
+    </div>
+
+    <button
+        type="button"
+        onclick="enableSmartMinuteNotifications()"
+        style="
+            border:1px solid #00b878;
+            border-radius:12px;
+            padding:10px 15px;
+            background:linear-gradient(135deg,#d5ffed,#baffdf);
+            color:#006b46;
+            font-weight:800;
+            cursor:pointer;
+            box-shadow:0 0 14px rgba(0,220,145,.16);
+        "
+    >
+        Enable Notifications
+    </button>
+</div>
 
 <div class="ksh-rain" aria-hidden="true">
     <span class="ksh" style="left:3%;animation-duration:11s;animation-delay:-2s;">KSh</span>
@@ -2658,7 +2702,7 @@ opacity:0;
             >
                 <span class="withdraw-title"> Withdraw Funds</span>
                 <span class="withdraw-minimum">
-                    Minimum withdrawal: KSh 5,000
+    Minimum withdrawal: KSh 5,000
                 </span>
             </button>
 
@@ -2720,8 +2764,8 @@ async function refreshUserProfile(){
             API_BASE + "/api/membership",
             {
                 headers:{
-                    Authorization:
-                        "Bearer " + token
+    Authorization:
+    "Bearer " + token
                 }
             }
         );
@@ -2896,7 +2940,7 @@ document.addEventListener(
 
             const overlay =
                 document.getElementById(
-                    "smActionOverlay"
+    "smActionOverlay"
                 );
 
             if(
@@ -3051,13 +3095,13 @@ async function inviteFriends(){
             await navigator.share({
 
                 title:
-                    "Join SmartMinute",
+    "Join SmartMinute",
 
                 text:
-                    shareText,
+    shareText,
 
                 url:
-                    inviteLink
+    inviteLink
 
             });
 
@@ -3154,11 +3198,11 @@ function showWithdrawalForm(){
             <select id="withdrawMethod">
 
                 <option value="mpesa">
-                    M-Pesa
+    M-Pesa
                 </option>
 
                 <option value="bank">
-                    Bank
+    Bank
                 </option>
 
             </select>
@@ -3243,16 +3287,16 @@ async function submitWithdrawal(){
                 method:"POST",
 
                 headers:{
-                    "Content-Type":"application/json",
-                    Authorization:
-                        "Bearer " + token
+    "Content-Type":"application/json",
+    Authorization:
+    "Bearer " + token
                 },
 
                 body:JSON.stringify({
 
-                    amount,
-                    method,
-                    destination
+    amount,
+    method,
+    destination
 
                 })
 
@@ -3375,13 +3419,13 @@ async function startKyc(){
                 method:"POST",
 
                 headers:{
-                    "Content-Type":"application/json",
-                    Authorization:
-                        "Bearer " + token
+    "Content-Type":"application/json",
+    Authorization:
+    "Bearer " + token
                 },
 
                 body:JSON.stringify({
-                    country
+    country
                 })
 
             }
@@ -3441,8 +3485,8 @@ async function submitKyc(){
                 method:"POST",
 
                 headers:{
-                    Authorization:
-                        "Bearer " + token
+    Authorization:
+    "Bearer " + token
                 }
 
             }
@@ -3501,8 +3545,8 @@ async function loadKycStatus(){
             API_BASE + "/api/kyc",
             {
                 headers:{
-                    Authorization:
-                        "Bearer " + token
+    Authorization:
+    "Bearer " + token
                 }
             }
         );
@@ -3515,7 +3559,7 @@ async function loadKycStatus(){
             if(response.status === 404){
 
                 message.textContent =
-                    "KYC profile has not been started yet.";
+    "KYC profile has not been started yet.";
 
                 return;
 
@@ -3585,7 +3629,7 @@ async function showUnlockForm(){
             <select id="unlockPaymentMethod">
 
                 <option value="mpesa">
-                    M-Pesa
+    M-Pesa
                 </option>
 
             </select>
@@ -3638,8 +3682,8 @@ async function loadUnlockStatus(){
             API_BASE + "/api/unlock/status",
             {
                 headers:{
-                    Authorization:
-                        "Bearer " + token
+    Authorization:
+    "Bearer " + token
                 }
             }
         );
@@ -3663,8 +3707,8 @@ async function loadUnlockStatus(){
 
             if(!sessionStorage.getItem("smartMinuteUnlockCelebrated")){
                 sessionStorage.setItem(
-                    "smartMinuteUnlockCelebrated",
-                    "1"
+    "smartMinuteUnlockCelebrated",
+    "1"
                 );
 
                 celebrateTradingUnlock();
@@ -3738,17 +3782,17 @@ async function purchaseUnlock(){
                 method:"POST",
 
                 headers:{
-                    "Content-Type":"application/json",
-                    Authorization:
-                        "Bearer " + token
+    "Content-Type":"application/json",
+    Authorization:
+    "Bearer " + token
                 },
 
                 body:JSON.stringify({
 
-                    phone,
-                    paymentMethod,
-                    transactionReference:
-                        transactionReference || null
+    phone,
+    paymentMethod,
+    transactionReference:
+    transactionReference || null
 
                 })
 
@@ -3928,41 +3972,41 @@ function smartMinuteCelebrationSound(){
             (frequency,index) => {
 
                 const oscillator =
-                    ctx.createOscillator();
+    ctx.createOscillator();
 
                 const gain =
-                    ctx.createGain();
+    ctx.createGain();
 
                 oscillator.type =
-                    "sine";
+    "sine";
 
                 oscillator.frequency.value =
-                    frequency;
+    frequency;
 
                 gain.gain.setValueAtTime(
-                    0.0001,
-                    now + index * 0.11
+    0.0001,
+    now + index * 0.11
                 );
 
                 gain.gain.exponentialRampToValueAtTime(
-                    0.18,
-                    now + index * 0.11 + 0.025
+    0.18,
+    now + index * 0.11 + 0.025
                 );
 
                 gain.gain.exponentialRampToValueAtTime(
-                    0.0001,
-                    now + index * 0.11 + 0.42
+    0.0001,
+    now + index * 0.11 + 0.42
                 );
 
                 oscillator.connect(gain);
                 gain.connect(ctx.destination);
 
                 oscillator.start(
-                    now + index * 0.11
+    now + index * 0.11
                 );
 
                 oscillator.stop(
-                    now + index * 0.11 + 0.45
+    now + index * 0.11 + 0.45
                 );
 
             }
@@ -4115,15 +4159,15 @@ async function startTasks(){
             const profileResponse = await fetch(
                 API_BASE + "/api/tasks",
                 {
-                    headers:{
-                        Authorization:"Bearer " + token
-                    }
+    headers:{
+    Authorization:"Bearer " + token
+    }
                 }
             );
 
             if(profileResponse.ok){
                 const profileData =
-                    await profileResponse.json();
+    await profileResponse.json();
 
                 isAdmin = profileData.isAdmin === true;
             }
@@ -4141,13 +4185,13 @@ async function startTasks(){
 
             const walletResponse =
                 await fetch(
-                    API_BASE + "/api/wallet",
-                    {
-                        headers:{
-                            Authorization:
-                                "Bearer " + token
-                        }
-                    }
+    API_BASE + "/api/wallet",
+    {
+    headers:{
+    Authorization:
+    "Bearer " + token
+    }
+    }
                 );
 
             const walletData =
@@ -4156,27 +4200,27 @@ async function startTasks(){
             if(!walletResponse.ok){
 
                 throw new Error(
-                    walletData.message ||
-                    "Unable to verify your wallet."
+    walletData.message ||
+    "Unable to verify your wallet."
                 );
 
             }
 
             const balance =
                 Number(
-                    walletData.wallet?.withdrawable_balance || 0
+    walletData.wallet?.withdrawable_balance || 0
                 );
 
             if(balance < 50){
 
                 container.innerHTML = `
-                    <div class="account-form earning-options">
-                        <h3>Tasks</h3>
+    <div class="account-form earning-options">
+    <h3>Tasks</h3>
 
-                        <p class="form-note">
-                            Insufficient balance. Please fund your account.
-                        </p>
-                    </div>
+    <p class="form-note">
+    Insufficient balance. Please fund your account.
+    </p>
+    </div>
                 `;
 
                 return;
@@ -4194,10 +4238,10 @@ async function startTasks(){
             await fetch(
                 API_BASE + "/api/tasks",
                 {
-                    headers:{
-                        Authorization:
-                            "Bearer " + token
-                    }
+    headers:{
+    Authorization:
+    "Bearer " + token
+    }
                 }
             );
 
@@ -4284,20 +4328,20 @@ async function startTasks(){
             <div class="earning-tiers">
                 ${tiers.map(tier => {
 
-                    const unlocked =
-                        isAdmin ||
-                        userRank >= tierRank[tier.key];
+    const unlocked =
+    isAdmin ||
+    userRank >= tierRank[tier.key];
 
-                    return `
-                        <button
-                            class="earning-tier ${unlocked ? "" : "locked"}"
-                            data-tier="${tier.key}"
-                            onclick="showTierTasks('${tier.key}')"
-                        >
-                            ${tier.icon} ${tier.name}
-                            ${unlocked ? "" : " "}
-                        </button>
-                    `;
+    return `
+    <button
+    class="earning-tier ${unlocked ? "" : "locked"}"
+    data-tier="${tier.key}"
+    onclick="showTierTasks('${tier.key}')"
+    >
+    ${tier.icon} ${tier.name}
+    ${unlocked ? "" : " "}
+    </button>
+    `;
 
                 }).join("")}
             </div>
@@ -4420,45 +4464,45 @@ function showTierTasks(tierKey){
                 <h3> ${tierName} Membership</h3>
 
                 <p>
-                    Upgrade to ${tierName} membership
-                    to access these earning tasks.
+    Upgrade to ${tierName} membership
+    to access these earning tasks.
                 </p>
 
                 <div class="tier-lock">
-                    Membership upgrade required.
+    Membership upgrade required.
                 </div>
 
                 <div style="
-                    margin:18px 0;
-                    padding:16px;
-                    border:1px solid rgba(212,175,55,.35);
-                    border-radius:12px;
-                    background:rgba(10,20,45,.65);
-                    text-align:center;
+    margin:18px 0;
+    padding:16px;
+    border:1px solid rgba(212,175,55,.35);
+    border-radius:12px;
+    background:rgba(10,20,45,.65);
+    text-align:center;
                 ">
 
-                    <div style="
-                        font-size:13px;
-                        opacity:.8;
-                        margin-bottom:5px;
-                    ">
-                        Membership Fee
-                    </div>
+    <div style="
+    font-size:13px;
+    opacity:.8;
+    margin-bottom:5px;
+    ">
+    Membership Fee
+    </div>
 
-                    <strong style="
-                        font-size:24px;
-                    ">
-                        KSh ${tierFee.toLocaleString()}
-                    </strong>
+    <strong style="
+    font-size:24px;
+    ">
+    KSh ${tierFee.toLocaleString()}
+    </strong>
 
                 </div>
 
                 <button
-                    class="action"
-                    type="button"
-                    onclick="purchaseMembership('${tierKey}')"
+    class="action"
+    type="button"
+    onclick="purchaseMembership('${tierKey}')"
                 >
-                     Upgrade to ${tierName}
+    Upgrade to ${tierName}
                 </button>
 
             </div>
@@ -4481,7 +4525,7 @@ function showTierTasks(tierKey){
 
             const required =
                 (task.required_membership || "free")
-                    .toLowerCase();
+    .toLowerCase();
 
             return required === tierKey;
 
@@ -4494,8 +4538,8 @@ function showTierTasks(tierKey){
             <div class="task-card">
                 <h3>No ${tierKey.toUpperCase()} tasks yet</h3>
                 <p>
-                    There are currently no tasks available
-                    for this membership level.
+    There are currently no tasks available
+    for this membership level.
                 </p>
             </div>
         `;
@@ -4518,19 +4562,19 @@ function showTierTasks(tierKey){
             const externalUrl =
                 typeof task.external_url === "string" &&
                 (() => {
-                    try{
-                        const url =
-                            new URL(task.external_url);
+    try{
+    const url =
+    new URL(task.external_url);
 
-                        return url.protocol === "http:" ||
-                               url.protocol === "https:";
+    return url.protocol === "http:" ||
+    url.protocol === "https:";
 
-                    }catch(_){
-                        return false;
-                    }
+    }catch(_){
+    return false;
+    }
                 })()
-                    ? task.external_url
-                    : null;
+    ? task.external_url
+    : null;
 
             const accessible =
                 isAdmin ||
@@ -4538,73 +4582,73 @@ function showTierTasks(tierKey){
 
             return `
                 <div
-                    class="task-card"
-                    data-task-id="${task.id}"
+    class="task-card"
+    data-task-id="${task.id}"
                 >
 
-                    <h3>${task.title}</h3>
+    <h3>${task.title}</h3>
 
-                    <p>
-                        <strong>Category:</strong>
-                        ${task.category || "General"}
-                    </p>
+    <p>
+    <strong>Category:</strong>
+    ${task.category || "General"}
+    </p>
 
-                    <p>
-                        ${task.description || ""}
-                    </p>
+    <p>
+    ${task.description || ""}
+    </p>
 
-                    <p>
-                        <strong>Reward:</strong>
-                        KSh ${task.reward}
-                    </p>
+    <p>
+    <strong>Reward:</strong>
+    KSh ${task.reward}
+    </p>
 
-                    ${task.provider ? `
-                        <p>
-                            <strong>Provider:</strong>
-                            ${task.provider}
-                        </p>
-                    ` : ""}
+    ${task.provider ? `
+    <p>
+    <strong>Provider:</strong>
+    ${task.provider}
+    </p>
+    ` : ""}
 
-                    ${task.requirements ? `
-                        <p>
-                            <strong>Requirements:</strong>
-                            ${task.requirements}
-                        </p>
-                    ` : ""}
+    ${task.requirements ? `
+    <p>
+    <strong>Requirements:</strong>
+    ${task.requirements}
+    </p>
+    ` : ""}
 
-                    ${task.risk_notice ? `
-                        <p>
-                            <strong>Risk notice:</strong>
-                            ${task.risk_notice}
-                        </p>
-                    ` : ""}
+    ${task.risk_notice ? `
+    <p>
+    <strong>Risk notice:</strong>
+    ${task.risk_notice}
+    </p>
+    ` : ""}
 
-                    ${accessible ? `
-                        <button
-                            class="action"
-                            onclick="startTask(${task.id})"
-                        >
-                            Start Task
-                        </button>
-                    ` : `
-                        <div class="tier-lock">
-                             Membership upgrade required
-                        </div>
-                    `}
+    ${accessible ? `
+    <button
+    class="action"
+    onclick="startTask(${task.id})"
+    >
+    Start Task
+    </button>
+    ` : `
+    <div class="tier-lock">
+    Membership upgrade required
+    </div>
+    `}
 
-                    ${externalUrl && accessible ? `
-                        <button
-                            type="button"
-                            class="secondary-action"
-                            onclick="window.open(
-                                '${externalUrl}',
-                                '_blank',
-                                'noopener,noreferrer'
-                            )"
-                        >
-                            Open Provider
-                        </button>
-                    ` : ""}
+    ${externalUrl && accessible ? `
+    <button
+    type="button"
+    class="secondary-action"
+    onclick="window.open(
+    '${externalUrl}',
+    '_blank',
+    'noopener,noreferrer'
+    )"
+    >
+    Open Provider
+    </button>
+    ` : ""}
 
                 </div>
             `;
@@ -4696,14 +4740,14 @@ async function purchaseMembership(tierKey){
                 method:"POST",
 
                 headers:{
-                    "Content-Type":"application/json",
-                    Authorization:
-                        "Bearer " + token
+    "Content-Type":"application/json",
+    Authorization:
+    "Bearer " + token
                 },
 
                 body:JSON.stringify({
-                    membershipTier:tierKey,
-                    phone:phone.trim()
+    membershipTier:tierKey,
+    phone:phone.trim()
                 })
             }
         );
@@ -4766,8 +4810,8 @@ async function startTask(taskId){
             {
                 method:"POST",
                 headers:{
-                    Authorization:
-                        "Bearer " + token
+    Authorization:
+    "Bearer " + token
                 }
             }
         );
@@ -4795,26 +4839,26 @@ async function startTask(taskId){
 
             const container =
                 document.getElementById(
-                    "tasksContainer"
+    "tasksContainer"
                 );
 
             const card =
                 container.querySelector(
-                    '[data-task-id="' + taskId + '"]'
+    '[data-task-id="' + taskId + '"]'
                 );
 
             if(card){
 
                 card.insertAdjacentHTML(
-                    "beforeend",
-                    `
-                    <button
-                        class="action"
-                        onclick="submitTask(${attempt.id})"
-                    >
-                         Submit Task
-                    </button>
-                    `
+    "beforeend",
+    `
+    <button
+    class="action"
+    onclick="submitTask(${attempt.id})"
+    >
+    Submit Task
+    </button>
+    `
                 );
 
             }
@@ -4841,8 +4885,8 @@ async function startTask(taskId){
 
             if (message) {
                 message.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
+    behavior: "smooth",
+    block: "center"
                 });
             }
         }
@@ -4867,8 +4911,8 @@ async function submitTask(attemptId){
             {
                 method:"POST",
                 headers:{
-                    Authorization:
-                        "Bearer " + token
+    Authorization:
+    "Bearer " + token
                 }
             }
         );
@@ -4939,8 +4983,109 @@ function showMessage(text){
 
 }
 
+/* =========================================
+   SMARTMINUTE BROWSER NOTIFICATIONS
+========================================= */
+
+async function requestSmartMinuteNotifications(){
+
+    if (!("Notification" in window)) {
+        console.log("Browser notifications are not supported.");
+        return;
+    }
+
+    if (!window.isSecureContext) {
+        console.warn(
+            "Browser notifications require a secure HTTPS connection."
+        );
+        return;
+    }
+
+    if (Notification.permission === "granted") {
+        console.log("SmartMinute notifications already enabled.");
+        return;
+    }
+
+    if (Notification.permission === "denied") {
+        console.warn(
+            "SmartMinute notifications are blocked in browser settings."
+        );
+        return;
+    }
+
+    try {
+
+        const permission =
+            await Notification.requestPermission();
+
+        console.log(
+            "SMARTMINUTE NOTIFICATION PERMISSION:",
+            permission
+        );
+
+        if (permission === "granted") {
+
+            new Notification(
+                "SmartMinute Notifications",
+                {
+    body:
+    "Notifications are now enabled. We'll keep you updated.",
+    icon:
+    "/favicon.ico"
+                }
+            );
+
+        }
+
+    } catch(error) {
+
+        console.error(
+            "SMARTMINUTE NOTIFICATION ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   NOTIFICATION ENABLE BUTTON
+========================================= */
+
+function enableSmartMinuteNotifications(){
+
+    requestSmartMinuteNotifications();
+
+}
+
+
+/* =========================================
+   NOTIFICATION PERMISSION START
+========================================= */
+
+function startSmartMinuteNotifications(){
+
+    if (!("Notification" in window)) {
+        return;
+    }
+
+    if (Notification.permission === "default") {
+
+        setTimeout(() => {
+
+            requestSmartMinuteNotifications();
+
+        }, 1500);
+
+    }
+
+}
+
+
 refreshUserProfile().then(() => {
     loadWallet();
+    startSmartMinuteNotifications();
 });
 
 </script>
@@ -4949,221 +5094,177 @@ refreshUserProfile().then(() => {
 
 
 
-<style id="smartminute-green-theme">
-
-/* =========================================
-   WELCOME — LUMINOUS GREEN FIRE
-========================================= */
-.welcome{
-    position:relative !important;
-    overflow:hidden !important;
-    background:
-        radial-gradient(circle at 50% 0%,rgba(0,255,170,.16),transparent 58%),
-        linear-gradient(145deg,rgba(3,28,19,.98),rgba(1,12,8,.97)) !important;
-    border:1px solid rgba(0,255,170,.55) !important;
-    box-shadow:
-        0 0 8px rgba(0,255,170,.18),
-        0 0 22px rgba(0,255,170,.10),
-        inset 0 0 25px rgba(0,255,170,.045) !important;
-    animation:welcomeBurn 4s ease-in-out infinite !important;
-}
-
-.welcome::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(105deg,transparent 25%,rgba(0,255,170,.10) 50%,transparent 75%);
-    transform:translateX(-120%);
-    animation:welcomeSweep 5s ease-in-out infinite;
-    pointer-events:none;
-}
-
-.welcome h1{
-    position:relative !important;
-    z-index:1 !important;
-    color:#8affd5 !important;
-    text-shadow:
-        0 0 4px rgba(0,255,170,.75),
-        0 0 10px rgba(0,255,170,.55),
-        0 0 22px rgba(0,255,170,.28) !important;
-    animation:welcomeTextBurn 3.2s ease-in-out infinite !important;
-}
-
-.welcome p{
-    position:relative !important;
-    z-index:1 !important;
-    color:rgba(190,255,231,.82) !important;
-    text-shadow:
-        0 0 5px rgba(0,255,170,.35),
-        0 0 12px rgba(0,255,170,.16) !important;
-}
-
-@keyframes welcomeBurn{
-    0%,100%{
-        box-shadow:
-            0 0 8px rgba(0,255,170,.16),
-            0 0 20px rgba(0,255,170,.07),
-            inset 0 0 20px rgba(0,255,170,.035);
-    }
-    50%{
-        box-shadow:
-            0 0 14px rgba(0,255,170,.32),
-            0 0 34px rgba(0,255,170,.15),
-            inset 0 0 30px rgba(0,255,170,.065);
-    }
-}
-
-@keyframes welcomeTextBurn{
-    0%,100%{
-        text-shadow:
-            0 0 4px rgba(0,255,170,.65),
-            0 0 10px rgba(0,255,170,.38),
-            0 0 18px rgba(0,255,170,.16);
-    }
-    50%{
-        text-shadow:
-            0 0 5px rgba(0,255,170,.95),
-            0 0 13px rgba(0,255,170,.72),
-            0 0 27px rgba(0,255,170,.38);
-    }
-}
-
-@keyframes welcomeSweep{
-    0%,35%{transform:translateX(-120%)}
-    65%,100%{transform:translateX(120%)}
-}
-
+<style>
 /* =========================================================
-   SMARTMINUTE GREEN NEON THEME
-   Final visual override
+   SMARTMINUTE BRIGHT GREEN THEME
+   Final homepage visual override
 ========================================================= */
 
 html,
 body{
     background:
-        radial-gradient(circle at 50% 20%,
-            rgba(0,255,170,.07),
-            transparent 38%),
+        radial-gradient(
+            circle at 50% 10%,
+            rgba(0,255,170,.08),
+            transparent 42%
+        ),
         linear-gradient(
             145deg,
-            #020806 0%,
-            #03130d 48%,
-            #010504 100%
+            #ffffff 0%,
+            #f7fffb 52%,
+            #effff8 100%
         ) !important;
-    color:#eafff6 !important;
+    color:#09251b !important;
 }
 
-/* Main page atmosphere */
+/* Page atmosphere */
 
 body::before{
     background:
         radial-gradient(
             circle,
-            rgba(0,255,170,.055) 0%,
-            transparent 62%
+            rgba(0,255,170,.07) 0%,
+            transparent 65%
         ) !important;
 }
 
 /* Header */
 
 header{
-    background:rgba(2,12,8,.88) !important;
-    border-bottom:1px solid rgba(0,255,170,.16) !important;
+    background:rgba(255,255,255,.96) !important;
+    border-bottom:1px solid rgba(0,210,140,.28) !important;
     box-shadow:
-        0 4px 22px rgba(0,255,170,.06) !important;
+        0 4px 22px rgba(0,180,120,.10) !important;
 }
 
-/* Welcome text */
+/* Welcome */
 
 .welcome h1{
-    color:#effff8 !important;
+    color:#063b29 !important;
     text-shadow:
-        0 0 12px rgba(0,255,170,.12);
+        0 0 8px rgba(0,255,170,.16) !important;
 }
 
 .welcome p{
-    color:#8fb5a7 !important;
+    color:#527568 !important;
 }
 
 /* Cards */
 
 .card,
-.section{
+.section,
+.profile-panel{
     background:
         linear-gradient(
             145deg,
-            rgba(5,25,17,.94),
-            rgba(2,12,8,.91)
+            #ffffff,
+            #f7fffb
         ) !important;
-    border:1px solid rgba(0,255,170,.13) !important;
+    color:#09251b !important;
+    border:1px solid rgba(0,210,140,.28) !important;
     box-shadow:
-        0 8px 30px rgba(0,0,0,.35),
-        inset 0 0 25px rgba(0,255,170,.025) !important;
+        0 8px 28px rgba(0,100,70,.09),
+        inset 0 0 24px rgba(0,255,170,.025) !important;
 }
 
-/* Card headings */
+/* Headings */
 
-.card h3{
-    color:#b8e8d3 !important;
+.card h3,
+.section h2,
+.profile-panel h2,
+.profile-panel h3{
+    color:#08704a !important;
 }
 
 /* Amounts */
 
 .amount{
-    color:#dfffee !important;
+    color:#00a86b !important;
     text-shadow:
-        0 0 10px rgba(0,255,170,.16);
+        0 0 12px rgba(0,220,145,.20) !important;
 }
 
-/* Deposit button */
+/* Deposit */
 
 .deposit{
-    border:1px solid rgba(0,255,170,.42) !important;
     background:
         linear-gradient(
             135deg,
-            rgba(0,255,170,.13),
-            rgba(0,90,60,.20)
+            #eafff6,
+            #d5ffed
         ) !important;
-    color:#dffff1 !important;
-    text-shadow:
-        0 0 8px rgba(0,255,170,.25);
+    color:#006b46 !important;
+    border:1px solid rgba(0,190,125,.55) !important;
 }
 
-/* Available balance */
+/* Account forms */
+
+.account-form{
+    background:#ffffff !important;
+    color:#09251b !important;
+    border-color:rgba(0,190,125,.38) !important;
+}
+
+.account-form label{
+    color:#08704a !important;
+}
+
+.account-form input,
+.account-form select{
+    background:#f7fffb !important;
+    color:#09251b !important;
+    border-color:#9bcdb9 !important;
+}
+
+/* Actions */
+
+.action,
+.secondary-action,
+.logout{
+    background:
+        linear-gradient(
+            135deg,
+            #eafff6,
+            #d5ffed
+        ) !important;
+    color:#006b46 !important;
+    border:1px solid #00b878 !important;
+}
+
+/* Balance */
 
 .balance-card{
     background:
         radial-gradient(
             circle at 50% 45%,
-            rgba(0,255,170,.09),
+            rgba(0,255,170,.14),
             transparent 68%
         ),
         linear-gradient(
             145deg,
-            rgba(4,28,19,.96),
-            rgba(1,10,7,.94)
+            #ffffff,
+            #effff8
         ) !important;
 }
 
-/* Balance aura */
-
 .balance-card::before{
-    border-color:rgba(0,255,170,.22) !important;
+    border-color:rgba(0,210,140,.30) !important;
 }
 
-/* Money flow stays behind all content */
+/* KSh rain */
 
 .money-flow{
     z-index:0 !important;
 }
 
-.money-flow span{
-    filter:
-        drop-shadow(0 0 7px rgba(0,255,170,.35));
+.money-flow span,
+.ksh{
+    color:#00b878 !important;
+    text-shadow:
+        0 0 10px rgba(0,255,170,.35) !important;
 }
 
-/* Keep dashboard content above animation */
+/* Content above animation */
 
 header,
 .container,
@@ -5175,7 +5276,7 @@ header,
     z-index:2;
 }
 
-/* Subtle green page glow */
+/* Green page glow */
 
 .container::after{
     content:"";
@@ -5186,68 +5287,26 @@ header,
     height:420px;
     transform:translateX(-50%);
     border-radius:50%;
-    background:rgba(0,255,170,.035);
+    background:rgba(0,255,170,.05);
     filter:blur(80px);
     pointer-events:none;
     z-index:-1;
 }
 
-/* Mobile refinement */
-
 @media(max-width:600px){
 
     .card,
-    .section{
+    .section,
+    .profile-panel{
         box-shadow:
-            0 6px 22px rgba(0,0,0,.30),
-            inset 0 0 18px rgba(0,255,170,.022) !important;
-    }
-
-    .money-flow span{
-        font-size:19px;
+            0 6px 22px rgba(0,100,70,.08),
+            inset 0 0 18px rgba(0,255,170,.025) !important;
     }
 
     .deposit{
         box-shadow:
-            0 0 10px rgba(0,255,170,.12),
-            0 0 22px rgba(0,255,170,.05) !important;
-    }
-}
-
-
-/* WELCOME TEXT — DARK WITH GREEN FIRE */
-.welcome h1{
-    color:#06140f !important;
-    text-shadow:
-        0 0 2px rgba(0,255,170,.95),
-        0 0 7px rgba(0,255,170,.85),
-        0 0 16px rgba(0,255,170,.65),
-        0 0 28px rgba(0,255,170,.35) !important;
-    animation:welcomeDarkTextBurn 3.2s ease-in-out infinite !important;
-}
-
-.welcome p{
-    color:#071a31 !important;
-    text-shadow:
-        0 0 3px rgba(0,255,170,.75),
-        0 0 8px rgba(0,255,170,.50) !important;
-}
-
-@keyframes welcomeDarkTextBurn{
-    0%,100%{
-        color:#06140f;
-        text-shadow:
-            0 0 2px rgba(0,255,170,.85),
-            0 0 7px rgba(0,255,170,.65),
-            0 0 15px rgba(0,255,170,.40);
-    }
-    50%{
-        color:#020b07;
-        text-shadow:
-            0 0 3px rgba(0,255,170,1),
-            0 0 9px rgba(0,255,170,.95),
-            0 0 20px rgba(0,255,170,.70),
-            0 0 32px rgba(0,255,170,.40);
+            0 0 12px rgba(0,220,145,.16),
+            0 0 24px rgba(0,255,170,.07) !important;
     }
 }
 </style>

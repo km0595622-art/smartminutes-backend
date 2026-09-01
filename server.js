@@ -17,6 +17,7 @@ const kycRoutes = require("./routes/kyc");
 const membershipRoutes = require("./routes/membership");
 const referralRoutes = require("./routes/referrals");
 const unlockRoutes = require("./routes/unlock");
+const notificationRoutes = require("./routes/notifications");
 
 const app = express();
 
@@ -123,6 +124,7 @@ app.use("/api/kyc", kycRoutes);
 app.use("/api", referralRoutes);
 app.use("/api", membershipRoutes);
 app.use("/api", unlockRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 
 // ============================================
