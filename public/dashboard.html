@@ -4087,10 +4087,14 @@ function showEarningOptions(){
 async function startTasks(){
 
     const container =
-        document.getElementById("smActionContent") ||
-        document.getElementById("tasksContainer");
+        document.getElementById("smActionContent");
 
-    showMessage("Checking your account balance...");
+    if(!container){
+        return;
+    }
+
+    /* Always clear the popup before loading task content. */
+    container.innerHTML = "";
 
     try {
 
@@ -4158,21 +4162,15 @@ async function startTasks(){
 
             if(balance < 50){
 
-                container.innerHTML = "";
+                container.innerHTML = `
+                    <div class="account-form earning-options">
+                        <h3>Tasks</h3>
 
-                showMessage(
-                    "Insufficient balance. Please fund your account."
-                );
-
-                const message =
-                    document.getElementById("message");
-
-                if(message){
-                    message.scrollIntoView({
-                        behavior:"smooth",
-                        block:"center"
-                    });
-                }
+                        <p class="form-note">
+                            Insufficient balance. Please fund your account.
+                        </p>
+                    </div>
+                `;
 
                 return;
             }
