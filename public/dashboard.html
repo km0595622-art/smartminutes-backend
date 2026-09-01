@@ -1142,12 +1142,18 @@ async function loadWallet(){
 </style>
 
 <style>
-/* ===== SMARTMINUTE FULL NAVY GOLD THEME ===== */
+/* ===== SMARTMINUTE BRIGHT GOLD THEME ===== */
 
+html,
 body{
     background:
-        radial-gradient(circle at top,#12345a 0%,#071a31 45%,#030b16 100%) !important;
-    color:#f4f6fa !important;
+        radial-gradient(
+            circle at top,
+            #ffffff 0%,
+            #f8fbff 55%,
+            #eef3f8 100%
+        ) !important;
+    color:#071a31 !important;
     overflow-x:hidden;
 }
 
@@ -1164,8 +1170,8 @@ body{
     top:-80px;
     color:#d9a52e;
     font-weight:900;
-    opacity:.16;
-    text-shadow:0 0 12px rgba(217,165,46,.35);
+    opacity:.10;
+    text-shadow:0 0 10px rgba(217,165,46,.20);
     animation:kshFall linear infinite;
 }
 
@@ -1174,8 +1180,8 @@ body{
         transform:translate3d(0,-100px,0) rotate(0deg);
         opacity:0;
     }
-    10%{opacity:.18;}
-    90%{opacity:.14;}
+    10%{opacity:.12;}
+    90%{opacity:.09;}
     100%{
         transform:translate3d(80px,110vh,0) rotate(360deg);
         opacity:0;
@@ -1202,58 +1208,60 @@ section,
     background:
         linear-gradient(
             145deg,
-            rgba(7,26,49,.97),
-            rgba(10,38,68,.97)
+            #ffffff,
+            #f7f9fc
         ) !important;
-
-    color:#f4f6fa !important;
-
+    color:#071a31 !important;
     border:1px solid rgba(217,165,46,.55) !important;
-
     box-shadow:
-        0 10px 30px rgba(0,0,0,.38),
-        inset 0 1px 0 rgba(255,255,255,.04) !important;
+        0 8px 25px rgba(7,26,49,.10),
+        inset 0 1px 0 rgba(255,255,255,.90) !important;
 }
 
 .card h3,
 .section h2,
 .profile-panel h2,
 .profile-panel h3{
-    color:#f0c34f !important;
+    color:#071a31 !important;
 }
 
 .amount{
-    color:#ffd45c !important;
-    text-shadow:0 0 12px rgba(240,195,79,.18);
+    color:#9a6d00 !important;
+    text-shadow:none;
+}
+
+.welcome h1{
+    color:#071a31 !important;
+    text-shadow:none !important;
 }
 
 .welcome p,
 .form-note,
 .form-message{
-    color:#c5cedb !important;
+    color:#536174 !important;
 }
 
 .profile-info{
-    background:rgba(255,255,255,.06) !important;
-    color:#f4f6fa !important;
-    border:1px solid rgba(217,165,46,.25);
+    background:#f7f9fc !important;
+    color:#071a31 !important;
+    border:1px solid rgba(217,165,46,.30);
 }
 
 .account-form{
-    background:rgba(3,15,29,.92) !important;
-    border:1px solid #b88a24 !important;
-    color:#f4f6fa !important;
+    background:#ffffff !important;
+    border:1px solid #d9a52e !important;
+    color:#071a31 !important;
 }
 
 .account-form label{
-    color:#e5bd55 !important;
+    color:#806000 !important;
 }
 
 .account-form input,
 .account-form select{
-    background:#071a31 !important;
-    color:#ffffff !important;
-    border-color:#536174 !important;
+    background:#ffffff !important;
+    color:#071a31 !important;
+    border-color:#c9d1dc !important;
 }
 
 .action,
@@ -1264,7 +1272,6 @@ section,
             #071a31,
             #12385f
         ) !important;
-
     color:#f0c34f !important;
     border:1px solid #d9a52e !important;
 }
@@ -1281,8 +1288,8 @@ section,
 
 .secondary-action,
 .logout{
-    background:#071a31 !important;
-    color:#f0c34f !important;
+    background:#ffffff !important;
+    color:#071a31 !important;
     border:1px solid #b88a24 !important;
 }
 
