@@ -13,10 +13,20 @@
     font-family:Arial,sans-serif;
 }
 
+html{
+    background:#050016;
+}
+
 body{
-    background:#05080f;
-    color:#fff;
     min-height:100vh;
+    overflow-x:hidden;
+    color:#fff;
+    background:
+        radial-gradient(circle at 10% 10%,rgba(139,92,246,.22),transparent 30%),
+        radial-gradient(circle at 90% 15%,rgba(255,20,147,.20),transparent 30%),
+        radial-gradient(circle at 20% 90%,rgba(0,245,255,.15),transparent 32%),
+        radial-gradient(circle at 85% 85%,rgba(255,230,0,.12),transparent 30%),
+        linear-gradient(135deg,#050016 0%,#0b0220 28%,#11001f 55%,#03051b 100%);
 }
 
 header{
@@ -24,54 +34,69 @@ header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    border-bottom:1px solid rgba(212,175,55,.2);
+    border-bottom:1px solid rgba(0,245,255,.45);
+    background:linear-gradient(135deg,rgba(8,2,30,.97),rgba(20,3,45,.97));
+    box-shadow:0 0 12px rgba(0,245,255,.18),0 0 28px rgba(255,0,230,.10);
 }
 
 .logo{
-    color:#d4af37;
+    color:#00f5ff;
     font-size:24px;
     font-weight:bold;
     letter-spacing:1px;
+    text-shadow:0 0 7px #00f5ff,0 0 18px rgba(255,20,147,.55);
 }
 
 nav a{
-    color:#ddd;
+    color:#fff;
     text-decoration:none;
     margin-left:18px;
     font-size:14px;
+    text-shadow:0 0 5px rgba(0,245,255,.3);
+}
+
+nav a:hover{
+    color:#ff1493;
+    text-shadow:0 0 8px #ff1493;
 }
 
 .hero{
     text-align:center;
     padding:80px 20px 60px;
     background:
-        radial-gradient(circle at center,rgba(212,175,55,.16),transparent 45%);
+        radial-gradient(circle at center,rgba(139,92,246,.20),transparent 45%),
+        radial-gradient(circle at 50% 20%,rgba(255,20,147,.10),transparent 35%);
 }
 
 .badge{
     display:inline-block;
-    color:#d4af37;
-    border:1px solid rgba(212,175,55,.5);
+    color:#00f5ff;
+    border:1px solid rgba(0,245,255,.65);
+    background:rgba(0,245,255,.06);
     padding:8px 16px;
     border-radius:30px;
     font-size:13px;
     margin-bottom:22px;
+    box-shadow:0 0 8px rgba(0,245,255,.35),inset 0 0 10px rgba(0,245,255,.08);
 }
 
 .hero h1{
     font-size:46px;
     line-height:1.1;
     margin-bottom:18px;
+    color:#fff;
+    text-shadow:0 0 8px rgba(0,245,255,.5),0 0 20px rgba(255,20,147,.25);
 }
 
 .gold{
-    color:#d4af37;
+    color:#ffe600;
+    text-shadow:0 0 7px rgba(255,230,0,.7),0 0 18px rgba(255,122,0,.4);
 }
 
 .hero p{
     max-width:650px;
     margin:auto;
-    color:#aeb5c2;
+    color:#d7d4e5;
     font-size:17px;
     line-height:1.6;
     margin-bottom:30px;
@@ -79,19 +104,27 @@ nav a{
 
 .btn{
     display:inline-block;
-    background:linear-gradient(135deg,#d4af37,#f5d76e);
-    color:#05080f;
+    background:linear-gradient(135deg,#7c3aed,#ff1493,#ff7a00);
+    color:#fff;
     padding:15px 32px;
     border-radius:30px;
     text-decoration:none;
     font-weight:bold;
     margin:6px;
+    border:1px solid #00f5ff;
+    box-shadow:0 0 8px rgba(0,245,255,.55),0 0 18px rgba(255,20,147,.30);
+    transition:.2s ease;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 12px #00f5ff,0 0 26px rgba(255,20,147,.65),0 0 42px rgba(139,92,246,.35);
 }
 
 .btn.secondary{
-    background:transparent;
-    color:#d4af37;
-    border:1px solid #d4af37;
+    background:rgba(8,20,42,.75);
+    color:#00f5ff;
+    border:1px solid #00f5ff;
 }
 
 .features{
@@ -104,25 +137,35 @@ nav a{
 }
 
 .card{
-    background:#0c111b;
-    border:1px solid rgba(212,175,55,.18);
+    background:linear-gradient(145deg,rgba(20,5,48,.94),rgba(5,7,30,.97));
+    border:1px solid rgba(139,92,246,.55);
     padding:28px 22px;
     border-radius:16px;
     text-align:center;
+    box-shadow:0 0 10px rgba(139,92,246,.14),0 0 24px rgba(255,20,147,.08);
+    transition:.2s ease;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    border-color:#00f5ff;
+    box-shadow:0 0 12px rgba(0,245,255,.35),0 0 28px rgba(255,20,147,.18);
 }
 
 .card-icon{
     font-size:30px;
     margin-bottom:15px;
+    filter:drop-shadow(0 0 7px rgba(0,245,255,.55));
 }
 
 .card h3{
-    color:#d4af37;
+    color:#ff1493;
     margin-bottom:10px;
+    text-shadow:0 0 7px rgba(255,20,147,.45);
 }
 
 .card p{
-    color:#9da6b5;
+    color:#c7c3d8;
     line-height:1.5;
     font-size:14px;
 }
@@ -130,9 +173,10 @@ nav a{
 footer{
     text-align:center;
     padding:30px 20px;
-    color:#687180;
-    border-top:1px solid rgba(212,175,55,.12);
+    color:#8d89a0;
+    border-top:1px solid rgba(0,245,255,.25);
     margin-top:30px;
+    background:rgba(5,0,22,.35);
 }
 
 @media(max-width:600px){
