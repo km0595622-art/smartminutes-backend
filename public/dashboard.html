@@ -2138,6 +2138,168 @@ a:hover{color:var(--sm-neon-pink)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 </style>
+
+<style id="smartminute-final-visual-fix">
+
+/* ===== KSh RAIN RESTORE ===== */
+
+.ksh-rain{
+    position:fixed !important;
+    inset:0 !important;
+    pointer-events:none !important;
+    overflow:hidden !important;
+    z-index:0 !important;
+}
+
+.ksh{
+    position:absolute !important;
+    top:-80px !important;
+    color:rgba(0,245,255,.10) !important;
+    font-weight:900 !important;
+    opacity:.10 !important;
+    text-shadow:0 0 10px rgba(0,245,255,.20) !important;
+    animation:kshFall 12s linear infinite !important;
+    will-change:transform,opacity !important;
+}
+
+@keyframes kshFall{
+    0%{
+        transform:translate3d(0,-100px,0) rotate(0deg);
+        opacity:0;
+    }
+    10%{opacity:.10;}
+    90%{opacity:.07;}
+    100%{
+        transform:translate3d(80px,110vh,0) rotate(360deg);
+        opacity:0;
+    }
+}
+
+/* Keep dashboard content above the decorative rain */
+
+header,
+main,
+.container,
+.dashboard,
+section,
+.profile-panel,
+.section,
+.cards,
+.card,
+.welcome{
+    position:relative;
+    z-index:1;
+}
+
+/* ===== NOTIFICATION BAR ===== */
+
+#smartMinuteNotificationBar{
+    background:
+        linear-gradient(
+            135deg,
+            rgba(20,0,55,.96),
+            rgba(55,0,80,.96)
+        ) !important;
+    border:1px solid rgba(0,245,255,.45) !important;
+    box-shadow:
+        0 0 16px rgba(0,245,255,.12),
+        0 0 24px rgba(255,20,147,.08) !important;
+    color:#ffffff !important;
+}
+
+#smartMinuteNotificationBar strong{
+    color:#00f5ff !important;
+}
+
+#smartMinuteNotificationBar div{
+    color:#dfe7ff !important;
+}
+
+#smartMinuteNotificationBar button{
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #ff1493
+        ) !important;
+    color:#ffffff !important;
+    border:1px solid #00f5ff !important;
+    box-shadow:
+        0 0 8px rgba(0,245,255,.35),
+        0 0 16px rgba(255,20,147,.22) !important;
+}
+
+/* ===== ACCOUNT / PROFILE LIGHT OVERRIDES ===== */
+
+.account-form{
+    background:linear-gradient(145deg,#0b0120,#16003b) !important;
+    border:1px solid rgba(0,245,255,.45) !important;
+    color:#f4f7ff !important;
+}
+
+.account-form h3{
+    color:#00f5ff !important;
+}
+
+.account-form label{
+    color:#00f5ff !important;
+}
+
+.form-note,
+.form-message{
+    color:#c9d3ef !important;
+}
+
+.account-form input,
+.account-form select{
+    background:#090018 !important;
+    color:#ffffff !important;
+    border:1px solid rgba(139,92,246,.60) !important;
+}
+
+.account-form input:focus,
+.account-form select:focus{
+    border-color:#00f5ff !important;
+    box-shadow:0 0 10px rgba(0,245,255,.20) !important;
+}
+
+.secondary-action{
+    background:linear-gradient(135deg,#16003b,#25005c) !important;
+    color:#00f5ff !important;
+    border:1px solid rgba(0,245,255,.55) !important;
+}
+
+.secondary-action:hover{
+    background:linear-gradient(135deg,#25005c,#3b087a) !important;
+    color:#ffffff !important;
+}
+
+.profile-panel{
+    background:linear-gradient(145deg,#10002b,#170044) !important;
+    color:#f4f7ff !important;
+    border:1px solid rgba(139,92,246,.55) !important;
+    box-shadow:
+        0 0 18px rgba(139,92,246,.14),
+        inset 0 0 18px rgba(255,20,147,.06) !important;
+}
+
+.profile-panel h2,
+.profile-panel h3{
+    color:#00f5ff !important;
+}
+
+.profile-info{
+    background:linear-gradient(145deg,#10002b,#170044) !important;
+    color:#f4f7ff !important;
+    border:1px solid rgba(139,92,246,.55) !important;
+}
+
+.profile-info strong{
+    color:#b9c7e8 !important;
+}
+
+</style>
+
 </head>
 
 <body>
