@@ -18,6 +18,7 @@ const membershipRoutes = require("./routes/membership");
 const referralRoutes = require("./routes/referrals");
 const unlockRoutes = require("./routes/unlock");
 const notificationRoutes = require("./routes/notifications");
+const metaRoutes = require("./routes/meta");
 
 const app = express();
 
@@ -125,6 +126,7 @@ app.use("/api", referralRoutes);
 app.use("/api", membershipRoutes);
 app.use("/api", unlockRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/meta", metaRoutes);
 
 
 // ============================================
