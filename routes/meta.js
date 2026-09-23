@@ -27,6 +27,8 @@ router.get("/login", (req, res) => {
         client_id: META_APP_ID,
         redirect_uri: META_REDIRECT_URI,
         config_id: META_CONFIG_ID,
+        response_type: "code",
+        override_default_response_type: "true",
         state
     });
 
